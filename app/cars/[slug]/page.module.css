@@ -1,47 +1,8 @@
 /* ==========================================================================
    Car Detail Page - Hero Pages for Individual Vehicles
    SuperNatural Motorsports Brand Integration
+   Theme tokens are defined in app/globals.css
    ========================================================================== */
-
-/* --------------------------------------------------------------------------
-   Theme Tokens (matching advisory)
-   -------------------------------------------------------------------------- */
-:root {
-  --sn-primary: #1a4d6e;
-  --sn-primary-light: #2a6d94;
-  --sn-primary-dark: #0f3347;
-  --sn-accent: #c9a227;
-  
-  --color-white: #ffffff;
-  --color-gray-50: #fafafa;
-  --color-gray-100: #f5f5f5;
-  --color-gray-200: #e5e5e5;
-  --color-gray-300: #d4d4d4;
-  --color-gray-400: #a3a3a3;
-  --color-gray-500: #737373;
-  --color-gray-600: #525252;
-  --color-gray-700: #404040;
-  --color-gray-800: #262626;
-  --color-gray-900: #171717;
-  
-  --score-excellent: #15803d;
-  --score-excellent-bg: rgba(21, 128, 61, 0.1);
-  --score-good: #1d4ed8;
-  --score-good-bg: rgba(29, 78, 216, 0.1);
-  --score-average: #b45309;
-  --score-average-bg: rgba(180, 83, 9, 0.1);
-  --score-poor: #b91c1c;
-  --score-poor-bg: rgba(185, 28, 28, 0.1);
-  
-  --tier-premium: #7c3aed;
-  --tier-premium-bg: rgba(124, 58, 237, 0.12);
-  --tier-upper: #2563eb;
-  --tier-upper-bg: rgba(37, 99, 235, 0.12);
-  --tier-mid: #059669;
-  --tier-mid-bg: rgba(5, 150, 105, 0.12);
-  --tier-entry: #d97706;
-  --tier-entry-bg: rgba(217, 119, 6, 0.12);
-}
 
 /* --------------------------------------------------------------------------
    Container

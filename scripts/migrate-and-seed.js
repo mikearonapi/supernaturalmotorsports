@@ -287,7 +287,7 @@ async function main() {
   console.log(`Packages: ${packagesResult.successCount} seeded`);
   console.log('\nNext steps:');
   console.log('1. Verify data in Supabase Dashboard');
-  console.log('2. Update VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in Vercel');
+  console.log('2. Update NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel');
   console.log('3. Generate and upload images to Vercel Blob');
   console.log('4. Redeploy to see live data\n');
 }

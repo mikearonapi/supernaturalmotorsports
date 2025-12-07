@@ -43,6 +43,34 @@
   --color-error: #b91c1c;
   --color-error-light: rgba(185, 28, 28, 0.1);
   
+  /* Score Colors (for advisory/performance ratings) */
+  --score-excellent: #15803d;
+  --score-excellent-bg: rgba(21, 128, 61, 0.1);
+  --score-good: #1d4ed8;
+  --score-good-bg: rgba(29, 78, 216, 0.1);
+  --score-average: #b45309;
+  --score-average-bg: rgba(180, 83, 9, 0.1);
+  --score-poor: #b91c1c;
+  --score-poor-bg: rgba(185, 28, 28, 0.1);
+  
+  /* Tier Colors */
+  --tier-premium: #7c3aed;
+  --tier-premium-bg: rgba(124, 58, 237, 0.08);
+  --tier-upper: #2563eb;
+  --tier-upper-bg: rgba(37, 99, 235, 0.08);
+  --tier-mid: #059669;
+  --tier-mid-bg: rgba(5, 150, 105, 0.08);
+  --tier-entry: #d97706;
+  --tier-entry-bg: rgba(217, 119, 6, 0.08);
+  
+  /* Recommendation Card Accents */
+  --rec-top: #059669;
+  --rec-sound: #d97706;
+  --rec-track: #2563eb;
+  --rec-value: #7c3aed;
+  --rec-reliable: #0891b2;
+  --rec-aftermarket: #db2777;
+  
   /* Performance HUB Category Colors */
   --perf-power: #e74c3c;
   --perf-grip: #3498db;

@@ -238,10 +238,11 @@ Requires environment variables:
 
 ## 6. Environment Variables
 
-### Client-Side (VITE_ prefix)
+### Client-Side (NEXT_PUBLIC_ prefix)
 ```
-VITE_SUPABASE_URL=https://xxx.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJ...
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+NEXT_PUBLIC_VERCEL_BLOB_URL=https://xxx.vercel-storage.com
 ```
 
 ### Server-Side Only (NOT exposed to browser)

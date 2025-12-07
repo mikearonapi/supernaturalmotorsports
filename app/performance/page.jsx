@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import styles from './page.module.css';
 import { fetchCars } from '@/lib/carsClient.js';
 import { carData as localCarData, tierConfig } from '@/data/cars.js';
 import PerformanceHub from '@/components/PerformanceHub';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 // Icons
 const Icons = {
@@ -36,7 +37,11 @@ const Icons = {
   ),
 };
 
-export default function Performance() {
+/**
+ * Inner component that uses useSearchParams
+ * Must be wrapped in Suspense
+ */
+function PerformanceContent() {
   const searchParams = useSearchParams();
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -270,3 +275,41 @@ export default function Performance() {
   );
 }
 
+/**
+ * Loading fallback for Suspense
+ */
+function PerformanceLoading() {
+  return (
+    <div className={styles.page}>
+      <section className={styles.hero}>
+        <div className={styles.container}>
+          <div className={styles.heroContent}>
+            <span className={styles.badge}>
+              <Icons.gauge size={16} />
+              Performance HUB
+            </span>
+            <h1 className={styles.title}>
+              Visualize Your<br />
+              <span className={styles.titleAccent}>Build Potential</span>
+            </h1>
+          </div>
+        </div>
+      </section>
+      <div className={styles.loadingState}>
+        <LoadingSpinner size="large" />
+        <p>Loading Performance HUB...</p>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Main page export - wraps content in Suspense for useSearchParams
+ */
+export default function Performance() {
+  return (
+    <Suspense fallback={<PerformanceLoading />}>
+      <PerformanceContent />
+    </Suspense>
+  );
+}

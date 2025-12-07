@@ -72,11 +72,6 @@ const sampleBuilds = [
   }
 ];
 
-export const metadata = {
-  title: 'Upgrade Advisory',
-  description: 'Get expert guidance on performance modifications. We help you prioritize upgrades that deliver the most driving joy per dollar.',
-};
-
 export default function Upgrades() {
   const [selectedGoal, setSelectedGoal] = useState('');
   const [selectedBudget, setSelectedBudget] = useState('');

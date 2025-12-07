@@ -5,7 +5,7 @@ This document lists all images needed for the site. Each image has a unique file
 ## Image Storage
 - **Local Generation**: Use Google AI (Imagen/Gemini) to generate images locally
 - **Upload Destination**: Vercel Blob Storage
-- **Base URL**: Set via `VITE_VERCEL_BLOB_URL` environment variable
+- **Base URL**: Set via `NEXT_PUBLIC_VERCEL_BLOB_URL` environment variable
 - **Format**: WebP preferred for web optimization (JPEG as fallback)
 
 ---
