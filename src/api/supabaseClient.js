@@ -2,15 +2,22 @@
  * Supabase Client Configuration
  * 
  * This module initializes the Supabase client using environment variables.
- * For local development, create a .env file with:
- *   VITE_SUPABASE_URL=your_supabase_project_url
- *   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
  * 
- * For production (Vercel), add these as environment variables in your project settings.
+ * For Vite projects, environment variables must be prefixed with VITE_ to be
+ * exposed to the client. When using Vercel's Supabase integration, you need to
+ * add these variables manually in Vercel:
+ * 
+ *   VITE_SUPABASE_URL = (copy from SUPABASE_URL)
+ *   VITE_SUPABASE_ANON_KEY = (copy from SUPABASE_ANON_KEY)
+ * 
+ * For local development, create a .env file with:
+ *   VITE_SUPABASE_URL=https://your-project.supabase.co
+ *   VITE_SUPABASE_ANON_KEY=your-anon-key
  */
 
 import { createClient } from '@supabase/supabase-js';
 
+// Try multiple environment variable patterns
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -24,18 +31,29 @@ export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
  * Will be null if environment variables are not configured
  */
 export const supabase = isSupabaseConfigured 
-  ? createClient(supabaseUrl, supabaseAnonKey)
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+      },
+    })
   : null;
 
 /**
- * Log warning if Supabase is not configured (only in development)
+ * Log info about Supabase configuration (only in development)
  */
-if (!isSupabaseConfigured && import.meta.env.DEV) {
-  console.warn(
-    '[SuperNatural Motorsports] Supabase is not configured. ' +
-    'Using local data fallback. To enable Supabase, set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.'
-  );
+if (import.meta.env.DEV) {
+  if (isSupabaseConfigured) {
+    console.log('[SuperNatural] Supabase connected:', supabaseUrl);
+  } else {
+    console.warn(
+      '[SuperNatural] Supabase not configured. Using local data fallback.\n' +
+      'To enable Supabase:\n' +
+      '  1. Set VITE_SUPABASE_URL in .env (or Vercel)\n' +
+      '  2. Set VITE_SUPABASE_ANON_KEY in .env (or Vercel)\n' +
+      '\nNote: Vercel Supabase integration creates SUPABASE_URL but Vite needs VITE_ prefix.'
+    );
+  }
 }
 
 export default supabase;
-
