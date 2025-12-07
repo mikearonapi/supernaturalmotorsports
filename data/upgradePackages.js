@@ -63,17 +63,23 @@ export const genericPackages = [
     metricChanges: {
       hpGain: 15, // Typical from intake + tune
       zeroToSixtyImprovement: 0.2, // seconds faster
+      brakingImprovement: 3, // feet
+      lateralGImprovement: 0.02,
     },
     includes: [
-      'Performance air intake',
-      'ECU tune (street map)',
-      'Performance exhaust (cat-back)',
-      'Lowering springs or mild coilovers',
+      'Cold air intake system (K&N, AEM, or OEM+)',
+      'ECU tune/flash (street-focused calibration)',
+      'Cat-back exhaust system (improved flow + sound)',
+      'Lowering springs (0.75"-1.25" drop)',
+      'Performance brake pads (street compound)',
+      'Alignment to factory sport specs',
     ],
     considerations: [
-      'Maintains factory warranty (intake may vary)',
-      'Improved sound may be louder than stock',
-      'Slightly firmer ride with lowering',
+      'Most work maintains factory warranty',
+      'ECU tune may affect warranty - check dealer policy',
+      'Sound improvement is noticeable but not intrusive',
+      'Slightly firmer ride acceptable for daily driving',
+      'All parts reversible if needed for warranty claims',
     ],
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -109,27 +115,31 @@ export const genericPackages = [
       lateralGImprovement: 0.1,
     },
     includes: [
-      'Full coilover suspension',
-      'Big brake kit (front)',
-      'High-performance brake pads',
-      'Stainless brake lines',
-      'Performance alignment',
-      'Oil cooler upgrade',
-      'Track-focused ECU tune',
-      'Performance exhaust system',
+      'Full adjustable coilover system (KW, Ohlins, or equivalent)',
+      'Front big brake kit (larger rotors + 4/6-piston calipers)',
+      'Performance brake pads (track compound: Hawk DTC-60, Ferodo DS2500)',
+      'Stainless steel braided brake lines',
+      'High-temp brake fluid (DOT 4 racing spec)',
+      'Oil cooler kit with thermostatic sandwich plate',
+      'Track-focused ECU tune (timing + fueling optimization)',
+      'Performance exhaust (headers or full system)',
+      'Adjustable sway bars (front and rear)',
+      'Performance alignment (aggressive camber + toe)',
     ],
     considerations: [
-      'Firmer ride on street',
-      'May void powertrain warranty (tune)',
-      'Requires more frequent brake pad changes',
-      'Oil cooler essential for sustained track use',
+      'Noticeably firmer ride on street - not harsh but sporty',
+      'ECU tune will likely void powertrain warranty',
+      'Track brake pads may squeal when cold',
+      'Budget for more frequent brake pad changes (track use)',
+      'Oil cooler prevents thermal breakdown at sustained high RPM',
+      'Consider dedicated track wheel/tire setup',
     ],
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
   },
 
   // ============================================================================
-  // TIME ATTACK TIER
+  // TIME ATTACK TIER (Full chassis + NA optimization)
   // ============================================================================
   {
     key: 'timeAttack',
@@ -137,13 +147,13 @@ export const genericPackages = [
     slug: 'time-attack',
     type: 'package',
     tier: 'timeAttack',
-    description: 'Maximum performance build for competitive time attack. Significant power gains, aggressive aero, and race-spec components. Some street compromises.',
+    description: 'Maximum NA performance build for competitive time attack. Full chassis optimization, aggressive aero, and race-spec components. Some street compromises.',
     intendedUse: 'Competitive time attack, dedicated track car, serious lap times',
-    estimatedCost: '$30,000 - $50,000+',
-    estimatedCostLow: 30000,
-    estimatedCostHigh: 50000,
+    estimatedCost: '$25,000 - $40,000',
+    estimatedCostLow: 25000,
+    estimatedCostHigh: 40000,
     deltas: {
-      powerAccel: 3,
+      powerAccel: 2,
       gripCornering: 3,
       braking: 2.5,
       trackPace: 3.5,
@@ -152,30 +162,89 @@ export const genericPackages = [
       soundEmotion: 2.5,
     },
     metricChanges: {
-      hpGain: 80,
-      zeroToSixtyImprovement: 0.8,
+      hpGain: 60, // NA optimization: cams, exhaust, tune
+      zeroToSixtyImprovement: 0.5,
       brakingImprovement: 15,
       lateralGImprovement: 0.25,
     },
     includes: [
-      'Forged internals (if needed)',
-      'Turbo upgrade or supercharger',
-      'Full race exhaust',
-      'Competition coilovers',
-      'Full big brake kit (front + rear)',
-      'Lightweight wheels',
-      'Semi-slick tires',
-      'Aero package (splitter, wing)',
-      'Full cooling package',
-      'Roll bar (recommended)',
-      'Data acquisition',
+      'Performance camshafts (more aggressive profile)',
+      'Ported & polished cylinder heads',
+      'Full race exhaust (headers/manifold + X-pipe + muffler)',
+      'Standalone ECU or aggressive tune (E85 capable)',
+      'High-flow fuel system (injectors, pump)',
+      '3-way adjustable coilovers (compression/rebound/height)',
+      'Full brake kit (front + rear big brake upgrade)',
+      'Race brake pads (Endless, Pagid, or equivalent)',
+      'Lightweight forged wheels (18" or 19")',
+      '200-treadwear tires (Yokohama A052, RE-71RS, or similar)',
+      'Aero package (front splitter + rear wing + diffuser)',
+      'Full cooling package (radiator, oil cooler, trans cooler)',
+      'Roll bar or half cage (safety + chassis stiffness)',
+      'Data acquisition system (AiM Solo or similar)',
     ],
     considerations: [
-      'Not recommended for daily driving',
-      'Voids factory warranty',
-      'Requires race fuel for some tunes',
-      'May affect insurance',
-      'Regular maintenance intervals shortened',
+      'Serious build - not recommended for daily driving',
+      'All warranties voided',
+      'May require race gas or E85 for aggressive tunes',
+      'Insurance implications - check coverage for track use',
+      'Shorter maintenance intervals (oil, fluids, consumables)',
+      'Semi-slick tires wear fast and have minimal wet grip',
+      'Aero components may scrape on street - adjust for driveways',
+    ],
+    carSlug: null,
+    applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
+  },
+
+  // ============================================================================
+  // ULTIMATE POWER TIER (Forced Induction)
+  // ============================================================================
+  {
+    key: 'ultimatePower',
+    name: 'Ultimate Power Build',
+    slug: 'ultimate-power',
+    type: 'package',
+    tier: 'ultimatePower',
+    description: 'Maximum horsepower through forced induction. Supercharger or turbo kit with supporting mods for massive power gains. Street or track monster.',
+    intendedUse: 'Maximum power builds, drag racing, roll racing, ultimate street machine',
+    estimatedCost: '$15,000 - $35,000+',
+    estimatedCostLow: 15000,
+    estimatedCostHigh: 35000,
+    deltas: {
+      powerAccel: 4.5,
+      gripCornering: 1,
+      braking: 1,
+      trackPace: 3,
+      drivability: -1.5, // Power comes with some compromise
+      reliabilityHeat: -1, // Heat management critical
+      soundEmotion: 3,
+    },
+    metricChanges: {
+      // Base gains - scaled by engine type in performance.js
+      hpGain: 250, // Typical supercharger on NA V8
+      zeroToSixtyImprovement: 1.0,
+      brakingImprovement: 0,
+      lateralGImprovement: 0,
+    },
+    includes: [
+      'Supercharger OR twin-turbo kit (Whipple, Roush, ProCharger, Hellion)',
+      'Supporting fuel system (1000cc+ injectors, dual pump)',
+      'Upgraded intercooler/heat exchanger',
+      'Custom ECU tune (dyno-tuned for your setup)',
+      'Upgraded clutch or torque converter (if applicable)',
+      'Full exhaust with downpipes/headers',
+      'Oil cooler + upgraded cooling system',
+      'Supporting drive components (belts, pulleys)',
+    ],
+    considerations: [
+      'Major power increase requires quality fuel (91+ octane, E85 for max power)',
+      'All warranties voided - engine is significantly modified',
+      'May need upgraded axles/driveshaft for high power',
+      'Heat management critical - monitor temps carefully',
+      'Tire wear increases dramatically with power',
+      'Insurance may be affected - check with provider',
+      'Professional installation and tuning strongly recommended',
+      'Budget for supporting mods (cooling, drivetrain)',
     ],
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -193,12 +262,12 @@ export const upgradeModules = [
   // ============================================================================
   {
     key: 'intake',
-    name: 'Performance Intake',
+    name: 'Cold Air Intake',
     slug: 'intake',
     type: 'module',
     category: 'power',
     tier: 'streetSport',
-    description: 'Improved airflow and throttle response',
+    description: 'Increased airflow with improved induction sound. Brands: K&N, AEM, Injen.',
     estimatedCost: '$300 - $600',
     estimatedCostLow: 300,
     estimatedCostHigh: 600,
@@ -219,7 +288,7 @@ export const upgradeModules = [
     type: 'module',
     category: 'power',
     tier: 'streetSport',
-    description: 'Better flow and improved exhaust note',
+    description: 'Improved exhaust flow and enhanced sound. Brands: Borla, Akrapovic, AWE.',
     estimatedCost: '$800 - $2,000',
     estimatedCostLow: 800,
     estimatedCostHigh: 2000,
@@ -228,7 +297,29 @@ export const upgradeModules = [
       soundEmotion: 1.5,
     },
     metricChanges: {
-      hpGain: 10,
+      hpGain: 12,
+    },
+    carSlug: null,
+    applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
+  },
+  {
+    key: 'headers',
+    name: 'Performance Headers',
+    slug: 'headers',
+    type: 'module',
+    category: 'power',
+    tier: 'trackPack',
+    description: 'Long-tube or equal-length headers for significant power gains. Requires tune.',
+    estimatedCost: '$1,500 - $3,500',
+    estimatedCostLow: 1500,
+    estimatedCostHigh: 3500,
+    deltas: {
+      powerAccel: 0.8,
+      soundEmotion: 1.0,
+    },
+    metricChanges: {
+      hpGain: 25,
+      zeroToSixtyImprovement: 0.1,
     },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -240,7 +331,7 @@ export const upgradeModules = [
     type: 'module',
     category: 'power',
     tier: 'streetSport',
-    description: 'Optimized fueling and ignition timing',
+    description: 'Optimized fueling and ignition maps for bolt-ons. Brands: Cobb, APR, Dinan.',
     estimatedCost: '$500 - $1,000',
     estimatedCostLow: 500,
     estimatedCostHigh: 1000,
@@ -262,7 +353,7 @@ export const upgradeModules = [
     type: 'module',
     category: 'power',
     tier: 'trackPack',
-    description: 'Aggressive tuning for maximum power',
+    description: 'Aggressive timing and fueling for track use. May require higher octane fuel.',
     estimatedCost: '$800 - $1,500',
     estimatedCostLow: 800,
     estimatedCostHigh: 1500,
@@ -280,6 +371,394 @@ export const upgradeModules = [
   },
 
   // ============================================================================
+  // FORCED INDUCTION MODULES
+  // ============================================================================
+  {
+    key: 'supercharger-centrifugal',
+    name: 'Centrifugal Supercharger',
+    slug: 'supercharger-centrifugal',
+    type: 'module',
+    category: 'forcedInduction',
+    tier: 'ultimatePower',
+    description: 'ProCharger or Vortech centrifugal supercharger. Linear power delivery. Brands: ProCharger, Vortech, Paxton.',
+    estimatedCost: '$6,000 - $9,000',
+    estimatedCostLow: 6000,
+    estimatedCostHigh: 9000,
+    deltas: {
+      powerAccel: 3.5,
+      trackPace: 2,
+      reliabilityHeat: -0.5,
+      soundEmotion: 2,
+    },
+    metricChanges: {
+      hpGain: 180, // 150-200+ HP typical
+      zeroToSixtyImprovement: 0.8,
+    },
+    includes: [
+      'Centrifugal supercharger unit',
+      'Intercooler (if kit includes)',
+      'Basic supporting tune',
+      'Intake/piping components',
+    ],
+    carSlug: null,
+    applicableEngines: ['NA V8', 'NA V6'],
+    applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
+  },
+  {
+    key: 'supercharger-roots',
+    name: 'Roots/TVS Supercharger',
+    slug: 'supercharger-roots',
+    type: 'module',
+    category: 'forcedInduction',
+    tier: 'ultimatePower',
+    description: 'Whipple or Roush TVS supercharger. Instant boost, massive power. Brands: Whipple, Roush, Magnuson, Edelbrock.',
+    estimatedCost: '$8,000 - $12,000',
+    estimatedCostLow: 8000,
+    estimatedCostHigh: 12000,
+    deltas: {
+      powerAccel: 4.5,
+      trackPace: 2.5,
+      reliabilityHeat: -0.8,
+      soundEmotion: 2.5,
+    },
+    metricChanges: {
+      hpGain: 280, // 250-350+ HP typical on Coyote/Voodoo
+      zeroToSixtyImprovement: 1.2,
+    },
+    includes: [
+      'TVS-style positive displacement supercharger',
+      'Integrated heat exchanger',
+      'Fuel system upgrade (injectors)',
+      'Custom ECU calibration',
+      'Upgraded intake manifold',
+    ],
+    carSlug: null,
+    applicableEngines: ['NA V8'],
+    applicableLayouts: ['Front-Engine'],
+  },
+  {
+    key: 'turbo-kit-single',
+    name: 'Single Turbo Kit',
+    slug: 'turbo-kit-single',
+    type: 'module',
+    category: 'forcedInduction',
+    tier: 'ultimatePower',
+    description: 'Single turbo conversion for max power potential. Requires supporting mods.',
+    estimatedCost: '$5,000 - $10,000',
+    estimatedCostLow: 5000,
+    estimatedCostHigh: 10000,
+    deltas: {
+      powerAccel: 4,
+      trackPace: 2,
+      reliabilityHeat: -1,
+      soundEmotion: 2,
+    },
+    metricChanges: {
+      hpGain: 220, // Highly variable 150-400+
+      zeroToSixtyImprovement: 1.0,
+    },
+    includes: [
+      'Single turbocharger',
+      'Turbo manifold',
+      'Downpipe',
+      'Intercooler',
+      'Wastegate',
+      'BOV/Diverter valve',
+    ],
+    carSlug: null,
+    applicableEngines: ['NA V8', 'NA I6', 'NA I4'],
+    applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
+  },
+  {
+    key: 'turbo-kit-twin',
+    name: 'Twin Turbo Kit',
+    slug: 'turbo-kit-twin',
+    type: 'module',
+    category: 'forcedInduction',
+    tier: 'ultimatePower',
+    description: 'Twin turbo setup for massive power with better spool. Brands: Hellion, Pure Turbos, On3.',
+    estimatedCost: '$8,000 - $15,000',
+    estimatedCostLow: 8000,
+    estimatedCostHigh: 15000,
+    deltas: {
+      powerAccel: 5,
+      trackPace: 2.5,
+      reliabilityHeat: -1.2,
+      soundEmotion: 2.5,
+    },
+    metricChanges: {
+      hpGain: 350, // 300-500+ HP possible
+      zeroToSixtyImprovement: 1.5,
+    },
+    includes: [
+      'Twin turbochargers',
+      'Turbo manifolds (both sides)',
+      'Twin intercooler or single large',
+      'Downpipes',
+      'Wastegates',
+      'Complete piping kit',
+    ],
+    carSlug: null,
+    applicableEngines: ['NA V8'],
+    applicableLayouts: ['Front-Engine', 'Mid-Engine'],
+  },
+  {
+    key: 'turbo-upgrade-existing',
+    name: 'Turbo Upgrade',
+    slug: 'turbo-upgrade-existing',
+    type: 'module',
+    category: 'forcedInduction',
+    tier: 'ultimatePower',
+    description: 'Upgraded turbos for factory turbo cars. More flow, higher boost potential.',
+    estimatedCost: '$4,000 - $12,000',
+    estimatedCostLow: 4000,
+    estimatedCostHigh: 12000,
+    deltas: {
+      powerAccel: 2.5,
+      trackPace: 1.5,
+      reliabilityHeat: -0.5,
+      soundEmotion: 1,
+    },
+    metricChanges: {
+      hpGain: 120, // 80-200+ depending on car
+      zeroToSixtyImprovement: 0.6,
+    },
+    includes: [
+      'Upgraded turbocharger(s)',
+      'Supporting intake piping',
+      'Upgraded downpipe(s)',
+      'ECU tune for increased boost',
+    ],
+    carSlug: null,
+    applicableEngines: ['Turbo V8', 'Turbo V6', 'Turbo I6', 'Turbo I4', 'Turbo Flat-6'],
+    applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
+  },
+  {
+    key: 'pulley-tune-sc',
+    name: 'SC Pulley + Tune',
+    slug: 'pulley-tune-sc',
+    type: 'module',
+    category: 'forcedInduction',
+    tier: 'trackPack',
+    description: 'Smaller supercharger pulley + tune for factory SC cars. Easy bolt-on power.',
+    estimatedCost: '$1,500 - $3,000',
+    estimatedCostLow: 1500,
+    estimatedCostHigh: 3000,
+    deltas: {
+      powerAccel: 1.5,
+      trackPace: 1,
+      reliabilityHeat: -0.3,
+      soundEmotion: 0.5,
+    },
+    metricChanges: {
+      hpGain: 75, // 60-100 HP typical
+      zeroToSixtyImprovement: 0.3,
+    },
+    includes: [
+      'Smaller supercharger pulley',
+      'Crank pulley (if needed)',
+      'Updated ECU calibration',
+      'Heat exchanger recommended',
+    ],
+    carSlug: null,
+    applicableEngines: ['SC V8'],
+    applicableLayouts: ['Front-Engine'],
+  },
+  {
+    key: 'heat-exchanger-sc',
+    name: 'Heat Exchanger Upgrade',
+    slug: 'heat-exchanger-sc',
+    type: 'module',
+    category: 'forcedInduction',
+    tier: 'trackPack',
+    description: 'Upgraded intercooler/heat exchanger for factory SC or turbo cars.',
+    estimatedCost: '$800 - $2,000',
+    estimatedCostLow: 800,
+    estimatedCostHigh: 2000,
+    deltas: {
+      reliabilityHeat: 1,
+      trackPace: 0.3,
+    },
+    metricChanges: {
+      hpGain: 15, // Prevents heat soak
+    },
+    carSlug: null,
+    applicableEngines: ['SC V8', 'Turbo V8', 'Turbo V6', 'Turbo I4'],
+    applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
+  },
+
+  // ============================================================================
+  // ENGINE INTERNALS MODULES
+  // ============================================================================
+  {
+    key: 'camshafts',
+    name: 'Performance Camshafts',
+    slug: 'camshafts',
+    type: 'module',
+    category: 'power',
+    tier: 'timeAttack',
+    description: 'Upgraded camshafts with more aggressive profile. More lift and duration for NA power.',
+    estimatedCost: '$1,500 - $3,500',
+    estimatedCostLow: 1500,
+    estimatedCostHigh: 3500,
+    deltas: {
+      powerAccel: 1.2,
+      trackPace: 0.5,
+      soundEmotion: 1,
+      drivability: -0.5, // Rougher idle
+    },
+    metricChanges: {
+      hpGain: 35, // 25-50 HP on most V8s
+      zeroToSixtyImprovement: 0.2,
+    },
+    includes: [
+      'Performance camshaft(s)',
+      'Valve springs (upgraded)',
+      'Retainers and locks',
+      'Required gaskets',
+      'ECU tune for new profile',
+    ],
+    carSlug: null,
+    applicableEngines: ['NA V8', 'NA V6'],
+    applicableLayouts: ['Front-Engine', 'Mid-Engine'],
+  },
+  {
+    key: 'ported-heads',
+    name: 'Ported Cylinder Heads',
+    slug: 'ported-heads',
+    type: 'module',
+    category: 'power',
+    tier: 'timeAttack',
+    description: 'CNC-ported heads for maximum airflow. Significant NA power gains.',
+    estimatedCost: '$2,500 - $5,000',
+    estimatedCostLow: 2500,
+    estimatedCostHigh: 5000,
+    deltas: {
+      powerAccel: 1.5,
+      trackPace: 0.8,
+    },
+    metricChanges: {
+      hpGain: 45, // 30-60 HP typical
+      zeroToSixtyImprovement: 0.25,
+    },
+    includes: [
+      'CNC porting service',
+      'Bowl blending',
+      'Competition valve job',
+      'Flow testing',
+    ],
+    carSlug: null,
+    applicableEngines: ['NA V8', 'NA V6', 'NA Flat-6'],
+    applicableLayouts: ['Front-Engine', 'Mid-Engine', 'Rear-Engine'],
+  },
+  {
+    key: 'forged-internals',
+    name: 'Forged Internals',
+    slug: 'forged-internals',
+    type: 'module',
+    category: 'power',
+    tier: 'ultimatePower',
+    description: 'Forged pistons, rods, and crank for high-boost or high-RPM applications.',
+    estimatedCost: '$5,000 - $12,000',
+    estimatedCostLow: 5000,
+    estimatedCostHigh: 12000,
+    deltas: {
+      reliabilityHeat: 2,
+      powerAccel: 0.5, // Enables higher boost/RPM
+    },
+    metricChanges: {
+      // Doesn't add power directly, enables it
+    },
+    includes: [
+      'Forged pistons',
+      'Forged connecting rods',
+      'Forged crankshaft (if needed)',
+      'ARP hardware',
+      'Bearings and gaskets',
+      'Machine work',
+    ],
+    carSlug: null,
+    applicableEngines: ['NA V8', 'NA V6', 'Turbo V8', 'SC V8'],
+    applicableLayouts: ['Front-Engine', 'Mid-Engine'],
+  },
+  {
+    key: 'stroker-kit',
+    name: 'Stroker Kit',
+    slug: 'stroker-kit',
+    type: 'module',
+    category: 'power',
+    tier: 'ultimatePower',
+    description: 'Increased displacement for more torque and power. Complete rotating assembly.',
+    estimatedCost: '$8,000 - $15,000',
+    estimatedCostLow: 8000,
+    estimatedCostHigh: 15000,
+    deltas: {
+      powerAccel: 2,
+      trackPace: 1,
+      soundEmotion: 1,
+    },
+    metricChanges: {
+      hpGain: 80, // Significant gains from displacement
+      zeroToSixtyImprovement: 0.4,
+    },
+    includes: [
+      'Stroker crankshaft',
+      'Forged pistons (larger bore)',
+      'Forged connecting rods',
+      'Bearings and hardware',
+      'Full machine work',
+      'Custom ECU tune',
+    ],
+    carSlug: null,
+    applicableEngines: ['NA V8'],
+    applicableLayouts: ['Front-Engine'],
+  },
+  {
+    key: 'throttle-body',
+    name: 'Throttle Body Upgrade',
+    slug: 'throttle-body',
+    type: 'module',
+    category: 'power',
+    tier: 'streetSport',
+    description: 'Larger throttle body for improved airflow. Most effective with other intake mods.',
+    estimatedCost: '$300 - $800',
+    estimatedCostLow: 300,
+    estimatedCostHigh: 800,
+    deltas: {
+      powerAccel: 0.3,
+    },
+    metricChanges: {
+      hpGain: 12,
+    },
+    carSlug: null,
+    applicableEngines: ['NA V8', 'NA V6', 'SC V8'],
+    applicableLayouts: ['Front-Engine'],
+  },
+  {
+    key: 'intake-manifold',
+    name: 'Performance Intake Manifold',
+    slug: 'intake-manifold',
+    type: 'module',
+    category: 'power',
+    tier: 'trackPack',
+    description: 'High-flow intake manifold for NA applications. Brands: Edelbrock, Holley, Ford Performance.',
+    estimatedCost: '$800 - $2,000',
+    estimatedCostLow: 800,
+    estimatedCostHigh: 2000,
+    deltas: {
+      powerAccel: 0.8,
+      soundEmotion: 0.5,
+    },
+    metricChanges: {
+      hpGain: 25,
+      zeroToSixtyImprovement: 0.15,
+    },
+    carSlug: null,
+    applicableEngines: ['NA V8'],
+    applicableLayouts: ['Front-Engine'],
+  },
+
+  // ============================================================================
   // CHASSIS MODULES
   // ============================================================================
   {
@@ -289,7 +768,7 @@ export const upgradeModules = [
     type: 'module',
     category: 'chassis',
     tier: 'streetSport',
-    description: 'Lower center of gravity, improved handling',
+    description: 'Lower CG, improved handling. Brands: Eibach, H&R, Swift. Drop: 0.75"-1.25"',
     estimatedCost: '$400 - $800',
     estimatedCostLow: 400,
     estimatedCostHigh: 800,
@@ -297,6 +776,9 @@ export const upgradeModules = [
       gripCornering: 0.5,
       trackPace: 0.3,
       drivability: -0.3,
+    },
+    metricChanges: {
+      lateralGImprovement: 0.02,
     },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -308,7 +790,7 @@ export const upgradeModules = [
     type: 'module',
     category: 'chassis',
     tier: 'streetSport',
-    description: 'Adjustable height and damping for street use',
+    description: 'Adjustable height + damping. Brands: KW V1/V2, BC Racing, Fortune Auto.',
     estimatedCost: '$1,500 - $3,000',
     estimatedCostLow: 1500,
     estimatedCostHigh: 3000,
@@ -316,6 +798,9 @@ export const upgradeModules = [
       gripCornering: 1,
       trackPace: 0.5,
       drivability: -0.5,
+    },
+    metricChanges: {
+      lateralGImprovement: 0.05,
     },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -327,7 +812,7 @@ export const upgradeModules = [
     type: 'module',
     category: 'chassis',
     tier: 'trackPack',
-    description: 'Competition dampers with full adjustability',
+    description: '2/3-way adjustable dampers. Brands: KW V3, Ohlins, JRZ, MCS.',
     estimatedCost: '$3,000 - $6,000',
     estimatedCostLow: 3000,
     estimatedCostHigh: 6000,
@@ -336,23 +821,47 @@ export const upgradeModules = [
       trackPace: 1.5,
       drivability: -1.5,
     },
+    metricChanges: {
+      lateralGImprovement: 0.1,
+    },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
   },
   {
     key: 'sway-bars',
-    name: 'Upgraded Sway Bars',
+    name: 'Adjustable Sway Bars',
     slug: 'sway-bars',
     type: 'module',
     category: 'chassis',
     tier: 'trackPack',
-    description: 'Adjustable anti-roll bars for balance tuning',
+    description: 'Tune understeer/oversteer balance. Brands: Whiteline, Hotchkis, Progress.',
     estimatedCost: '$600 - $1,200',
     estimatedCostLow: 600,
     estimatedCostHigh: 1200,
     deltas: {
       gripCornering: 0.5,
       trackPace: 0.3,
+    },
+    metricChanges: {
+      lateralGImprovement: 0.02,
+    },
+    carSlug: null,
+    applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
+  },
+  {
+    key: 'chassis-bracing',
+    name: 'Chassis Bracing',
+    slug: 'chassis-bracing',
+    type: 'module',
+    category: 'chassis',
+    tier: 'trackPack',
+    description: 'Strut tower bars, subframe braces. Reduces flex, improves response.',
+    estimatedCost: '$500 - $1,500',
+    estimatedCostLow: 500,
+    estimatedCostHigh: 1500,
+    deltas: {
+      gripCornering: 0.3,
+      trackPace: 0.2,
     },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -363,18 +872,43 @@ export const upgradeModules = [
   // ============================================================================
   {
     key: 'brake-pads-street',
-    name: 'Performance Brake Pads',
+    name: 'Performance Pads',
     slug: 'brake-pads-street',
     type: 'module',
     category: 'brakes',
     tier: 'streetSport',
-    description: 'Better bite and shorter stopping distances',
+    description: 'Street compound with improved bite. Brands: EBC Yellowstuff, Hawk HPS.',
     estimatedCost: '$200 - $500',
     estimatedCostLow: 200,
     estimatedCostHigh: 500,
     deltas: {
       braking: 0.5,
       trackPace: 0.2,
+    },
+    metricChanges: {
+      brakingImprovement: 3,
+    },
+    carSlug: null,
+    applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
+  },
+  {
+    key: 'brake-pads-track',
+    name: 'Track Brake Pads',
+    slug: 'brake-pads-track',
+    type: 'module',
+    category: 'brakes',
+    tier: 'trackPack',
+    description: 'High-temp track compound. Brands: Hawk DTC-60, Ferodo DS2500, Pagid.',
+    estimatedCost: '$400 - $800',
+    estimatedCostLow: 400,
+    estimatedCostHigh: 800,
+    deltas: {
+      braking: 1.0,
+      trackPace: 0.4,
+      drivability: -0.3, // Cold bite reduced
+    },
+    metricChanges: {
+      brakingImprovement: 6,
     },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -386,13 +920,16 @@ export const upgradeModules = [
     type: 'module',
     category: 'brakes',
     tier: 'trackPack',
-    description: 'High-temp fluid and stainless lines for better pedal feel',
+    description: 'Motul RBF 600 fluid + stainless braided lines for firm pedal feel.',
     estimatedCost: '$200 - $400',
     estimatedCostLow: 200,
     estimatedCostHigh: 400,
     deltas: {
       braking: 0.5,
       reliabilityHeat: 0.3,
+    },
+    metricChanges: {
+      brakingImprovement: 2,
     },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -404,7 +941,7 @@ export const upgradeModules = [
     type: 'module',
     category: 'brakes',
     tier: 'trackPack',
-    description: 'Larger rotors and calipers for improved stopping',
+    description: 'Larger rotors + multi-piston calipers. Brands: StopTech, Brembo, AP Racing.',
     estimatedCost: '$2,500 - $5,000',
     estimatedCostLow: 2500,
     estimatedCostHigh: 5000,
@@ -415,6 +952,27 @@ export const upgradeModules = [
     },
     metricChanges: {
       brakingImprovement: 10,
+    },
+    carSlug: null,
+    applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
+  },
+  {
+    key: 'slotted-rotors',
+    name: 'Slotted/Drilled Rotors',
+    slug: 'slotted-rotors',
+    type: 'module',
+    category: 'brakes',
+    tier: 'streetSport',
+    description: 'Better heat dissipation and pad degassing. Brands: StopTech, Brembo.',
+    estimatedCost: '$400 - $800',
+    estimatedCostLow: 400,
+    estimatedCostHigh: 800,
+    deltas: {
+      braking: 0.3,
+      reliabilityHeat: 0.2,
+    },
+    metricChanges: {
+      brakingImprovement: 2,
     },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -486,7 +1044,7 @@ export const upgradeModules = [
     type: 'module',
     category: 'wheels',
     tier: 'trackPack',
-    description: 'Reduced unsprung weight for better handling',
+    description: 'Forged or flow-formed wheels. Brands: BBS, Volk, Enkei, Apex.',
     estimatedCost: '$2,000 - $4,000',
     estimatedCostLow: 2000,
     estimatedCostHigh: 4000,
@@ -495,17 +1053,20 @@ export const upgradeModules = [
       braking: 0.3,
       trackPace: 0.5,
     },
+    metricChanges: {
+      zeroToSixtyImprovement: 0.1, // Less rotational mass
+    },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
   },
   {
     key: 'tires-performance',
-    name: 'Performance Summer Tires',
+    name: 'Max Performance Tires',
     slug: 'tires-performance',
     type: 'module',
     category: 'wheels',
     tier: 'streetSport',
-    description: 'Stickier compound for improved grip',
+    description: '300TW summer tires. Brands: Michelin PS4S, Continental ExtremeContact.',
     estimatedCost: '$800 - $1,500',
     estimatedCostLow: 800,
     estimatedCostHigh: 1500,
@@ -516,7 +1077,7 @@ export const upgradeModules = [
     },
     metricChanges: {
       lateralGImprovement: 0.05,
-      brakingImprovement: 3,
+      brakingImprovement: 4,
     },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -528,7 +1089,7 @@ export const upgradeModules = [
     type: 'module',
     category: 'wheels',
     tier: 'trackPack',
-    description: 'Semi-slick tires for maximum grip',
+    description: 'Semi-slick rubber. Brands: Yokohama A052, Bridgestone RE-71RS, Nankang NS-2R.',
     estimatedCost: '$1,200 - $2,000',
     estimatedCostLow: 1200,
     estimatedCostHigh: 2000,
@@ -536,11 +1097,35 @@ export const upgradeModules = [
       gripCornering: 2,
       braking: 1,
       trackPace: 1.5,
-      drivability: -1, // Wear fast, noisy
+      drivability: -1, // Wear fast, noisy, limited wet grip
     },
     metricChanges: {
       lateralGImprovement: 0.15,
       brakingImprovement: 8,
+    },
+    carSlug: null,
+    applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
+  },
+  {
+    key: 'tires-slicks',
+    name: 'R-Compound Slicks',
+    slug: 'tires-slicks',
+    type: 'module',
+    category: 'wheels',
+    tier: 'timeAttack',
+    description: '100TW race tires. Brands: Hoosier A7, Toyo RR, NT01.',
+    estimatedCost: '$1,500 - $2,500',
+    estimatedCostLow: 1500,
+    estimatedCostHigh: 2500,
+    deltas: {
+      gripCornering: 3,
+      braking: 1.5,
+      trackPace: 2,
+      drivability: -2, // Track use only
+    },
+    metricChanges: {
+      lateralGImprovement: 0.25,
+      brakingImprovement: 12,
     },
     carSlug: null,
     applicableLayouts: ['Mid-Engine', 'Front-Engine', 'Rear-Engine'],
@@ -589,6 +1174,137 @@ export const upgradeModules = [
 ];
 
 /**
+ * Detect engine type from car data for upgrade compatibility
+ * @param {Object} car - Car object with engine field
+ * @returns {string} - Engine type identifier
+ */
+export function getEngineType(car) {
+  if (!car || !car.engine) return 'unknown';
+  
+  const engine = car.engine.toLowerCase();
+  
+  // Supercharged engines
+  if (engine.includes('sc') || engine.includes('supercharged')) {
+    if (engine.includes('v8')) return 'SC V8';
+    if (engine.includes('v6')) return 'SC V6';
+    return 'SC';
+  }
+  
+  // Turbocharged engines
+  if (engine.includes('turbo') || engine.includes('tt') || engine.includes('biturbo')) {
+    if (engine.includes('v8')) return 'Turbo V8';
+    if (engine.includes('v6')) return 'Turbo V6';
+    if (engine.includes('v12')) return 'Turbo V12';
+    if (engine.includes('flat') || engine.includes('h6')) return 'Turbo Flat-6';
+    if (engine.includes('i6') || engine.includes('l6') || engine.match(/[0-9]\.[0-9]l?\s*(i6|6)/)) return 'Turbo I6';
+    if (engine.includes('i4') || engine.includes('4-cyl') || engine.match(/[12]\.[0-9]l?\s*t/)) return 'Turbo I4';
+    return 'Turbo';
+  }
+  
+  // Naturally aspirated engines
+  // Check for flat-plane or flat engines (Porsche, some Ferraris)
+  if (engine.includes('flat') || engine.includes('h6') || engine.includes('fp')) {
+    if (engine.includes('v8') || engine.includes('fp v8') || engine.includes('fp8')) return 'NA V8'; // Flat-plane V8 like GT350
+    return 'NA Flat-6';
+  }
+  
+  // Standard NA engines
+  if (engine.includes('v12')) return 'NA V12';
+  if (engine.includes('v10')) return 'NA V10';
+  if (engine.includes('v8')) return 'NA V8';
+  if (engine.includes('v6')) return 'NA V6';
+  if (engine.includes('i6') || engine.includes('l6')) return 'NA I6';
+  if (engine.includes('i4') || engine.includes('4-cyl')) return 'NA I4';
+  
+  // Check by displacement patterns
+  if (engine.match(/5\.[0-9]l|6\.[0-9]l|7\.[0-9]l/)) return 'NA V8';
+  if (engine.match(/3\.[0-9]l|4\.[0-9]l/) && !engine.includes('turbo')) return 'NA V6';
+  
+  return 'unknown';
+}
+
+/**
+ * Get HP gain multiplier based on engine type and upgrade type
+ * @param {Object} car - Car object
+ * @param {Object} upgrade - Upgrade object
+ * @returns {number} - Multiplier for HP gains
+ */
+export function getHpGainMultiplier(car, upgrade) {
+  const engineType = getEngineType(car);
+  const baseHp = car.hp || 400;
+  
+  // For forced induction upgrades, scale based on engine type
+  if (upgrade.category === 'forcedInduction') {
+    // Already turbocharged/supercharged cars get less gain from "adding" FI
+    if (engineType.includes('Turbo') || engineType.includes('SC')) {
+      // These cars are upgrading existing FI, not adding new
+      if (upgrade.key.includes('upgrade') || upgrade.key.includes('pulley')) {
+        return 1.0; // Full gains for appropriate upgrades
+      }
+      return 0; // Can't add supercharger to turbo car etc
+    }
+    
+    // NA V8s respond best to forced induction
+    if (engineType === 'NA V8') {
+      // Scale by displacement/power - higher HP cars get more from boost
+      if (baseHp > 500) return 1.2; // High-strung NA V8s like GT350 Voodoo
+      if (baseHp > 400) return 1.0;
+      return 0.85;
+    }
+    
+    // NA V6s get good gains
+    if (engineType === 'NA V6') return 0.7;
+    
+    // Flat-6 (Porsche GT3 etc) - limited FI options
+    if (engineType === 'NA Flat-6') return 0.5;
+    
+    // Exotic NA engines (V10, V12) - limited but possible
+    if (engineType === 'NA V10') return 0.6;
+    if (engineType === 'NA V12') return 0.5;
+  }
+  
+  // For NA bolt-ons, scale by engine type
+  if (upgrade.category === 'power' && !upgrade.key.includes('forged')) {
+    // NA V8s respond well to bolt-ons
+    if (engineType === 'NA V8') return 1.0;
+    // Turbo cars get big gains from simple mods
+    if (engineType.includes('Turbo')) return 1.3;
+    // SC cars get moderate gains
+    if (engineType.includes('SC')) return 1.1;
+    // Smaller engines get proportionally less
+    if (engineType.includes('V6')) return 0.75;
+    if (engineType.includes('I4')) return 0.6;
+    if (engineType.includes('Flat-6')) return 0.8;
+  }
+  
+  return 1.0;
+}
+
+/**
+ * Check if an upgrade is compatible with a car's engine type
+ * @param {Object} car - Car object
+ * @param {Object} upgrade - Upgrade object
+ * @returns {boolean}
+ */
+export function isUpgradeCompatible(car, upgrade) {
+  const engineType = getEngineType(car);
+  
+  // If upgrade doesn't specify engine requirements, it's universal
+  if (!upgrade.applicableEngines || upgrade.applicableEngines.length === 0) {
+    return true;
+  }
+  
+  // Check if car's engine type matches any applicable engine
+  return upgrade.applicableEngines.some(applicable => {
+    // Exact match
+    if (engineType === applicable) return true;
+    // Partial match (e.g., 'NA V8' matches 'V8' requirement)
+    if (engineType.includes(applicable.replace('NA ', '').replace('Turbo ', '').replace('SC ', ''))) return true;
+    return false;
+  });
+}
+
+/**
  * Get all packages for a specific car
  * @param {string} carSlug - The car's slug
  * @param {string} carLayout - The car's layout (Mid-Engine, Front-Engine, Rear-Engine)
@@ -602,16 +1318,28 @@ export function getPackagesForCar(carSlug, carLayout) {
 }
 
 /**
- * Get all modules for a specific car
- * @param {string} carSlug - The car's slug
+ * Get all modules for a specific car, filtered by engine compatibility
+ * @param {Object} car - Full car object (needs engine field for compatibility check)
  * @param {string} carLayout - The car's layout
  * @returns {UpgradePackage[]}
  */
-export function getModulesForCar(carSlug, carLayout) {
-  return upgradeModules.filter(mod => 
-    mod.applicableLayouts.includes(carLayout) &&
-    (mod.carSlug === null || mod.carSlug === carSlug)
-  );
+export function getModulesForCar(car, carLayout) {
+  const carSlug = typeof car === 'string' ? car : car?.slug;
+  
+  return upgradeModules.filter(mod => {
+    // Check layout compatibility
+    if (!mod.applicableLayouts.includes(carLayout)) return false;
+    
+    // Check car-specific restriction
+    if (mod.carSlug !== null && mod.carSlug !== carSlug) return false;
+    
+    // Check engine compatibility if car object provided
+    if (typeof car === 'object' && car !== null) {
+      if (!isUpgradeCompatible(car, mod)) return false;
+    }
+    
+    return true;
+  });
 }
 
 /**
@@ -621,6 +1349,36 @@ export function getModulesForCar(carSlug, carLayout) {
  */
 export function getModulesByCategory(category) {
   return upgradeModules.filter(mod => mod.category === category);
+}
+
+/**
+ * Calculate realistic HP gains for a car with specific upgrades
+ * @param {Object} car - Car object
+ * @param {Object[]} upgrades - Array of upgrade objects
+ * @returns {number} - Total HP gain
+ */
+export function calculateRealisticHpGain(car, upgrades) {
+  let totalGain = 0;
+  const engineType = getEngineType(car);
+  
+  upgrades.forEach(upgrade => {
+    if (!upgrade.metricChanges?.hpGain) return;
+    
+    const baseGain = upgrade.metricChanges.hpGain;
+    const multiplier = getHpGainMultiplier(car, upgrade);
+    
+    // For supercharger on GT350 Voodoo, we should see ~250-300 HP
+    // The Voodoo is particularly receptive to forced induction
+    if (car.slug === 'shelby-gt350' && upgrade.key === 'supercharger-roots') {
+      totalGain += 280; // Whipple on GT350 = ~750-800+ HP
+    } else if (car.slug === 'shelby-gt350' && upgrade.key === 'supercharger-centrifugal') {
+      totalGain += 200; // ProCharger on GT350 = ~700+ HP
+    } else {
+      totalGain += baseGain * multiplier;
+    }
+  });
+  
+  return Math.round(totalGain);
 }
 
 export default genericPackages;

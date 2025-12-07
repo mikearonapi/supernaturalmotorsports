@@ -12,8 +12,17 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SUPABASE_URL = 'https://pcbkerqlfcjbnhaxjyqj.supabase.co';
-const SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjYmtlcnFsZmNqYm5oYXhqeXFqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTExMzAyOCwiZXhwIjoyMDgwNjg5MDI4fQ.X4VQhw1uIalfaTfiZBA5hrAgOTd2Ktc3ASS6I3ZAaZo';
+// Configuration - MUST be set via environment variables
+// NEVER hardcode secrets - use .env file locally
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('❌ Error: Missing required environment variables');
+  console.error('   Please set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY');
+  console.error('   Example: SUPABASE_URL=https://your-project.supabase.co SUPABASE_SERVICE_ROLE_KEY=your-key node scripts/run-schema.js');
+  process.exit(1);
+}
 
 async function runSchema() {
   console.log('\n🔧 Running database schema migration...\n');
@@ -47,7 +56,7 @@ async function runSchema() {
     // RPC function might not exist, try alternative approach
     console.log('Note: exec_sql function not available.');
     console.log('\n📋 Please run the schema manually:');
-    console.log('   1. Go to: https://supabase.com/dashboard/project/pcbkerqlfcjbnhaxjyqj/sql');
+    console.log(`   1. Go to: ${SUPABASE_URL.replace('.supabase.co', '')}/sql`);
     console.log('   2. Copy everything from supabase/schema.sql');
     console.log('   3. Paste and click "Run"\n');
     

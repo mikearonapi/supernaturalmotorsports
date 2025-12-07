@@ -17,12 +17,20 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { carData } from '../src/data/cars.js';
-import { genericPackages, upgradeModules } from '../src/data/upgradePackages.js';
+import { carData } from '../data/cars.js';
+import { genericPackages, upgradeModules } from '../data/upgradePackages.js';
 
-// Configuration - these will be passed via command line or hardcoded for one-time use
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pcbkerqlfcjbnhaxjyqj.supabase.co';
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjYmtlcnFsZmNqYm5oYXhqeXFqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTExMzAyOCwiZXhwIjoyMDgwNjg5MDI4fQ.X4VQhw1uIalfaTfiZBA5hrAgOTd2Ktc3ASS6I3ZAaZo';
+// Configuration - MUST be set via environment variables
+// NEVER hardcode secrets - use .env file locally and Vercel/Supabase env vars in production
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('❌ Error: Missing required environment variables');
+  console.error('   Please set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY');
+  console.error('   Example: SUPABASE_URL=https://your-project.supabase.co SUPABASE_SERVICE_ROLE_KEY=your-key node scripts/migrate-and-seed.js');
+  process.exit(1);
+}
 
 // Create Supabase client with service role key
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {

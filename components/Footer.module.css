@@ -1,27 +1,31 @@
-/* Footer - Mobile First */
+/* Footer - Mobile First with Touch-Optimized Layout */
 .footer {
   background: var(--color-gray-900);
   color: var(--color-white);
   margin-top: auto;
+  /* Safe area for notched devices */
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 .container {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: var(--space-2xl) var(--space-md);
+  padding: var(--space-xl) var(--space-md);
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
 }
 
-/* Brand Section */
+/* Brand Section - Compact on mobile */
 .brand {
   text-align: center;
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-gray-800);
 }
 
 .brandName {
   font-family: var(--font-display);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -29,12 +33,12 @@
 }
 
 .tagline {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-gray-400);
   font-style: italic;
 }
 
-/* Links Section */
+/* Links Section - Grid layout on mobile for better tap targets */
 .links {
   text-align: center;
 }
@@ -45,24 +49,36 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-gray-500);
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-sm);
 }
 
 .nav {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-sm) var(--space-md);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xs);
 }
 
 .link {
   font-size: var(--font-size-sm);
   color: var(--color-gray-300);
   transition: color var(--transition-fast);
+  /* Touch-friendly tap targets */
+  padding: var(--space-sm) var(--space-xs);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
 }
 
-.link:hover {
+.link:hover,
+.link:active {
   color: var(--sn-accent);
+}
+
+/* Active state for touch feedback */
+.link:active {
+  background: var(--color-gray-800);
 }
 
 /* Contact Section */
@@ -70,22 +86,32 @@
   text-align: center;
 }
 
+.contactTitle {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-gray-500);
+  margin-bottom: var(--space-sm);
+}
+
 .social {
   display: flex;
   justify-content: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .socialLink {
-  width: 44px;
-  height: 44px;
+  /* Touch-optimized 48px tap target */
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--color-gray-800);
   border-radius: var(--radius-full);
   color: var(--color-gray-400);
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
 }
 
 .socialLink:hover {
@@ -93,12 +119,20 @@
   color: var(--color-white);
 }
 
-/* Newsletter Section */
+.socialLink:active {
+  transform: scale(0.95);
+  background: var(--sn-primary-dark);
+  color: var(--color-white);
+}
+
+/* Newsletter Section - Compact on mobile */
 .newsletter {
   text-align: center;
   width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-gray-800);
 }
 
 /* Override newsletter component colors for dark footer */
@@ -110,16 +144,20 @@
 
 .newsletter h3 {
   color: var(--color-white) !important;
+  font-size: var(--font-size-base) !important;
 }
 
 .newsletter p {
   color: var(--color-gray-400) !important;
+  font-size: var(--font-size-xs) !important;
 }
 
 .newsletter input {
   background: var(--color-gray-800);
   border-color: var(--color-gray-700);
   color: var(--color-white);
+  /* Touch-optimized input height */
+  min-height: 48px;
 }
 
 .newsletter input::placeholder {
@@ -129,7 +167,9 @@
 /* Bottom Bar */
 .bottom {
   border-top: 1px solid var(--color-gray-800);
-  padding: var(--space-md);
+  padding: var(--space-md) var(--space-md);
+  /* Safe area for notched devices */
+  padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom, 0));
 }
 
 .bottomContainer {
@@ -139,44 +179,95 @@
 }
 
 .copyright {
-  font-size: var(--font-size-xs);
+  font-size: 11px;
   color: var(--color-gray-500);
   margin-bottom: var(--space-xs);
+  line-height: 1.4;
 }
 
 .note {
-  font-size: var(--font-size-xs);
+  font-size: 10px;
   color: var(--color-gray-600);
+  line-height: 1.4;
+}
+
+/* Small mobile (< 375px) - Extra compact */
+@media (max-width: 374px) {
+  .container {
+    padding: var(--space-md);
+    gap: var(--space-md);
+  }
+  
+  .brandName {
+    font-size: var(--font-size-base);
+  }
+  
+  .nav {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Tablet */
 @media (min-width: 768px) {
   .container {
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-start;
-    padding: var(--space-3xl) var(--space-lg);
+    padding: var(--space-2xl) var(--space-lg);
+    gap: var(--space-lg) var(--space-xl);
   }
 
-  .brand,
+  .brand {
+    text-align: left;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .brandName {
+    font-size: var(--font-size-xl);
+  }
+  
+  .tagline {
+    font-size: var(--font-size-sm);
+  }
+
   .links,
-  .contact,
-  .newsletter {
+  .contact {
     text-align: left;
   }
-
+  
   .newsletter {
-    margin: 0;
+    text-align: left;
+    max-width: 280px;
+    border-top: none;
+    padding-top: 0;
   }
 
   .nav {
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-sm);
+    gap: 0;
+  }
+  
+  .link {
+    padding: var(--space-xs) 0;
+    min-height: auto;
+    justify-content: flex-start;
+  }
+  
+  .link:active {
+    background: transparent;
   }
 
   .social {
     justify-content: flex-start;
+  }
+  
+  .socialLink {
+    width: 44px;
+    height: 44px;
   }
 
   .bottomContainer {
@@ -188,6 +279,7 @@
   .copyright,
   .note {
     margin: 0;
+    font-size: var(--font-size-xs);
   }
 }
 
@@ -195,10 +287,16 @@
 @media (min-width: 1024px) {
   .container {
     padding: var(--space-3xl) var(--space-xl);
+    flex-wrap: nowrap;
   }
 
   .bottom {
     padding: var(--space-md) var(--space-xl);
+    padding-bottom: var(--space-md);
+  }
+  
+  .newsletter {
+    max-width: 320px;
   }
 }
 

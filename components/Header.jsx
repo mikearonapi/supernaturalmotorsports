@@ -31,10 +31,9 @@ const CloseIcon = () => (
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/advisory', label: 'Car Selector' },
+  { href: '/car-finder', label: 'Car Finder' },
   { href: '/performance', label: 'Performance HUB' },
-  { href: '/upgrades', label: 'Upgrades' },
-  { href: '/services', label: 'Services' },
+  { href: '/services', label: 'Service Center' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -104,8 +103,8 @@ export default function Header() {
         </nav>
 
         {/* Desktop CTA */}
-        <Link href="/advisory" className={styles.ctaButton}>
-          Start Advisory
+        <Link href="/car-finder" className={styles.ctaButton}>
+          Find Your Car
         </Link>
 
         {/* Mobile Menu Toggle */}
@@ -132,8 +131,8 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <Link href="/advisory" className={styles.mobileCta} onClick={() => setIsMenuOpen(false)}>
-          Start Advisory
+        <Link href="/car-finder" className={styles.mobileCta} onClick={() => setIsMenuOpen(false)}>
+          Find Your Car
         </Link>
       </div>
     </header>

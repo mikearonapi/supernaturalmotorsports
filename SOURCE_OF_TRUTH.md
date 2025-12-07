@@ -1,6 +1,6 @@
 # SuperNatural Motorsports - Source of Truth
 
-> **Last Updated**: December 7, 2024  
+> **Last Updated**: December 7, 2024 (Ownership data + brand-specific pricing)  
 > **Framework**: Next.js 14 (App Router)  
 > **Database**: Supabase (PostgreSQL)  
 > **Deployment**: Vercel  
@@ -80,7 +80,7 @@ supernatural-motorsports/
 │   ├── page.jsx             # Home page (/)
 │   ├── globals.css          # Global styles & theme tokens
 │   ├── not-found.jsx        # 404 page
-│   ├── advisory/            # /advisory - Car Selector
+│   ├── car-finder/          # /car-finder - Sports Car Finder
 │   ├── performance/         # /performance - Performance HUB
 │   ├── upgrades/            # /upgrades - Upgrade Advisory
 │   ├── services/            # /services - Upgrade Services
@@ -139,7 +139,7 @@ supernatural-motorsports/
 | Route | Page | Component | Description |
 |-------|------|-----------|-------------|
 | `/` | Home | `app/page.jsx` | Landing page with hero, pillars, process |
-| `/advisory` | Car Selector | `app/advisory/page.jsx` | Main recommendation tool |
+| `/car-finder` | Sports Car Finder | `app/car-finder/page.jsx` | Main recommendation tool |
 | `/performance` | Performance HUB | `app/performance/page.jsx` | Car selection for Performance HUB |
 | `/cars/[slug]` | Car Detail | `app/cars/[slug]/page.jsx` | Individual car profile |
 | `/cars/[slug]/performance` | Car Performance | `app/cars/[slug]/performance/page.jsx` | Performance HUB for specific car |
@@ -292,6 +292,11 @@ cars (
   tier VARCHAR(20),                    -- premium | upper-mid | mid | budget
   category VARCHAR(50),                -- Mid-Engine | Front-Engine | Rear-Engine
   
+  -- Brand & Origin (for upgrade pricing)
+  brand VARCHAR(100),                  -- Porsche | Chevrolet | BMW | etc.
+  country VARCHAR(50),                 -- Germany | USA | Japan | UK | Italy
+  platform_cost_tier VARCHAR(50),      -- exotic | premium | luxury | mainstream
+  
   -- Advisory Scores (1-10)
   score_sound, score_interior, score_track,
   score_reliability, score_value, score_driver_fun, score_aftermarket,
@@ -299,10 +304,23 @@ cars (
   -- Specs
   engine, hp, trans, drivetrain, price_range, price_avg,
   curb_weight, zero_to_sixty, top_speed, layout,
+  torque, quarter_mile, braking_60_to_0, lateral_g,
   
   -- Performance HUB Scores (1-10)
   perf_power_accel, perf_grip_cornering, perf_braking,
   perf_track_pace, perf_drivability, perf_reliability_heat, perf_sound_emotion,
+  
+  -- Ownership & Usability
+  manual_available BOOLEAN,
+  seats INTEGER,
+  daily_usability_tag VARCHAR(50),     -- Dailyable | Weekend warrior | Track focused
+  maintenance_cost_index INTEGER,       -- 1-5 scale
+  insurance_cost_index INTEGER,         -- 1-5 scale
+  fuel_economy_combined INTEGER,        -- MPG
+  common_issues TEXT[],                 -- Array of known issues
+  years_to_avoid VARCHAR(200),
+  recommended_years_note TEXT,
+  ownership_cost_notes TEXT,
   
   -- Content
   notes, highlight, tagline, hero_blurb, pros, cons, best_for,
@@ -448,6 +466,25 @@ function calculateWeightedScore(car, weights) {
 upgradedScore = stockScore + Σ(upgrade.delta*)
 
 // Example: Sport Exhaust adds +1.5 to sound_emotion
+```
+
+#### Brand-Specific Upgrade Pricing (`data/upgradePricing.js`)
+
+Premium brands have higher parts and labor costs. The system uses `platformCostTier` to adjust pricing:
+
+| Tier | Multiplier | Brands |
+|------|-----------|--------|
+| **Exotic** | 2.0x | Ferrari, Lamborghini, McLaren, Aston Martin |
+| **Premium** | 1.5x | Porsche, BMW, Mercedes-AMG, Audi |
+| **Luxury** | 1.3x | Lexus, Jaguar, Maserati, Alfa Romeo, Lotus |
+| **Mainstream** | 1.0x | Ford, Chevrolet, Dodge, Nissan, Toyota |
+
+```javascript
+// Pricing calculation
+const adjustedCost = baseCost * platformCostMultipliers[car.platformCostTier].multiplier;
+
+// Brand-specific overrides exist for known expensive combos:
+// Example: Porsche big brake kit = $4,500-$9,000 (vs $2,500-$5,000 generic)
 ```
 
 ---
@@ -684,8 +721,40 @@ Add console logging by checking browser DevTools:
 
 | Date | Change | Author |
 |------|--------|--------|
+| 2024-12-07 | **CLEANUP**: Removed entire legacy `src/` directory (Vite-era code) | AI |
+| 2024-12-07 | **FIX**: Updated scripts to import from `data/` instead of `src/data/` | AI |
+| 2024-12-07 | Full-stack audit completed | AI |
+| 2024-12-07 | **SECURITY FIX**: Removed hardcoded Supabase service keys from scripts | AI |
+| 2024-12-07 | **BUG FIX**: Fixed Link to= → href= in components/SportsCarComparison.jsx | AI |
 | 2024-12-07 | Migrated from Vite to Next.js 14 | AI |
 | 2024-12-07 | Created SOURCE_OF_TRUTH.md | AI |
+
+---
+
+## Audit Summary (Dec 7, 2024)
+
+### Issues Found & Fixed ✅
+
+1. **P0 - Security**: Hardcoded Supabase service role keys in scripts
+   - **Fixed**: Now requires environment variables (scripts/migrate-and-seed.js, scripts/run-schema.js)
+
+2. **P1 - Bug**: Link component using React Router syntax (`to=`) instead of Next.js (`href=`)
+   - **Fixed**: Updated `components/SportsCarComparison.jsx` line 415
+
+3. **P2 - Cleanup**: Legacy `src/` directory contained Vite-era code
+   - **Fixed**: Entire `src/` directory removed, scripts updated to use `data/`
+
+4. **P2 - Imports**: Scripts imported from old `src/data/` path
+   - **Fixed**: All scripts now import from `data/`
+
+### Remaining Notes
+
+1. **Dev Environment**: EMFILE errors may occur on external HD volumes
+   - Cause: Too many open file descriptors when running from external HD
+   - Workaround: Clone project to internal SSD for development
+
+2. **Type Safety**: JSDoc types are comprehensive but TypeScript migration would improve safety
+   - Recommendation: Gradual TypeScript adoption starting with `lib/` utilities (optional)
 
 ---
 

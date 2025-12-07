@@ -1,31 +1,63 @@
 /**
  * CarImage Component Styles
  * 
- * Handles different image variants with smooth placeholder-to-image transitions.
+ * Mobile-First with responsive aspect ratios and efficient loading.
  */
 
 /* Base Container */
 .container {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  background: var(--color-gray-100, #f5f5f5);
 }
 
-/* Variant Sizes */
+@media (min-width: 768px) {
+  .container {
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* Variant Sizes - Mobile First */
 .hero {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  /* Taller aspect ratio on mobile for better visual impact */
+  aspect-ratio: 4 / 3;
+}
+
+@media (min-width: 480px) {
+  .hero {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero {
+    aspect-ratio: 16 / 9;
+  }
 }
 
 .thumbnail {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
+}
+
+@media (min-width: 480px) {
+  .thumbnail {
+    aspect-ratio: 4 / 3;
+  }
 }
 
 .card {
   width: 100%;
-  aspect-ratio: 3 / 2;
+  /* Slightly squarer on mobile for compact cards */
+  aspect-ratio: 4 / 3;
+}
+
+@media (min-width: 768px) {
+  .card {
+    aspect-ratio: 3 / 2;
+  }
 }
 
 /* Placeholder */
@@ -112,17 +144,41 @@
   opacity: 1;
 }
 
-/* Variant-specific placeholder text sizes */
+/* Variant-specific placeholder text sizes - Mobile First */
 .hero .placeholderText {
-  font-size: var(--text-xl);
+  font-size: var(--font-size-base, 1rem);
+}
+
+@media (min-width: 480px) {
+  .hero .placeholderText {
+    font-size: var(--font-size-lg, 1.125rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero .placeholderText {
+    font-size: var(--font-size-xl, 1.25rem);
+  }
 }
 
 .thumbnail .placeholderText {
-  font-size: var(--text-sm);
+  font-size: var(--font-size-xs, 0.75rem);
+}
+
+@media (min-width: 768px) {
+  .thumbnail .placeholderText {
+    font-size: var(--font-size-sm, 0.875rem);
+  }
 }
 
 .card .placeholderText {
-  font-size: var(--text-base);
+  font-size: var(--font-size-xs, 0.75rem);
+}
+
+@media (min-width: 768px) {
+  .card .placeholderText {
+    font-size: var(--font-size-base, 1rem);
+  }
 }
 
 .thumbnail .placeholderSubtext,
@@ -130,24 +186,21 @@
   display: none;
 }
 
-/* Hover effect for interactive contexts */
-.container:hover .placeholder {
-  transform: scale(1.02);
+/* Hover effect only for devices that support hover */
+@media (hover: hover) {
+  .container:hover .placeholder {
+    transform: scale(1.02);
+  }
+
+  .container:hover .image {
+    transform: scale(1.02);
+  }
 }
 
-.container:hover .image {
-  transform: scale(1.02);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .hero .placeholderText {
-    font-size: var(--text-lg);
-  }
-  
-  .card .placeholderText {
-    font-size: var(--text-sm);
-  }
+/* Active state for touch feedback */
+.container:active .image,
+.container:active .placeholder {
+  transform: scale(0.99);
 }
 
 /* Loading shimmer animation */

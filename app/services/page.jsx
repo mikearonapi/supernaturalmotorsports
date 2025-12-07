@@ -1,5 +1,37 @@
+import Image from 'next/image';
 import Button from '@/components/Button';
 import styles from './page.module.css';
+
+export const metadata = {
+  title: 'Performance Services | Suspension, Brakes & Engine Upgrades',
+  description: 'Professional motorsports service center specializing in suspension setup, brake upgrades, engine tuning, and track preparation. Expert technicians for Porsche, BMW, Corvette, and other performance vehicles.',
+  keywords: ['car service', 'performance service', 'suspension setup', 'brake upgrades', 'engine tuning', 'track preparation', 'Porsche service', 'BMW M service', 'Corvette service', 'motorsports service'],
+  openGraph: {
+    title: 'Performance Services | SuperNatural Motorsports',
+    description: 'Professional motorsports service center for suspension, brakes, engine tuning, and track prep.',
+    url: '/services',
+    type: 'website',
+  },
+  twitter: {
+    title: 'Performance Services | SuperNatural Motorsports',
+    description: 'Professional motorsports service center for suspension, brakes, engine tuning, and track prep.',
+  },
+  alternates: {
+    canonical: '/services',
+  },
+};
+
+// Blob URLs for page images
+const BLOB_BASE = 'https://abqnp7qrs0nhv5pw.public.blob.vercel-storage.com';
+const heroImageUrl = `${BLOB_BASE}/pages/services/hero.webp`;
+const workshopImageUrl = `${BLOB_BASE}/pages/services/workshop.webp`;
+
+// CTA Icon
+const ChatIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+);
 
 // Service Icons
 const SuspensionIcon = () => (
@@ -112,30 +144,39 @@ const processSteps = [
   { number: '5', title: 'Test', description: 'Road or track testing to verify everything works exactly as intended.' }
 ];
 
-export const metadata = {
-  title: 'Upgrade Services',
-  description: 'Professional sports car upgrades and performance builds. From suspension setup to full builds, our team handles it all.',
-};
-
 export default function Services() {
   return (
     <div className={styles.page}>
       {/* Hero Section */}
       <section className={styles.hero}>
+        <div className={styles.heroImageWrapper}>
+          <Image
+            src={heroImageUrl}
+            alt="Professional automotive shop"
+            fill
+            priority
+            quality={85}
+            className={styles.heroImage}
+            sizes="100vw"
+          />
+        </div>
+        <div className={styles.heroOverlay} />
         <div className={styles.container}>
-          <span className={styles.badge}>Upgrade Services</span>
-          <h1 className={styles.title}>
-            Hands-On Help When<br />
-            <span className={styles.titleAccent}>You Need It</span>
-          </h1>
-          <p className={styles.subtitle}>
-            Not everyone has the time, tools, or confidence to do their own wrenching. 
-            Our team handles everything from basic upgrades to full performance builds—
-            no pressure, just honest work.
-          </p>
-          <Button href="/contact" variant="secondary" size="lg">
-            Ask Us Anything
-          </Button>
+          <div className={styles.heroContent}>
+            <span className={styles.badge}>Service Center</span>
+            <h1 className={styles.title}>
+              Professional Builds,<br />
+              <span className={styles.titleAccent}>Proven Results</span>
+            </h1>
+            <p className={styles.subtitle}>
+              Our team handles everything from basic bolt-ons to full track builds. 
+              Every modification is validated by professional drivers to ensure 
+              your upgrades perform exactly as intended—no guesswork, just results.
+            </p>
+            <Button href="/contact" variant="secondary" size="lg" icon={<ChatIcon />}>
+              Get Started
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -216,16 +257,17 @@ export default function Services() {
       <section className={styles.cta}>
         <div className={styles.container}>
           <div className={styles.ctaContent}>
-            <h2 className={styles.ctaTitle}>Questions? Just Ask.</h2>
+            <h2 className={styles.ctaTitle}>Ready to Get Started?</h2>
             <p className={styles.ctaSubtitle}>
-              No obligation. Tell us about your car and goals, and we&apos;ll share honest advice.
+              Tell us about your car and goals. We&apos;ll create a plan that fits your 
+              budget and timeline—then make it happen.
             </p>
             <div className={styles.ctaButtons}>
               <Button href="/contact" variant="secondary" size="lg">
-                Get in Touch
+                Talk to Us
               </Button>
-              <Button href="/upgrades" variant="outline" size="lg">
-                Explore Upgrades First
+              <Button href="/performance" variant="outlineLight" size="lg">
+                Plan Your Build First
               </Button>
             </div>
           </div>

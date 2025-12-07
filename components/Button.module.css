@@ -1,4 +1,4 @@
-/* Button Component - Mobile First */
+/* Button Component - Mobile First with Touch-Optimized Targets */
 .button {
   display: inline-flex;
   align-items: center;
@@ -12,6 +12,10 @@
   cursor: pointer;
   border: 2px solid transparent;
   white-space: nowrap;
+  /* Improve touch interaction */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .button:focus-visible {
@@ -19,20 +23,46 @@
   outline-offset: 2px;
 }
 
-/* Sizes */
+/* Active state for touch feedback */
+.button:active {
+  transform: scale(0.97);
+}
+
+/* Sizes - Ensure minimum touch target height of 44px on mobile */
 .sm {
   padding: var(--space-sm) var(--space-md);
   font-size: var(--font-size-sm);
+  min-height: 40px;
 }
 
 .md {
   padding: var(--space-sm) var(--space-lg);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
+  min-height: 44px;
 }
 
 .lg {
   padding: var(--space-md) var(--space-xl);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
+  min-height: 48px;
+}
+
+/* On desktop, can be slightly smaller */
+@media (min-width: 768px) {
+  .sm {
+    min-height: 36px;
+    padding: var(--space-xs) var(--space-md);
+  }
+  
+  .md {
+    min-height: 40px;
+    padding: var(--space-sm) var(--space-lg);
+  }
+  
+  .lg {
+    min-height: 44px;
+    padding: var(--space-sm) var(--space-xl);
+  }
 }
 
 /* Variants */
@@ -87,6 +117,26 @@
 .outline:active {
   background: var(--sn-primary-dark);
   border-color: var(--sn-primary-dark);
+  transform: translateY(0);
+}
+
+/* Outline Light - For use on dark backgrounds */
+.outlineLight {
+  background: transparent;
+  color: var(--color-white);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.outlineLight:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-white);
+  border-color: var(--color-white);
+  transform: translateY(-1px);
+}
+
+.outlineLight:active {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: var(--color-white);
   transform: translateY(0);
 }
 

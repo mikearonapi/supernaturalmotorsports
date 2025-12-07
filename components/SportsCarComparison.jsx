@@ -9,8 +9,11 @@ import {
   calculateWeightedScore, 
   calculateMaxScore, 
   getRecommendations,
+  getTopPriorities,
+  getDynamicRecommendationTypes,
   DEFAULT_WEIGHTS 
 } from '@/lib/scoring.js';
+import CarImage from './CarImage';
 
 // SVG Icons - Optimized for light theme
 const Icons = {
@@ -170,6 +173,13 @@ export default function SportsCarComparison() {
   const [expandedId, setExpandedId] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   
+  // Must-have filters (hard constraints)
+  const [mustHaveFilters, setMustHaveFilters] = useState({
+    manualOnly: false,
+    drivetrainFilter: 'all', // 'all', 'RWD', 'AWD'
+    seatsFilter: 'all', // 'all', '2', '4'
+  });
+  
   // Refs
   const tableRef = useRef(null);
   const rowRefs = useRef({});
@@ -224,19 +234,46 @@ export default function SportsCarComparison() {
     [weights]
   );
 
-  // Filtered and sorted cars
+  // Filtered and sorted cars (with must-have filters)
   const filteredCars = useMemo(() => {
     return carData
       .filter(car => car.priceAvg >= priceMin && car.priceAvg <= priceMax)
       .filter(car => car.name.toLowerCase().includes(searchTerm.toLowerCase()))
       .filter(car => selectedCategory === 'all' || car.category === selectedCategory)
+      // Must-have: Manual transmission
+      .filter(car => !mustHaveFilters.manualOnly || (car.trans && car.trans.toLowerCase().includes('manual')))
+      // Must-have: Drivetrain filter
+      .filter(car => mustHaveFilters.drivetrainFilter === 'all' || car.drivetrain === mustHaveFilters.drivetrainFilter)
+      // Must-have: Seats filter (graceful handling if seats data is missing)
+      .filter(car => mustHaveFilters.seatsFilter === 'all' || !car.seats ||
+        (mustHaveFilters.seatsFilter === '2' && car.seats <= 2) ||
+        (mustHaveFilters.seatsFilter === '4' && car.seats >= 4))
       .map(car => ({ ...car, total: calculateTotal(car) }))
       .sort((a, b) => {
         if (sortBy === 'price') return a.priceAvg - b.priceAvg;
         if (sortBy === 'name') return a.name.localeCompare(b.name);
         return b[sortBy] - a[sortBy];
       });
-  }, [carData, weights, sortBy, priceMin, priceMax, searchTerm, selectedCategory, calculateTotal]);
+  }, [carData, weights, sortBy, priceMin, priceMax, searchTerm, selectedCategory, mustHaveFilters, calculateTotal]);
+
+  // Get user's top priorities for ranking display
+  const topPriorities = useMemo(() => 
+    getTopPriorities(weights, 3).map(p => ({
+      ...p,
+      ...categoriesWithIcons.find(c => c.key === p.key)
+    })),
+    [weights]
+  );
+
+  // Dynamic recommendation types based on user's priorities
+  const dynamicRecommendationTypes = useMemo(() => 
+    getDynamicRecommendationTypes(weights).map(rec => ({
+      ...rec,
+      icon: rec.isPrimary ? Icons.trophy : (Icons[rec.icon] || Icons.alertCircle),
+      colorVar: rec.isPrimary ? '--rec-top' : `--rec-${rec.key}`,
+    })),
+    [weights]
+  );
 
   // Personalized recommendations using scoring library
   const recommendations = useMemo(() => {
@@ -250,6 +287,13 @@ export default function SportsCarComparison() {
       .map(cat => ({ ...cat, weight: weights[cat.key] })),
     [weights]
   );
+
+  // Check if filters are constraining results significantly
+  const filterWarning = useMemo(() => {
+    if (filteredCars.length === 0) return 'No matches found';
+    if (filteredCars.length < 3 && carData.length > 10) return `Only ${filteredCars.length} match${filteredCars.length === 1 ? 'es' : ''} your criteria`;
+    return null;
+  }, [filteredCars.length, carData.length]);
 
   // Handle recommendation card click - expand and scroll to car
   const handleRecCardClick = useCallback((car) => {
@@ -355,23 +399,68 @@ export default function SportsCarComparison() {
             })}
           </div>
 
-          {/* Priority Summary */}
-          {activePriorities.length > 0 && (
+          {/* Priority Ranking Display */}
+          {topPriorities.length > 0 && (
             <div className={styles.prioritySummary}>
-              <span className={styles.prioritySummaryLabel}>You're prioritizing:</span>
+              <span className={styles.prioritySummaryLabel}>Your Priority Ranking:</span>
               <div className={styles.prioritySummaryTags}>
-                {activePriorities.map(cat => {
-                  const IconComponent = cat.icon;
+                {topPriorities.map(priority => {
+                  const IconComponent = priority.icon;
                   return (
-                    <span key={cat.key} className={styles.priorityTag}>
+                    <span key={priority.key} className={styles.priorityRankTag} data-rank={priority.rank}>
+                      <span className={styles.priorityRankBadge}>{priority.rank}</span>
                       <IconComponent size={14} />
-                      {cat.label} ({cat.weight}×)
+                      {priority.label}
                     </span>
                   );
                 })}
               </div>
             </div>
           )}
+
+          {/* Must-Have Filters */}
+          <div className={styles.mustHaveFilters}>
+            <span className={styles.mustHaveLabel}>Must-Have Requirements:</span>
+            <div className={styles.mustHaveOptions}>
+              <label className={styles.mustHaveCheckbox}>
+                <input
+                  type="checkbox"
+                  checked={mustHaveFilters.manualOnly}
+                  onChange={e => setMustHaveFilters(prev => ({ ...prev, manualOnly: e.target.checked }))}
+                />
+                <span className={styles.checkboxLabel}>Manual Transmission</span>
+              </label>
+              
+              <select
+                value={mustHaveFilters.drivetrainFilter}
+                onChange={e => setMustHaveFilters(prev => ({ ...prev, drivetrainFilter: e.target.value }))}
+                className={styles.mustHaveSelect}
+                aria-label="Drivetrain requirement"
+              >
+                <option value="all">Any Drivetrain</option>
+                <option value="RWD">RWD Only</option>
+                <option value="AWD">AWD Only</option>
+              </select>
+              
+              <select
+                value={mustHaveFilters.seatsFilter}
+                onChange={e => setMustHaveFilters(prev => ({ ...prev, seatsFilter: e.target.value }))}
+                className={styles.mustHaveSelect}
+                aria-label="Seating requirement"
+              >
+                <option value="all">Any Seating</option>
+                <option value="2">2-Seater Only</option>
+                <option value="4">4+ Seats</option>
+              </select>
+            </div>
+            
+            {filterWarning && (
+              <div className={styles.filterWarning}>
+                <Icons.alertCircle size={14} />
+                <span>{filterWarning} — try relaxing some filters</span>
+              </div>
+            )}
+          </div>
         </section>
 
         {/* Step 2: Recommendations */}
@@ -382,14 +471,14 @@ export default function SportsCarComparison() {
           </div>
 
           <div className={styles.recommendationsGrid}>
-            {recommendationTypesWithIcons.map(rec => {
+            {dynamicRecommendationTypes.map(rec => {
               const car = recommendations[rec.key];
               const IconComponent = rec.icon;
               
               return (
                 <div 
                   key={rec.key}
-                  className={styles.recCard}
+                  className={`${styles.recCard} ${rec.isPrimary ? styles.recCardPrimary : ''}`}
                   style={{ '--rec-color': `var(${rec.colorVar})` }}
                   onClick={() => handleRecCardClick(car)}
                   onKeyDown={e => e.key === 'Enter' && handleRecCardClick(car)}
@@ -405,6 +494,9 @@ export default function SportsCarComparison() {
                   </div>
                   {car ? (
                     <>
+                      <div className={styles.recCardImage}>
+                        <CarImage car={car} variant="thumbnail" showName={false} />
+                      </div>
                       <div className={styles.recCardName}>{car.name}</div>
                       <div className={styles.recCardPrice}>{car.priceRange}</div>
                       <div className={styles.recCardScore}>
@@ -412,7 +504,7 @@ export default function SportsCarComparison() {
                       </div>
                       {car.slug && (
                         <Link 
-                          to={`/cars/${car.slug}`}
+                          href={`/cars/${car.slug}`}
                           className={styles.recCardLink}
                           onClick={e => e.stopPropagation()}
                         >

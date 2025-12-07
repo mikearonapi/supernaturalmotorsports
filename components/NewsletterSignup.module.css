@@ -1,4 +1,4 @@
-/* NewsletterSignup Component - Mobile First */
+/* NewsletterSignup Component - Mobile First with Touch Optimization */
 
 .container {
   width: 100%;
@@ -9,7 +9,7 @@
   background: var(--color-white);
   border: 1px solid var(--color-gray-200);
   border-radius: var(--radius-lg);
-  padding: var(--space-lg);
+  padding: var(--space-md);
 }
 
 /* Variant: Compact (for inline use) */
@@ -22,7 +22,7 @@
   background: var(--color-white);
   border: 1px solid var(--color-gray-200);
   border-radius: var(--radius-lg);
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-md);
 }
 
 .inline .form {
@@ -37,19 +37,19 @@
 
 /* Header */
 .header {
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-sm);
   text-align: center;
 }
 
 .title {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--color-gray-800);
   margin: 0 0 var(--space-xs);
 }
 
 .description {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-gray-500);
   margin: 0;
   line-height: 1.5;
@@ -70,13 +70,18 @@
 
 .input {
   flex: 1;
+  /* Touch-optimized: 48px minimum height */
+  min-height: 48px;
   padding: 0.75rem 1rem;
   border: 1px solid var(--color-gray-300);
   border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
+  /* 16px prevents iOS zoom on focus */
+  font-size: 16px;
   color: var(--color-gray-800);
   background: var(--color-white);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .input::placeholder {
@@ -86,7 +91,7 @@
 .input:focus {
   outline: none;
   border-color: var(--sn-primary);
-  box-shadow: 0 0 0 3px rgba(26, 77, 110, 0.1);
+  box-shadow: 0 0 0 3px rgba(26, 77, 110, 0.15);
 }
 
 .inputError {
@@ -95,10 +100,12 @@
 
 .inputError:focus {
   border-color: #b91c1c;
-  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15);
 }
 
 .button {
+  /* Touch-optimized: 48px minimum height */
+  min-height: 48px;
   padding: 0.75rem 1.5rem;
   background: var(--sn-primary);
   color: var(--color-white);
@@ -107,20 +114,27 @@
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 100px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .button:hover:not(:disabled) {
   background: var(--sn-primary-dark);
 }
 
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+  background: var(--sn-primary-dark);
+}
+
 .button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* Spinner */
@@ -149,10 +163,11 @@
 
 /* Privacy Note */
 .privacy {
-  font-size: var(--font-size-xs);
+  font-size: 10px;
   color: var(--color-gray-400);
-  margin: var(--space-sm) 0 0;
+  margin: var(--space-xs) 0 0;
   text-align: center;
+  line-height: 1.4;
 }
 
 /* Success State */
@@ -161,19 +176,51 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  padding: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
   background: rgba(21, 128, 61, 0.1);
   border-radius: var(--radius-md);
   color: #15803d;
   font-weight: 500;
+  font-size: var(--font-size-sm);
 }
 
 .successState svg {
   flex-shrink: 0;
 }
 
+/* Extra small mobile */
+@media (max-width: 374px) {
+  .default {
+    padding: var(--space-sm);
+  }
+  
+  .title {
+    font-size: var(--font-size-sm);
+  }
+}
+
 /* Responsive - Tablet+ */
 @media (min-width: 600px) {
+  .default {
+    padding: var(--space-lg);
+  }
+  
+  .inline {
+    padding: var(--space-md) var(--space-lg);
+  }
+  
+  .header {
+    margin-bottom: var(--space-md);
+  }
+  
+  .title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .description {
+    font-size: var(--font-size-sm);
+  }
+
   .default .inputWrapper,
   .compact .inputWrapper {
     flex-direction: row;
@@ -182,11 +229,17 @@
   .default .input,
   .compact .input {
     flex: 1;
+    min-height: 44px;
   }
 
   .default .button,
   .compact .button {
     flex-shrink: 0;
+    min-height: 44px;
+  }
+  
+  .privacy {
+    font-size: var(--font-size-xs);
   }
 }
 

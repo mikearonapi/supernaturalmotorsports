@@ -1,9 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Button from '@/components/Button';
 import styles from './page.module.css';
 import { submitLead, LEAD_SOURCES } from '@/lib/leadsClient.js';
+
+// Blob URL for hero image (with cache-bust for new image)
+const BLOB_BASE = 'https://abqnp7qrs0nhv5pw.public.blob.vercel-storage.com';
+const heroImageUrl = `${BLOB_BASE}/pages/contact/hero.webp?v=3`;
 
 // Icons
 const MailIcon = () => (
@@ -27,9 +32,9 @@ const MessageIcon = () => (
 );
 
 const interests = [
-  { id: 'advisory', label: 'Sports Car Advisory' },
-  { id: 'upgrades', label: 'Upgrade Planning' },
-  { id: 'services', label: 'Upgrade Services' },
+  { id: 'advisory', label: 'Sports Car Finder' },
+  { id: 'performance', label: 'Performance HUB / Build Planning' },
+  { id: 'services', label: 'Service Center' },
   { id: 'inspection', label: 'Pre-Purchase Inspection' },
   { id: 'other', label: 'Something Else' }
 ];
@@ -49,7 +54,7 @@ const faqs = [
   },
   {
     question: 'Do you offer remote consultations?',
-    answer: 'Yes! Our advisory services and build planning can be done remotely via video call. For hands-on work, we\'re based in [Location] and happy to discuss logistics.'
+    answer: 'Yes! Our consultation services and build planning can be done remotely via video call. For hands-on work, we\'re based in [Location] and happy to discuss logistics.'
   }
 ];
 
@@ -106,16 +111,30 @@ export default function Contact() {
     <div className={styles.page}>
       {/* Hero Section */}
       <section className={styles.hero}>
+        <div className={styles.heroImageWrapper}>
+          <Image
+            src={heroImageUrl}
+            alt="Enthusiasts at a cars and coffee meet"
+            fill
+            priority
+            quality={85}
+            className={styles.heroImage}
+            sizes="100vw"
+          />
+        </div>
+        <div className={styles.heroOverlay} />
         <div className={styles.container}>
-          <span className={styles.badge}>Get in Touch</span>
-          <h1 className={styles.title}>
-            Let&apos;s Talk<br />
-            <span className={styles.titleAccent}>Cars</span>
-          </h1>
-          <p className={styles.subtitle}>
-            Have a question? Looking for honest advice? Just curious?
-            Drop us a line—no obligation, no sales pitch.
-          </p>
+          <div className={styles.heroContent}>
+            <span className={styles.badge}>Get in Touch</span>
+            <h1 className={styles.title}>
+              Let&apos;s Talk<br />
+              <span className={styles.titleAccent}>Cars</span>
+            </h1>
+            <p className={styles.subtitle}>
+              Have a question? Looking for honest advice? Just curious?
+              Drop us a line—no obligation, no sales pitch.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -133,14 +152,14 @@ export default function Contact() {
                   <h2 className={styles.successTitle}>Message Sent!</h2>
                   <p className={styles.successText}>
                     Thanks for reaching out. We&apos;ll get back to you within 48 hours.
-                    In the meantime, check out our Car Selector or Upgrade Advisory.
+                    In the meantime, check out our Car Finder or Upgrade Planner.
                   </p>
                   <div className={styles.successLinks}>
-                    <Button href="/advisory" variant="primary" size="md">
-                      Car Selector
+                    <Button href="/car-finder" variant="primary" size="md">
+                      Find Your Car
                     </Button>
-                    <Button href="/upgrades" variant="outline" size="md">
-                      Plan Upgrades
+                    <Button href="/performance" variant="outline" size="md">
+                      Plan Your Build
                     </Button>
                   </div>
                 </div>

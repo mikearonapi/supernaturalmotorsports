@@ -37,35 +37,36 @@ const ChevronIcon = ({ size = 16, expanded = false }) => (
 
 /**
  * Scoring categories and their explanations
+ * These align with the categories defined in data/cars.js
  */
 const scoringCategories = [
   {
     key: 'sound',
-    label: 'Sound',
+    label: 'Sound & Character',
     description: 'Exhaust note character, engine tone at various RPMs, and overall emotional response. Based on in-person evaluations and owner feedback.',
     notes: 'Higher scores go to cars with distinctive, engaging soundtracks. Turbo whine counts, but nothing beats a naturally-aspirated scream.',
   },
   {
     key: 'interior',
-    label: 'Interior',
-    description: 'Materials quality, design cohesion, ergonomics, and technology. We consider both objective quality and subjective character.',
-    notes: 'A well-executed sporty interior can score as high as a luxury one. We\'re not just measuring price.',
+    label: 'Interior & Comfort',
+    description: 'Materials quality, design cohesion, ergonomics, technology, and daily livability. We consider both objective quality and subjective character.',
+    notes: 'A well-executed sporty interior can score as high as a luxury one. We also factor in how the car is to live with day-to-day.',
   },
   {
     key: 'track',
-    label: 'Track',
+    label: 'Track Capability',
     description: 'Handling limits, cooling capacity, brake fade resistance, and overall track-day capability. Based on professional reviews and track-day owner reports.',
     notes: 'Some daily-focused cars score lower here, and that\'s okay—not every sports car needs to be a track weapon.',
   },
   {
     key: 'reliability',
-    label: 'Reliability',
+    label: 'Reliability & Ownership',
     description: 'Known issues, maintenance costs, parts availability, and real-world ownership experience from forums and owner communities.',
     notes: 'We factor in both frequency of issues and cost to resolve. A reliable expensive fix is different from an unreliable cheap fix.',
   },
   {
     key: 'value',
-    label: 'Value',
+    label: 'Value for Money',
     description: 'Performance and experience per dollar, considering both purchase price and total cost of ownership.',
     notes: 'A $100K car can have great value if it delivers a $150K experience. A $30K car can have poor value if it drives like a $20K car.',
   },
@@ -77,7 +78,7 @@ const scoringCategories = [
   },
   {
     key: 'aftermarket',
-    label: 'Aftermarket',
+    label: 'Aftermarket & Tuning',
     description: 'Availability of performance parts, tuning support, active community forums, and ease of modification.',
     notes: 'Niche exotics may score lower here even if excellent otherwise. If you like modding, this matters.',
   },

@@ -41,9 +41,9 @@ export default function Footer() {
         <div className={styles.links}>
           <h4 className={styles.linksTitle}>Quick Links</h4>
           <nav className={styles.nav}>
-            <Link href="/advisory" className={styles.link}>Car Selector</Link>
-            <Link href="/upgrades" className={styles.link}>Upgrade Advisory</Link>
-            <Link href="/services" className={styles.link}>Services</Link>
+            <Link href="/car-finder" className={styles.link}>Car Finder</Link>
+            <Link href="/performance" className={styles.link}>Performance HUB</Link>
+            <Link href="/services" className={styles.link}>Service Center</Link>
             <Link href="/contact" className={styles.link}>Contact</Link>
           </nav>
         </div>

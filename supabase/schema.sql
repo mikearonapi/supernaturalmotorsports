@@ -236,6 +236,116 @@ CREATE TRIGGER update_upgrade_packages_updated_at
   EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================================================
+-- UPGRADE EDUCATION TABLE
+-- Educational content about individual upgrades for the Performance HUB
+-- Allows users to learn about mods without selecting a specific car
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS upgrade_education (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  
+  -- Identity
+  key TEXT UNIQUE NOT NULL,              -- e.g., 'cold-air-intake'
+  name TEXT NOT NULL,                    -- e.g., 'Cold Air Intake (CAI)'
+  slug TEXT UNIQUE NOT NULL,             -- URL-friendly identifier
+  category TEXT NOT NULL CHECK (category IN (
+    'power-engine',
+    'exhaust-sound', 
+    'electronics-tuning',
+    'suspension-handling',
+    'brakes',
+    'wheels-tires',
+    'cooling',
+    'aero'
+  )),
+  
+  -- Short content (for cards)
+  short_description TEXT NOT NULL,       -- One-line description
+  cost_range TEXT NOT NULL,              -- e.g., '$200 - $500'
+  cost_low INTEGER CHECK (cost_low >= 0),
+  cost_high INTEGER CHECK (cost_high >= 0),
+  difficulty TEXT CHECK (difficulty IN ('Easy', 'Moderate', 'Hard', 'Professional')),
+  install_time TEXT,                     -- e.g., '30-60 minutes'
+  
+  -- Long content (for detail modal)
+  full_description TEXT,                 -- Full explanation (what_it_is)
+  how_it_works TEXT,                     -- Technical explanation
+  
+  -- Expected gains (JSONB for flexibility)
+  expected_gains JSONB DEFAULT '{}'::jsonb,  -- { hp: '5-15 hp', torque: '5-10 lb-ft', note: '...' }
+  
+  -- Pros/Cons
+  pros JSONB DEFAULT '[]'::jsonb,
+  cons JSONB DEFAULT '[]'::jsonb,
+  
+  -- Related info
+  best_for JSONB DEFAULT '[]'::jsonb,    -- ['Track enthusiasts', 'Budget builds']
+  works_well_with JSONB DEFAULT '[]'::jsonb,  -- ['ECU tune', 'Exhaust']
+  considerations TEXT,                   -- Important notes
+  
+  -- Metadata
+  applicable_car_types JSONB DEFAULT '["all"]'::jsonb,  -- ['turbo', 'na', 'all']
+  sort_order INTEGER DEFAULT 0,          -- Display order within category
+  
+  -- Timestamps
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes for upgrade education
+CREATE INDEX IF NOT EXISTS idx_upgrade_education_key ON upgrade_education(key);
+CREATE INDEX IF NOT EXISTS idx_upgrade_education_slug ON upgrade_education(slug);
+CREATE INDEX IF NOT EXISTS idx_upgrade_education_category ON upgrade_education(category);
+
+-- Auto-update timestamp trigger
+DROP TRIGGER IF EXISTS update_upgrade_education_updated_at ON upgrade_education;
+CREATE TRIGGER update_upgrade_education_updated_at
+  BEFORE UPDATE ON upgrade_education
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================================
+-- CAR KNOWN ISSUES TABLE
+-- Documents common problems and concerns for each vehicle
+-- High-value buyer information content
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS car_known_issues (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  
+  car_slug TEXT NOT NULL REFERENCES cars(slug) ON DELETE CASCADE,
+  
+  -- Issue details
+  issue_name TEXT NOT NULL,              -- e.g., 'IMS Bearing Failure'
+  severity TEXT NOT NULL CHECK (severity IN ('Critical', 'Major', 'Minor', 'Cosmetic')),
+  affected_years TEXT,                   -- e.g., '2009-2011' or 'All'
+  
+  -- Description
+  description TEXT NOT NULL,             -- What the issue is
+  symptoms TEXT,                         -- How to identify it
+  prevention TEXT,                       -- How to prevent/check
+  fix_description TEXT,                  -- How to fix
+  estimated_cost TEXT,                   -- Cost to fix (e.g., '$2,000 - $5,000')
+  
+  -- Metadata
+  source TEXT,                           -- Where we learned this (forum, TSB, etc.)
+  sort_order INTEGER DEFAULT 0,          -- Display order
+  
+  -- Timestamps
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes for known issues
+CREATE INDEX IF NOT EXISTS idx_car_known_issues_car_slug ON car_known_issues(car_slug);
+CREATE INDEX IF NOT EXISTS idx_car_known_issues_severity ON car_known_issues(severity);
+
+-- Auto-update timestamp trigger
+DROP TRIGGER IF EXISTS update_car_known_issues_updated_at ON car_known_issues;
+CREATE TRIGGER update_car_known_issues_updated_at
+  BEFORE UPDATE ON car_known_issues
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================================
 -- ROW LEVEL SECURITY (RLS)
 -- 
 -- Security model:
@@ -294,6 +404,34 @@ CREATE POLICY "upgrade_packages_select_policy"
 DROP POLICY IF EXISTS "upgrade_packages_insert_policy" ON upgrade_packages;
 DROP POLICY IF EXISTS "upgrade_packages_update_policy" ON upgrade_packages;
 DROP POLICY IF EXISTS "upgrade_packages_delete_policy" ON upgrade_packages;
+
+-- Enable RLS on new tables
+ALTER TABLE upgrade_education ENABLE ROW LEVEL SECURITY;
+ALTER TABLE car_known_issues ENABLE ROW LEVEL SECURITY;
+
+-- UPGRADE_EDUCATION: Public read access
+DROP POLICY IF EXISTS "upgrade_education_select_policy" ON upgrade_education;
+CREATE POLICY "upgrade_education_select_policy"
+  ON upgrade_education FOR SELECT
+  TO public
+  USING (true);
+
+-- UPGRADE_EDUCATION: No public write access
+DROP POLICY IF EXISTS "upgrade_education_insert_policy" ON upgrade_education;
+DROP POLICY IF EXISTS "upgrade_education_update_policy" ON upgrade_education;
+DROP POLICY IF EXISTS "upgrade_education_delete_policy" ON upgrade_education;
+
+-- CAR_KNOWN_ISSUES: Public read access
+DROP POLICY IF EXISTS "car_known_issues_select_policy" ON car_known_issues;
+CREATE POLICY "car_known_issues_select_policy"
+  ON car_known_issues FOR SELECT
+  TO public
+  USING (true);
+
+-- CAR_KNOWN_ISSUES: No public write access
+DROP POLICY IF EXISTS "car_known_issues_insert_policy" ON car_known_issues;
+DROP POLICY IF EXISTS "car_known_issues_update_policy" ON car_known_issues;
+DROP POLICY IF EXISTS "car_known_issues_delete_policy" ON car_known_issues;
 
 -- ============================================================================
 -- TABLE COMMENTS (Documentation)

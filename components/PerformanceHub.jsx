@@ -1,8 +1,14 @@
 /**
  * Performance HUB Component
  * 
- * Gran Turismo-inspired performance visualization showing stock vs upgraded
- * performance metrics with interactive package selection.
+ * Redesigned to show meaningful real-world metrics:
+ * - Power: Actual HP with HP gains
+ * - Acceleration: 0-60 times with improvement in seconds
+ * - Braking: 60-0 distance with feet improvement
+ * - Grip: Lateral G with improvement
+ * - Plus subjective scores for Comfort, Reliability, Sound
+ * 
+ * Also shows component breakdown for each upgrade package.
  */
 
 'use client';
@@ -73,6 +79,11 @@ const Icons = {
       <polyline points="9 18 15 12 9 6"/>
     </svg>
   ),
+  chevronDown: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  ),
   arrowLeft: ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"/>
@@ -89,6 +100,19 @@ const Icons = {
       <polyline points="20 6 9 17 4 12"/>
     </svg>
   ),
+  bolt: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+  ),
+  stopwatch: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="13" r="8"/>
+      <path d="M12 9v4l2 2"/>
+      <path d="M9 2h6"/>
+      <path d="M12 2v2"/>
+    </svg>
+  ),
 };
 
 // Map icon names to components
@@ -103,9 +127,78 @@ const iconMap = {
 };
 
 /**
- * Performance bar component for visualizing scores
+ * Real Metric Row - Shows actual values like HP, seconds, feet
  */
-function PerformanceBar({ category, stockScore, upgradedScore, showUpgrade }) {
+function RealMetricRow({ icon: IconComponent, label, stockValue, upgradedValue, unit, improvement, improvementPrefix = '+', isLowerBetter = false }) {
+  const hasImproved = isLowerBetter ? upgradedValue < stockValue : upgradedValue > stockValue;
+  const improvementVal = improvement || Math.abs(upgradedValue - stockValue);
+  
+  // Calculate percentage for bar (relative to a max)
+  const maxValues = {
+    hp: 800,
+    seconds: 6,
+    feet: 130,
+    g: 1.3,
+  };
+  
+  let maxValue = 800; // default for HP
+  if (unit === 's') maxValue = maxValues.seconds;
+  if (unit === 'ft') maxValue = maxValues.feet;
+  if (unit === 'g') maxValue = maxValues.g;
+  
+  // For time/distance (lower is better), invert the percentage
+  const stockPercent = isLowerBetter 
+    ? ((maxValue - stockValue) / maxValue) * 100 
+    : (stockValue / maxValue) * 100;
+  const upgradedPercent = isLowerBetter 
+    ? ((maxValue - upgradedValue) / maxValue) * 100 
+    : (upgradedValue / maxValue) * 100;
+  
+  return (
+    <div className={styles.metricRow}>
+      <div className={styles.metricHeader}>
+        <div className={styles.metricLabel}>
+          <span className={styles.metricIcon}><IconComponent size={18} /></span>
+          <span className={styles.metricName}>{label}</span>
+        </div>
+        <div className={styles.metricValues}>
+          {hasImproved ? (
+            <>
+              <span className={styles.stockValueSmall}>{stockValue}{unit}</span>
+              <span className={styles.metricArrow}>→</span>
+              <span className={styles.upgradedValue}>{upgradedValue}{unit}</span>
+              <span className={styles.metricGain}>
+                {improvementPrefix}{improvementVal.toFixed(unit === 'g' ? 2 : unit === 's' ? 1 : 0)}{unit}
+              </span>
+            </>
+          ) : (
+            <span className={styles.currentValue}>{stockValue}{unit}</span>
+          )}
+        </div>
+      </div>
+      <div className={styles.metricTrack}>
+        <div 
+          className={styles.metricFillStock}
+          style={{ width: `${Math.min(100, stockPercent)}%` }}
+        />
+        {hasImproved && (
+          <div 
+            className={styles.metricFillUpgrade}
+            style={{ 
+              left: `${Math.min(100, stockPercent)}%`,
+              width: `${Math.min(100 - stockPercent, upgradedPercent - stockPercent)}%` 
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Score bar component for subjective ratings (1-10 scale)
+ */
+function ScoreBar({ category, stockScore, upgradedScore, showUpgrade }) {
   const IconComponent = iconMap[category.icon] || Icons.flag;
   const hasImproved = upgradedScore > stockScore;
   const delta = upgradedScore - stockScore;
@@ -152,6 +245,59 @@ function PerformanceBar({ category, stockScore, upgradedScore, showUpgrade }) {
 }
 
 /**
+ * Component Breakdown - Shows what parts are included in upgrade
+ */
+function ComponentBreakdown({ selectedUpgrades, showUpgrade }) {
+  if (!showUpgrade || selectedUpgrades.length === 0) return null;
+  
+  // Get main package
+  const mainPackage = selectedUpgrades.find(u => u.type === 'package');
+  const modules = selectedUpgrades.filter(u => u.type === 'module');
+  
+  return (
+    <div className={styles.componentBreakdown}>
+      <h4 className={styles.breakdownTitle}>
+        <Icons.wrench size={16} />
+        What's Included
+      </h4>
+      
+      {mainPackage && mainPackage.includes && (
+        <div className={styles.componentList}>
+          {mainPackage.includes.map((item, idx) => (
+            <div key={idx} className={styles.componentItem}>
+              <Icons.check size={14} />
+              <span>{item}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      
+      {modules.length > 0 && (
+        <div className={styles.additionalModules}>
+          <span className={styles.modulesLabel}>Additional Modules:</span>
+          <div className={styles.modulesList}>
+            {modules.map(mod => (
+              <span key={mod.key} className={styles.moduleBadge}>{mod.name}</span>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {mainPackage && mainPackage.considerations && (
+        <div className={styles.considerations}>
+          <span className={styles.considerationsLabel}>Things to Consider:</span>
+          <ul className={styles.considerationsList}>
+            {mainPackage.considerations.map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
  * Main Performance HUB component
  */
 export default function PerformanceHub({ car }) {
@@ -184,10 +330,10 @@ export default function PerformanceHub({ car }) {
     [profile]
   );
   
-  // Calculate total cost
+  // Calculate total cost with brand-specific pricing
   const totalCost = useMemo(() => 
-    calculateTotalCost(profile.selectedUpgrades),
-    [profile.selectedUpgrades]
+    calculateTotalCost(profile.selectedUpgrades, car),
+    [profile.selectedUpgrades, car]
   );
   
   // Get summary text
@@ -210,21 +356,23 @@ export default function PerformanceHub({ car }) {
       }
       return [...prev, moduleKey];
     });
-    if (selectedPackageKey !== 'custom' && selectedPackageKey !== 'stock') {
-      // Keep package selected but also add module
-    }
   };
   
   const tierInfo = tierConfig[car.tier] || {};
   const showUpgrade = selectedPackageKey !== 'stock' || selectedModules.length > 0;
+  
+  // Get the subjective score categories
+  const subjectiveCategories = scoreComparison.filter(cat => 
+    ['drivability', 'reliabilityHeat', 'soundEmotion'].includes(cat.key)
+  );
 
   return (
     <div className={styles.hub}>
       {/* Left Panel - Car Identity */}
       <div className={styles.carPanel}>
-        <Link href="/advisory" className={styles.backLink}>
+        <Link href="/car-finder" className={styles.backLink}>
           <Icons.arrowLeft size={16} />
-          Back to Advisory
+          Back to Car Finder
         </Link>
         
         <div className={styles.carImageContainer}>
@@ -306,8 +454,13 @@ export default function PerformanceHub({ car }) {
         <div className={styles.dashboardHeader}>
           <h3 className={styles.dashboardTitle}>Performance HUB</h3>
           {showUpgrade && (
-            <div className={styles.costBadge}>
-              Est. Cost: {totalCost.display}
+            <div className={styles.costBadge} title={totalCost.tierDescription || ''}>
+              Est. Investment: {totalCost.display}
+              {totalCost.tier !== 'mainstream' && (
+                <span className={styles.costTierBadge}>
+                  {totalCost.tierLabel}
+                </span>
+              )}
             </div>
           )}
         </div>
@@ -338,10 +491,65 @@ export default function PerformanceHub({ car }) {
           </div>
         )}
         
-        {/* Performance Bars */}
-        <div className={styles.performanceBars}>
-          {scoreComparison.map(cat => (
-            <PerformanceBar
+        {/* Real Metrics Section */}
+        <div className={styles.metricsSection}>
+          <h4 className={styles.sectionTitle}>Performance Metrics</h4>
+          
+          {/* Power (HP) */}
+          <RealMetricRow
+            icon={Icons.bolt}
+            label="Power"
+            stockValue={profile.stockMetrics.hp || car.hp}
+            upgradedValue={profile.upgradedMetrics.hp}
+            unit=" hp"
+            isLowerBetter={false}
+          />
+          
+          {/* 0-60 Time */}
+          {profile.stockMetrics.zeroToSixty && (
+            <RealMetricRow
+              icon={Icons.stopwatch}
+              label="0-60 mph"
+              stockValue={profile.stockMetrics.zeroToSixty}
+              upgradedValue={profile.upgradedMetrics.zeroToSixty || profile.stockMetrics.zeroToSixty}
+              unit="s"
+              improvementPrefix="-"
+              isLowerBetter={true}
+            />
+          )}
+          
+          {/* Braking Distance */}
+          {profile.stockMetrics.braking60To0 && (
+            <RealMetricRow
+              icon={Icons.brake}
+              label="60-0 Braking"
+              stockValue={profile.stockMetrics.braking60To0}
+              upgradedValue={profile.upgradedMetrics.braking60To0 || profile.stockMetrics.braking60To0}
+              unit="ft"
+              improvementPrefix="-"
+              isLowerBetter={true}
+            />
+          )}
+          
+          {/* Lateral G */}
+          {profile.stockMetrics.lateralG && (
+            <RealMetricRow
+              icon={Icons.tire}
+              label="Lateral Grip"
+              stockValue={profile.stockMetrics.lateralG}
+              upgradedValue={profile.upgradedMetrics.lateralG || profile.stockMetrics.lateralG}
+              unit="g"
+              improvementPrefix="+"
+              isLowerBetter={false}
+            />
+          )}
+        </div>
+        
+        {/* Subjective Scores Section */}
+        <div className={styles.scoresSection}>
+          <h4 className={styles.sectionTitle}>Experience Scores</h4>
+          {subjectiveCategories.map(cat => (
+            <ScoreBar
               key={cat.key}
               category={cat}
               stockScore={cat.stockScore}
@@ -350,6 +558,12 @@ export default function PerformanceHub({ car }) {
             />
           ))}
         </div>
+        
+        {/* Component Breakdown */}
+        <ComponentBreakdown 
+          selectedUpgrades={profile.selectedUpgrades}
+          showUpgrade={showUpgrade}
+        />
         
         {/* Scoring Info */}
         <div className={styles.scoringInfoWrapper}>
@@ -362,9 +576,9 @@ export default function PerformanceHub({ car }) {
             className={styles.modulesToggle}
             onClick={() => setExpandedModules(!expandedModules)}
           >
-            <span>Fine-tune with modules</span>
+            <span>Fine-tune with individual modules</span>
             <span className={`${styles.toggleIcon} ${expandedModules ? styles.expanded : ''}`}>
-              <Icons.chevronRight size={16} />
+              <Icons.chevronDown size={16} />
             </span>
           </button>
           
@@ -381,11 +595,15 @@ export default function PerformanceHub({ car }) {
                         key={mod.key}
                         className={`${styles.moduleChip} ${selectedModules.includes(mod.key) ? styles.selected : ''}`}
                         onClick={() => handleModuleToggle(mod.key)}
+                        title={mod.description}
                       >
                         {selectedModules.includes(mod.key) && (
                           <Icons.check size={12} />
                         )}
-                        {mod.name}
+                        <span>{mod.name}</span>
+                        {mod.metricChanges?.hpGain && (
+                          <span className={styles.moduleHpGain}>+{mod.metricChanges.hpGain}hp</span>
+                        )}
                       </button>
                     ))}
                   </div>
@@ -408,4 +626,3 @@ export default function PerformanceHub({ car }) {
     </div>
   );
 }
-

@@ -4,7 +4,7 @@ import styles from './Button.module.css';
 /**
  * Button component - supports both button and link variants
  * @param {Object} props
- * @param {'primary' | 'secondary' | 'outline' | 'ghost'} props.variant - Button style variant
+ * @param {'primary' | 'secondary' | 'outline' | 'outlineLight' | 'ghost'} props.variant - Button style variant
  * @param {'sm' | 'md' | 'lg'} props.size - Button size
  * @param {string} props.href - If provided, renders as Link (internal) or anchor (external)
  * @param {boolean} props.fullWidth - Makes button full width

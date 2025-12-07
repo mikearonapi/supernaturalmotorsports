@@ -2,7 +2,7 @@
 /**
  * SuperNatural Motorsports - Database Seed Script
  * 
- * This script syncs local car data from src/data/cars.js to Supabase.
+ * This script syncs local car data from data/cars.js to Supabase.
  * Run this when setting up a new environment or after adding/modifying cars locally.
  * 
  * Usage:
@@ -20,8 +20,8 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { carData } from '../src/data/cars.js';
-import { genericPackages, upgradeModules } from '../src/data/upgradePackages.js';
+import { carData } from '../data/cars.js';
+import { genericPackages, upgradeModules } from '../data/upgradePackages.js';
 
 // Get environment variables
 const SUPABASE_URL = process.env.SUPABASE_URL;

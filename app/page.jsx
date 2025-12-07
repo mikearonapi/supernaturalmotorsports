@@ -1,7 +1,22 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import Button from '@/components/Button';
-import PageImage from '@/components/PageImage';
+import CarCarousel from '@/components/CarCarousel';
 import styles from './page.module.css';
+
+// Homepage uses the default layout metadata but we can add specific homepage schema
+export const metadata = {
+  title: 'SuperNatural Motorsports | Sports Car Finder & Performance Experts',
+  description: 'Your destination for sports car expertise. Find your perfect car with our intelligent comparison tool, plan performance upgrades, and access professional motorsports services. From Porsche to BMW M to Corvette.',
+  alternates: {
+    canonical: '/',
+  },
+};
+
+// Blob URLs for page images
+const BLOB_BASE = 'https://abqnp7qrs0nhv5pw.public.blob.vercel-storage.com';
+const heroImageUrl = `${BLOB_BASE}/pages/home/hero.webp`;
+const valueImageUrl = `${BLOB_BASE}/pages/home/value-section.webp`;
 
 // Icons
 const CarIcon = () => (
@@ -45,25 +60,25 @@ const CheckIcon = () => (
 const pillars = [
   {
     icon: <CarIcon />,
-    title: 'Sports Car Selector',
+    title: 'Car Finder',
     description: 'Find your perfect sports car based on what actually matters to you—sound, track capability, reliability, value, and more.',
-    cta: 'Explore Cars',
-    href: '/advisory',
+    cta: 'Find Your Car',
+    href: '/car-finder',
     accent: 'primary'
   },
   {
     icon: <ToolIcon />,
-    title: 'Upgrade Advisory',
-    description: 'Already have a car? We help you prioritize modifications that deliver the most driving joy per dollar spent.',
-    cta: 'Learn About Upgrades',
-    href: '/upgrades',
+    title: 'Performance HUB',
+    description: 'Already have a car? Explore upgrades, see how they affect performance scores, and plan your build with confidence.',
+    cta: 'Plan Your Build',
+    href: '/performance',
     accent: 'secondary'
   },
   {
     icon: <WrenchIcon />,
-    title: 'Upgrade Services',
+    title: 'Service Center',
     description: 'Need hands-on help? Our team handles everything from suspension setup to full performance builds.',
-    cta: 'See What We Offer',
+    cta: 'Get It Built',
     href: '/services',
     accent: 'tertiary'
   }
@@ -71,7 +86,7 @@ const pillars = [
 
 const steps = [
   { number: '01', title: 'Tell Us Your Goals', description: 'Track days? Canyon runs? Daily driving? We start with what you actually want.' },
-  { number: '02', title: 'Get Recommendations', description: 'Our advisory tools match you with cars or upgrades based on real-world experience.' },
+  { number: '02', title: 'Get Matched', description: 'Our tools match you with cars or upgrades based on real-world experience.' },
   { number: '03', title: 'Plan Your Path', description: 'Whether buying or modding, we help you prioritize for your budget.' },
   { number: '04', title: 'Hit the Road', description: 'Execute your plan with confidence—or let us handle the build.' }
 ];
@@ -81,6 +96,17 @@ export default function Home() {
     <div className={styles.page}>
       {/* Hero Section */}
       <section className={styles.hero}>
+        <div className={styles.heroImageWrapper}>
+          <Image
+            src={heroImageUrl}
+            alt="Sports car on a winding mountain road at golden hour"
+            fill
+            priority
+            quality={90}
+            className={styles.heroImage}
+            sizes="100vw"
+          />
+        </div>
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
@@ -92,14 +118,9 @@ export default function Home() {
             SuperNatural Motorsports helps enthusiasts at every budget 
             make smarter performance decisions.
           </p>
-          <div className={styles.heroCtas}>
-            <Button href="/advisory" variant="secondary" size="lg" icon={<ArrowRightIcon />}>
-              Explore the Advisory
-            </Button>
-            <Button href="/upgrades" variant="outline" size="lg">
-              Learn About Upgrades
-            </Button>
-          </div>
+          <Button href="/car-finder" variant="secondary" size="lg" icon={<ArrowRightIcon />}>
+            Find Your Car
+          </Button>
         </div>
         <div className={styles.heroScroll}>
           <span>Scroll to explore</span>
@@ -129,6 +150,15 @@ export default function Home() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Car Showcase Carousel */}
+      <section className={styles.carShowcase}>
+        <div className={styles.carShowcaseHeader}>
+          <h2 className={styles.carShowcaseTitle}>35+ Sports Cars to Explore</h2>
+          <p className={styles.carShowcaseSubtitle}>From weekend warriors to track machines</p>
+        </div>
+        <CarCarousel />
       </section>
 
       {/* How It Works Section */}
@@ -172,18 +202,21 @@ export default function Home() {
                 <li><CheckIcon /> Community-driven data from actual enthusiasts</li>
                 <li><CheckIcon /> Approachable experts who love cars as much as you do</li>
               </ul>
-              <Button href="/advisory" variant="primary" size="lg">
-                Try the Advisory
+              <Button href="/car-finder" variant="primary" size="lg">
+                Find Your Car
               </Button>
             </div>
             <div className={styles.valueImage}>
-              <PageImage 
-                imageKey="homeValue"
-                alt="Enthusiast inspecting a sports car"
-                variant="section"
-                placeholderText="Track Photo"
-                className={styles.valueImageWrapper}
-              />
+              <div className={styles.valueImageWrapper}>
+                <Image
+                  src={valueImageUrl}
+                  alt="Car enthusiast working on their sports car in a home garage"
+                  width={600}
+                  height={400}
+                  className={styles.valueImagePhoto}
+                  style={{ objectFit: 'cover', borderRadius: 'var(--radius-lg)' }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -193,15 +226,15 @@ export default function Home() {
       <section className={styles.finalCta}>
         <div className={styles.container}>
           <div className={styles.ctaContent}>
-            <h2 className={styles.ctaTitle}>Curious? Just Browse.</h2>
+            <h2 className={styles.ctaTitle}>Ready to Find Your Car?</h2>
             <p className={styles.ctaSubtitle}>
               No signup required. Explore our free tools and see what catches your eye.
             </p>
             <div className={styles.ctaButtons}>
-              <Button href="/advisory" variant="secondary" size="lg">
-                Open Advisory
+              <Button href="/car-finder" variant="secondary" size="lg">
+                Find Your Car
               </Button>
-              <Button href="/contact" variant="outline" size="lg">
+              <Button href="/contact" variant="outlineLight" size="lg">
                 Have Questions?
               </Button>
             </div>

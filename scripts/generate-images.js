@@ -11,7 +11,7 @@
  *   node scripts/generate-images.js prompts cars  # Generate prompts for car images only
  */
 
-import { carData } from '../src/data/cars.js';
+import { carData } from '../data/cars.js';
 
 // Image categories and their templates
 const imageCategories = {

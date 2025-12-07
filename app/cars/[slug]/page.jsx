@@ -7,8 +7,6 @@ import styles from './page.module.css';
 import { fetchCarBySlug } from '@/lib/carsClient.js';
 import { getCarBySlug as getLocalCarBySlug, categories, tierConfig } from '@/data/cars.js';
 import { calculateScoreBreakdown, getScoreLabel, DEFAULT_WEIGHTS } from '@/lib/scoring.js';
-import NewsletterSignup from '@/components/NewsletterSignup';
-import { LEAD_SOURCES } from '@/lib/leadsClient.js';
 import CarImage from '@/components/CarImage';
 import ScoringInfo from '@/components/ScoringInfo';
 
@@ -162,9 +160,9 @@ export default function CarDetail() {
           <Icons.alertCircle size={48} />
           <h2>{error || 'Vehicle not found'}</h2>
           <p>The vehicle you&apos;re looking for doesn&apos;t exist or couldn&apos;t be loaded.</p>
-          <Link href="/advisory" className={styles.backButton}>
+          <Link href="/car-finder" className={styles.backButton}>
             <Icons.arrowLeft size={18} />
-            Back to Advisory
+            Back to Car Finder
           </Link>
         </div>
       </div>
@@ -178,9 +176,9 @@ export default function CarDetail() {
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <div className={styles.heroContent}>
-          <Link href="/advisory" className={styles.backLink}>
+          <Link href="/car-finder" className={styles.backLink}>
             <Icons.arrowLeft size={18} />
-            Back to Advisory
+            Back to Car Finder
           </Link>
           
           <div className={styles.heroHeader}>
@@ -209,7 +207,7 @@ export default function CarDetail() {
         </div>
       </section>
 
-      {/* Quick Specs Strip */}
+      {/* Quick Specs Strip - Primary */}
       <section className={styles.specsStrip}>
         <div className={styles.specsGrid}>
           <div className={styles.specItem}>
@@ -220,22 +218,66 @@ export default function CarDetail() {
             <span className={styles.specLabel}>Power</span>
             <span className={styles.specValue}>{car.hp} hp</span>
           </div>
+          {car.torque && (
+            <div className={styles.specItem}>
+              <span className={styles.specLabel}>Torque</span>
+              <span className={styles.specValue}>{car.torque} lb-ft</span>
+            </div>
+          )}
           <div className={styles.specItem}>
-            <span className={styles.specLabel}>Transmission</span>
+            <span className={styles.specLabel}>Trans</span>
             <span className={styles.specValue}>{car.trans}</span>
           </div>
           {car.drivetrain && (
             <div className={styles.specItem}>
-              <span className={styles.specLabel}>Drivetrain</span>
+              <span className={styles.specLabel}>Drive</span>
               <span className={styles.specValue}>{car.drivetrain}</span>
             </div>
           )}
           <div className={styles.specItem}>
-            <span className={styles.specLabel}>Price Range</span>
+            <span className={styles.specLabel}>Price</span>
             <span className={styles.specValue}>{car.priceRange}</span>
           </div>
         </div>
       </section>
+
+      {/* Performance Specs - Secondary */}
+      {(car.zeroToSixty || car.quarterMile || car.curbWeight || car.braking60To0 || car.lateralG) && (
+        <section className={styles.perfSpecsStrip}>
+          <div className={styles.perfSpecsGrid}>
+            {car.zeroToSixty && (
+              <div className={styles.perfSpecItem}>
+                <span className={styles.perfSpecValue}>{car.zeroToSixty}s</span>
+                <span className={styles.perfSpecLabel}>0-60 mph</span>
+              </div>
+            )}
+            {car.quarterMile && (
+              <div className={styles.perfSpecItem}>
+                <span className={styles.perfSpecValue}>{car.quarterMile}s</span>
+                <span className={styles.perfSpecLabel}>¼ Mile</span>
+              </div>
+            )}
+            {car.braking60To0 && (
+              <div className={styles.perfSpecItem}>
+                <span className={styles.perfSpecValue}>{car.braking60To0} ft</span>
+                <span className={styles.perfSpecLabel}>60-0 Braking</span>
+              </div>
+            )}
+            {car.lateralG && (
+              <div className={styles.perfSpecItem}>
+                <span className={styles.perfSpecValue}>{car.lateralG}g</span>
+                <span className={styles.perfSpecLabel}>Lateral G</span>
+              </div>
+            )}
+            {car.curbWeight && (
+              <div className={styles.perfSpecItem}>
+                <span className={styles.perfSpecValue}>{car.curbWeight.toLocaleString()} lbs</span>
+                <span className={styles.perfSpecLabel}>Curb Weight</span>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Main Content */}
       <div className={styles.mainContent}>
@@ -365,55 +407,19 @@ export default function CarDetail() {
         </div>
       </div>
 
-      {/* Performance HUB CTA */}
-      <section className={styles.performanceHubSection}>
-        <div className={styles.container}>
-          <div className={styles.performanceHubCard}>
-            <div className={styles.performanceHubIcon}>
-              <Icons.gauge size={32} />
-            </div>
-            <div className={styles.performanceHubContent}>
-              <h3>See the Numbers</h3>
-              <p>
-                Curious how upgrades affect the {car.name}? Our Performance HUB shows 
-                stock vs. upgraded specs across 7 categories. Just for fun—or to plan a build.
-              </p>
-            </div>
-            <Link 
-              href={`/cars/${car.slug}/performance`} 
-              className={styles.performanceHubButton}
-            >
-              Open Performance HUB
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter CTA */}
-      <section className={styles.newsletterSection}>
-        <div className={styles.newsletterContent}>
-          <NewsletterSignup 
-            variant="default"
-            source={LEAD_SOURCES.HERO_PAGE}
-            carSlug={car.slug}
-            title={`Interested in the ${car.name}?`}
-            description="Get market insights, buying tips, and maintenance advice for this vehicle."
-            buttonText="Get Updates"
-            successText="You're in! We'll send relevant updates."
-          />
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className={styles.ctaSection}>
         <div className={styles.ctaContent}>
-          <h2>Keep Exploring</h2>
-          <p>
-            See how the {car.name} stacks up against other options—or browse more vehicles.
-          </p>
-          <Link href="/advisory" className={styles.ctaButton}>
-            Back to Advisory
-          </Link>
+          <div className={styles.ctaButtons}>
+            <Link href={`/performance?car=${car.slug}`} className={styles.ctaPrimary}>
+              <Icons.gauge size={20} />
+              See Performance Impact
+            </Link>
+            <Link href="/car-finder" className={styles.ctaSecondary}>
+              <Icons.arrowLeft size={18} />
+              Back to Car Finder
+            </Link>
+          </div>
         </div>
       </section>
     </div>

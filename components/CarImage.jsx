@@ -8,7 +8,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getCarHeroImage, getCarThumbnail, shouldShowPlaceholder, getPlaceholderGradient } from '@/lib/images.js';
+import Image from 'next/image';
+import { getCarHeroImage, getCarThumbnail, getPlaceholderGradient } from '@/lib/images.js';
 import styles from './CarImage.module.css';
 
 /**
@@ -45,7 +46,8 @@ export default function CarImage({
   };
   
   const imageUrl = getImageUrl();
-  const showPlaceholder = shouldShowPlaceholder(car) || imageError || !imageUrl;
+  // Show placeholder only if no image URL or image failed to load
+  const showPlaceholder = imageError || !imageUrl;
   
   // Handle image load error
   const handleError = () => {
@@ -85,15 +87,26 @@ export default function CarImage({
       </div>
       
       {/* Actual image (if available) */}
-      {imageUrl && !showPlaceholder && (
-        <img
+      {imageUrl && (
+        <Image
           src={imageUrl}
           alt={car?.name || 'Car image'}
+          fill
           className={`${styles.image} ${imageLoaded ? styles.loaded : ''}`}
           onError={handleError}
           onLoad={handleLoad}
           loading={lazy ? 'lazy' : 'eager'}
-          decoding="async"
+          // Mobile-optimized sizes: load smaller images on smaller screens
+          sizes={
+            variant === 'hero' 
+              ? '(max-width: 480px) 100vw, (max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw'
+              : variant === 'card' 
+                ? '(max-width: 480px) 100vw, (max-width: 768px) 50vw, 400px'
+                : '(max-width: 480px) 50vw, (max-width: 768px) 33vw, 200px'
+          }
+          style={{ objectFit: 'cover' }}
+          // Prioritize hero images on car detail pages
+          priority={variant === 'hero' && !lazy}
         />
       )}
     </div>
