@@ -326,9 +326,9 @@ export default function SportsCarComparison() {
 
   // Get priority badge text and class
   const getPriorityBadge = (weight) => {
-    if (weight === 0) return { text: 'Off', className: styles.priorityBadgeOff };
+    if (weight === 0) return { text: 'Off', className: `${styles.priorityBadge} ${styles.priorityBadgeOff}` };
     if (weight === 1) return { text: 'Normal', className: styles.priorityBadge };
-    return { text: `${weight}× Priority`, className: styles.priorityBadgeHigh };
+    return { text: `${weight}×`, className: `${styles.priorityBadge} ${styles.priorityBadgeHigh}` };
   };
 
   // Show loading state
@@ -515,7 +515,7 @@ export default function SportsCarComparison() {
                       <div className={styles.recCardName}>{car.name}</div>
                       <div className={styles.recCardPrice}>{car.priceRange}</div>
                       <div className={styles.recCardScore}>
-                        Score: <strong>{car.total}</strong>/{maxScore}
+                        Score: <strong>{car.total.toFixed(1)}</strong>/{maxScore}
                       </div>
                       {car.slug && (
                         <Link 
@@ -643,7 +643,7 @@ export default function SportsCarComparison() {
                           tabIndex={0}
                           role="button"
                           aria-expanded={isExpanded}
-                          aria-label={`${car.name}, rank ${index + 1}, score ${car.total}`}
+                          aria-label={`${car.name}, rank ${index + 1}, score ${car.total.toFixed(1)}`}
                         >
                           <span className={`${styles.tableRank} ${isTop ? styles.tableRankTop : isPodium ? styles.tableRankPodium : ''}`}>
                             {index + 1}
@@ -671,7 +671,7 @@ export default function SportsCarComparison() {
 
                           <div className={styles.tableTotal}>
                             <span className={`${styles.tableTotalScore} ${getTotalScoreClass(car.total, maxScore)}`}>
-                        {car.total}
+                        {car.total.toFixed(1)}
                       </span>
                     </div>
 
@@ -708,7 +708,7 @@ export default function SportsCarComparison() {
                               <div className={styles.mobileCardPrice}>
                                 <div className={styles.mobileCardPriceValue}>{car.priceRange}</div>
                                 <div className={styles.mobileCardPriceScore}>
-                                  Score: <strong>{car.total}</strong>
+                                  Score: <strong>{car.total.toFixed(1)}</strong>
                                 </div>
                               </div>
                             </div>
