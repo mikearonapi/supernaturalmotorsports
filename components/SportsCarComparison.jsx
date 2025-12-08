@@ -169,7 +169,7 @@ export default function SportsCarComparison() {
   const [priceMax, setPriceMax] = useState(100000);
   const [priceMin, setPriceMin] = useState(25000);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  // selectedCategory removed - now using mustHaveFilters.engineLayoutFilter
   const [expandedId, setExpandedId] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   
@@ -178,6 +178,7 @@ export default function SportsCarComparison() {
     manualOnly: false,
     drivetrainFilter: 'all', // 'all', 'RWD', 'AWD'
     seatsFilter: 'all', // 'all', '2', '4'
+    engineLayoutFilter: 'all', // 'all', 'Mid-Engine', 'Front-Engine', 'Rear-Engine'
   });
   
   // Refs
@@ -239,22 +240,24 @@ export default function SportsCarComparison() {
     return carData
       .filter(car => car.priceAvg >= priceMin && car.priceAvg <= priceMax)
       .filter(car => car.name.toLowerCase().includes(searchTerm.toLowerCase()))
-      .filter(car => selectedCategory === 'all' || car.category === selectedCategory)
-      // Must-have: Manual transmission
-      .filter(car => !mustHaveFilters.manualOnly || (car.trans && car.trans.toLowerCase().includes('manual')))
+      // Engine layout filter is now in mustHaveFilters.engineLayoutFilter
+      // Must-have: Manual transmission (use manualAvailable boolean field)
+      .filter(car => !mustHaveFilters.manualOnly || car.manualAvailable === true)
       // Must-have: Drivetrain filter
       .filter(car => mustHaveFilters.drivetrainFilter === 'all' || car.drivetrain === mustHaveFilters.drivetrainFilter)
       // Must-have: Seats filter (graceful handling if seats data is missing)
       .filter(car => mustHaveFilters.seatsFilter === 'all' || !car.seats ||
         (mustHaveFilters.seatsFilter === '2' && car.seats <= 2) ||
         (mustHaveFilters.seatsFilter === '4' && car.seats >= 4))
+      // Must-have: Engine layout filter
+      .filter(car => mustHaveFilters.engineLayoutFilter === 'all' || car.category === mustHaveFilters.engineLayoutFilter)
       .map(car => ({ ...car, total: calculateTotal(car) }))
       .sort((a, b) => {
         if (sortBy === 'price') return a.priceAvg - b.priceAvg;
         if (sortBy === 'name') return a.name.localeCompare(b.name);
         return b[sortBy] - a[sortBy];
       });
-  }, [carData, weights, sortBy, priceMin, priceMax, searchTerm, selectedCategory, mustHaveFilters, calculateTotal]);
+  }, [carData, weights, sortBy, priceMin, priceMax, searchTerm, mustHaveFilters, calculateTotal]);
 
   // Get user's top priorities for ranking display
   const topPriorities = useMemo(() => 
@@ -452,6 +455,18 @@ export default function SportsCarComparison() {
                 <option value="2">2-Seater Only</option>
                 <option value="4">4+ Seats</option>
               </select>
+              
+              <select
+                value={mustHaveFilters.engineLayoutFilter}
+                onChange={e => setMustHaveFilters(prev => ({ ...prev, engineLayoutFilter: e.target.value }))}
+                className={styles.mustHaveSelect}
+                aria-label="Engine layout requirement"
+              >
+                <option value="all">Any Engine Layout</option>
+                <option value="Mid-Engine">Mid-Engine Only</option>
+                <option value="Front-Engine">Front-Engine Only</option>
+                <option value="Rear-Engine">Rear-Engine Only</option>
+              </select>
             </div>
             
             {filterWarning && (
@@ -534,7 +549,7 @@ export default function SportsCarComparison() {
             <div className={styles.filtersGroup}>
               <div className={styles.searchInput}>
                 <div className={styles.searchInputIcon}>
-                  <Icons.search size={16} />
+                  <Icons.search size={14} />
                 </div>
                 <input
                   type="text"
@@ -544,18 +559,6 @@ export default function SportsCarComparison() {
                   aria-label="Search vehicles"
                 />
               </div>
-              
-              <select 
-                value={selectedCategory} 
-                onChange={e => setSelectedCategory(e.target.value)}
-                className={styles.filterSelect}
-                aria-label="Filter by engine layout"
-              >
-                <option value="all">All Types</option>
-                <option value="Mid-Engine">Mid-Engine</option>
-                <option value="Front-Engine">Front-Engine</option>
-                <option value="Rear-Engine">Rear-Engine</option>
-              </select>
 
               <select 
                 value={`${priceMin}-${priceMax}`} 
@@ -566,7 +569,9 @@ export default function SportsCarComparison() {
                 <option value="25000-100000">$25K – $100K</option>
                 <option value="25000-50000">$25K – $50K</option>
                 <option value="40000-75000">$40K – $75K</option>
+                <option value="50000-80000">$50K – $80K</option>
                 <option value="60000-100000">$60K – $100K</option>
+                <option value="75000-100000">$75K – $100K</option>
               </select>
 
               <select 
@@ -577,9 +582,7 @@ export default function SportsCarComparison() {
               >
                 <option value="total">Sort by Score</option>
                 <option value="price">Sort by Price</option>
-                {categories.map(c => (
-                  <option key={c.key} value={c.key}>Sort by {c.label}</option>
-                ))}
+                <option value="name">Sort by Name</option>
               </select>
             </div>
           </div>
