@@ -39,25 +39,14 @@
 
 .thumbnail {
   width: 100%;
-  aspect-ratio: 1 / 1;
-}
-
-@media (min-width: 480px) {
-  .thumbnail {
-    aspect-ratio: 4 / 3;
-  }
+  /* Wide aspect ratio for car thumbnails */
+  aspect-ratio: 16 / 9;
 }
 
 .card {
   width: 100%;
-  /* Slightly squarer on mobile for compact cards */
-  aspect-ratio: 4 / 3;
-}
-
-@media (min-width: 768px) {
-  .card {
-    aspect-ratio: 3 / 2;
-  }
+  /* Wide aspect ratio to show cars properly in landscape hero images */
+  aspect-ratio: 16 / 9;
 }
 
 /* Placeholder */
