@@ -84,7 +84,7 @@ function createVarietyMix(cars) {
 
 export default function CarCarousel() {
   const scrollRef = useRef(null);
-  const [isPaused, setIsPaused] = useState(false);
+  const isPausedRef = useRef(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const touchStartRef = useRef(null);
@@ -103,6 +103,15 @@ export default function CarCarousel() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
   
+  // Pause/resume handlers using ref to avoid effect restarts
+  const pauseScroll = useCallback(() => {
+    isPausedRef.current = true;
+  }, []);
+  
+  const resumeScroll = useCallback(() => {
+    isPausedRef.current = false;
+  }, []);
+  
   // Create a varied mix of cars from different makes and tiers
   const shuffledCars = useMemo(() => createVarietyMix(carData), []);
   
@@ -111,7 +120,7 @@ export default function CarCarousel() {
   
   // Handle touch start - pause animation
   const handleTouchStart = useCallback((e) => {
-    setIsPaused(true);
+    isPausedRef.current = true;
     touchStartRef.current = e.touches[0].clientX;
     lastScrollRef.current = scrollRef.current?.scrollLeft || 0;
   }, []);
@@ -128,26 +137,27 @@ export default function CarCarousel() {
     touchStartRef.current = null;
     // Resume auto-scroll after a brief delay
     setTimeout(() => {
-      setIsPaused(false);
+      isPausedRef.current = false;
     }, 2000);
   }, []);
   
-  // Auto-scroll animation
+  // Auto-scroll animation - runs continuously, checks isPausedRef each frame
   useEffect(() => {
     const scrollContainer = scrollRef.current;
     if (!scrollContainer || !isClient) return;
     
     let animationId;
-    let lastTime = 0;
+    let lastTime = performance.now();
     // Speed in pixels per second for consistent speed across devices
-    const scrollSpeed = isMobile ? 40 : 60;
+    const scrollSpeed = isMobile ? 50 : 80;
     
-    const animate = (currentTime) => {
-      if (!lastTime) lastTime = currentTime;
+    const animate = () => {
+      const currentTime = performance.now();
       const deltaTime = (currentTime - lastTime) / 1000; // Convert to seconds
       lastTime = currentTime;
       
-      if (!isPaused && scrollContainer) {
+      // Check ref instead of state to avoid effect restarts
+      if (!isPausedRef.current && scrollContainer) {
         scrollContainer.scrollLeft += scrollSpeed * deltaTime;
         
         // Reset scroll when we've scrolled through the first set (1/3 of total since we tripled)
@@ -166,13 +176,13 @@ export default function CarCarousel() {
         cancelAnimationFrame(animationId);
       }
     };
-  }, [isPaused, isMobile, isClient]);
+  }, [isMobile, isClient]);
   
   return (
     <div 
       className={styles.carousel}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      onMouseEnter={pauseScroll}
+      onMouseLeave={resumeScroll}
     >
       <div 
         className={styles.scrollContainer} 
