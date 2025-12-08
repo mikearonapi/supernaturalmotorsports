@@ -708,11 +708,6 @@
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .recCardImage {
-    height: 70px;
-    margin-bottom: 4px;
-  }
-  
   .recCardLink {
     font-size: 9px;
     padding: 3px 6px;
@@ -727,10 +722,6 @@
   
   .recCard {
     padding: 8px;
-  }
-  
-  .recCardImage {
-    height: 60px;
   }
   
   .recCardName {
@@ -1533,16 +1524,17 @@
 
 .recCardImage {
   width: 100%;
-  height: 80px;
+  aspect-ratio: 3/2;
   border-radius: var(--radius-sm);
   overflow: hidden;
   margin-bottom: 6px;
 }
 
-@media (min-width: 768px) {
-  .recCardImage {
-    height: 90px;
-  }
+/* Force child CarImage component to fill the container */
+.recCardImage > * {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: unset !important;
 }
 
 .expandedActions {
