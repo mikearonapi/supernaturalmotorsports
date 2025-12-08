@@ -15,6 +15,21 @@ import {
 } from '@/lib/scoring.js';
 import CarImage from './CarImage';
 
+/**
+ * Extract the low price from a price range string like "$55-70K" → 55000
+ * Falls back to priceAvg if parsing fails
+ */
+function getPriceLow(car) {
+  if (car.priceRange) {
+    // Match patterns like "$55-70K", "$85-100K", "$12-25K"
+    const match = car.priceRange.match(/\$(\d+)/);
+    if (match) {
+      return parseInt(match[1], 10) * 1000;
+    }
+  }
+  return car.priceAvg;
+}
+
 // SVG Icons - Optimized for light theme
 const Icons = {
   sound: ({ size = 18, className }) => (
@@ -236,9 +251,10 @@ export default function SportsCarComparison() {
   );
 
   // Filtered and sorted cars (with must-have filters)
+  // Price filter uses the LOW end of the price range so cars are shown if they START under budget
   const filteredCars = useMemo(() => {
     return carData
-      .filter(car => car.priceAvg >= priceMin && car.priceAvg <= priceMax)
+      .filter(car => getPriceLow(car) >= priceMin && getPriceLow(car) <= priceMax)
       .filter(car => car.name.toLowerCase().includes(searchTerm.toLowerCase()))
       // Engine layout filter is now in mustHaveFilters.engineLayoutFilter
       // Must-have: Manual transmission (use manualAvailable boolean field)
