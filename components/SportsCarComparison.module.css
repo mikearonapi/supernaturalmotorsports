@@ -993,11 +993,11 @@
   color: var(--sn-primary);
 }
 
-/* Tooltip for column headers */
+/* Tooltip for column headers - positioned below to avoid clipping */
 .tableHeaderIcon::after {
   content: attr(data-tooltip);
   position: absolute;
-  bottom: calc(100% + 8px);
+  top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   padding: 6px 10px;
@@ -1013,22 +1013,22 @@
   visibility: hidden;
   pointer-events: none;
   transition: opacity 0.15s ease, visibility 0.15s ease;
-  z-index: 100;
+  z-index: 1000;
   box-shadow: var(--shadow-lg);
 }
 
 .tableHeaderIcon::before {
   content: '';
   position: absolute;
-  bottom: calc(100% + 2px);
+  top: calc(100% + 2px);
   left: 50%;
   transform: translateX(-50%);
   border: 5px solid transparent;
-  border-top-color: var(--color-gray-900);
+  border-bottom-color: var(--color-gray-900);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.15s ease, visibility 0.15s ease;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .tableHeaderIcon:hover::after,
