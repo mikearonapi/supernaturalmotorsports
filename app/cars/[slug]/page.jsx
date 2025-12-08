@@ -81,6 +81,49 @@ const getScoreTierClass = (score) => {
   return styles.scorePoor;
 };
 
+// Parse transmission string to user-friendly format
+const parseTransmission = (trans) => {
+  if (!trans) return { display: 'Unknown', hasManual: false, hasAuto: false };
+  
+  const upper = trans.toUpperCase();
+  const hasManual = upper.includes('MT');
+  const hasAuto = upper.includes('AT') || upper.includes('DCT') || upper.includes('PDK') || 
+                  upper.includes('DSG') || upper.includes('SMG') || upper.includes('AUTO') || 
+                  upper.includes('TRONIC') || upper.includes('GEAR') || upper.includes('DIRECT');
+  
+  // Parse individual transmission types for better display
+  const parts = trans.split('/');
+  const formatted = parts.map(part => {
+    const p = part.trim().toUpperCase();
+    // Manual types
+    if (p.match(/^\d*MT$/)) return `${p.replace('MT', '')}-Speed Manual`.replace('-Speed', p.replace('MT', '') ? `${p.replace('MT', '')}-Speed` : '').trim();
+    // Automatic types
+    if (p.match(/^\d*AT$/)) return `${p.replace('AT', '')}-Speed Auto`;
+    if (p.includes('DCT')) return `${p.replace('DCT', '')}-Speed DCT`;
+    if (p.includes('PDK')) return 'PDK';
+    if (p.includes('DSG')) return 'DSG';
+    if (p.includes('SMG')) return 'SMG';
+    if (p.includes('TRONIC')) return part; // Keep original for S-Tronic, R-Tronic
+    if (p.includes('GEAR')) return 'E-Gear';
+    if (p === 'AUTO') return 'Automatic';
+    if (p === 'DIRECT') return 'Direct Drive';
+    return part;
+  });
+  
+  let display = trans;
+  let summary = '';
+  
+  if (hasManual && hasAuto) {
+    summary = 'Manual & Auto Available';
+  } else if (hasManual) {
+    summary = 'Manual Only';
+  } else if (hasAuto) {
+    summary = 'Automatic Only';
+  }
+  
+  return { display, summary, hasManual, hasAuto };
+};
+
 export default function CarDetail() {
   const params = useParams();
   const slug = params.slug;
@@ -175,35 +218,40 @@ export default function CarDetail() {
     <div className={styles.container}>
       {/* Hero Section */}
       <section className={styles.heroSection}>
-        <div className={styles.heroContent}>
-          <Link href="/car-selector" className={styles.backLink}>
-            <Icons.arrowLeft size={18} />
-            Back to Car Selector
-          </Link>
-          
-          <div className={styles.heroHeader}>
-            <span className={`${styles.tierBadge} ${getTierClass(car.tier)}`}>
-              {tier.label}
-            </span>
-            <span className={styles.categoryBadge}>{car.category}</span>
+        <div className={styles.heroInner}>
+          <div className={styles.heroContent}>
+            <Link href="/car-selector" className={styles.backLink}>
+              <Icons.arrowLeft size={18} />
+              Back to Car Selector
+            </Link>
+            
+            <div className={styles.heroHeader}>
+              <span className={`${styles.tierBadge} ${getTierClass(car.tier)}`}>
+                {tier.label}
+              </span>
+              <span className={styles.categoryBadge}>{car.category}</span>
+              {car.brand && (
+                <span className={styles.brandBadge}>{car.brand}</span>
+              )}
+            </div>
+            
+            <h1 className={styles.heroTitle}>{car.name}</h1>
+            <p className={styles.heroYears}>{car.years}</p>
+            
+            {car.tagline && (
+              <p className={styles.heroTagline}>{car.tagline}</p>
+            )}
+            
+            <div className={styles.heroHighlight}>
+              <Icons.zap size={18} />
+              <span>{car.highlight}</span>
+            </div>
           </div>
           
-          <h1 className={styles.heroTitle}>{car.name}</h1>
-          <p className={styles.heroYears}>{car.years}</p>
-          
-          {car.tagline && (
-            <p className={styles.heroTagline}>{car.tagline}</p>
-          )}
-          
-          <div className={styles.heroHighlight}>
-            <Icons.zap size={18} />
-            <span>{car.highlight}</span>
+          {/* Hero image - positioned within content bounds */}
+          <div className={styles.heroImageWrapper}>
+            <CarImage car={car} variant="hero" className={styles.heroImage} />
           </div>
-        </div>
-        
-        {/* Hero image with fallback placeholder */}
-        <div className={styles.heroImageWrapper}>
-          <CarImage car={car} variant="hero" className={styles.heroImage} />
         </div>
       </section>
 
@@ -225,8 +273,11 @@ export default function CarDetail() {
             </div>
           )}
           <div className={styles.specItem}>
-            <span className={styles.specLabel}>Trans</span>
+            <span className={styles.specLabel}>Transmission</span>
             <span className={styles.specValue}>{car.trans}</span>
+            {parseTransmission(car.trans).summary && (
+              <span className={styles.specMeta}>{parseTransmission(car.trans).summary}</span>
+            )}
           </div>
           {car.drivetrain && (
             <div className={styles.specItem}>

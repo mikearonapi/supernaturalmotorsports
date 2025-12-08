@@ -85,11 +85,20 @@
   padding: 3rem 2rem 4rem;
   position: relative;
   overflow: hidden;
+  /* Center the hero content area */
+  display: flex;
+  justify-content: center;
+}
+
+.heroInner {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 300px;
 }
 
 .heroContent {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 55%;
   position: relative;
   z-index: 2;
 }
@@ -157,6 +166,17 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
+.brandBadge {
+  display: inline-flex;
+  padding: 0.35rem 0.85rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .heroTitle {
   font-size: 3rem;
   font-weight: 700;
@@ -195,8 +215,8 @@
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 50%;
-  max-width: 600px;
+  width: 45%;
+  max-width: 500px;
   opacity: 1;
   pointer-events: none;
 }
@@ -300,6 +320,17 @@
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-gray-800);
+}
+
+.specMeta {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--sn-primary);
+  margin-top: 0.15rem;
+  padding: 0.15rem 0.4rem;
+  background: rgba(26, 77, 110, 0.1);
+  border-radius: var(--radius-sm);
+  display: inline-block;
 }
 
 /* --------------------------------------------------------------------------
@@ -797,11 +828,16 @@
 @media (max-width: 900px) {
   .heroSection {
     padding: 1.5rem 1rem 0;
+  }
+
+  .heroInner {
     display: flex;
     flex-direction: column;
+    min-height: auto;
   }
 
   .heroContent {
+    max-width: 100%;
     order: 1;
     margin-bottom: 1rem;
   }
@@ -932,6 +968,11 @@
 
   .specValue {
     font-size: 0.85rem;
+  }
+
+  .specMeta {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.3rem;
   }
 
   .perfSpecsStrip {
