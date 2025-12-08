@@ -1159,6 +1159,15 @@ export default function PerformanceHub({ car }) {
         
         {/* Footer Links */}
         <div className={styles.hubFooter}>
+          {effectiveSelectedModules.length > 0 && (
+            <Link 
+              href={`/education?upgrades=${effectiveSelectedModules.join(',')}`}
+              className={styles.footerLinkPrimary}
+            >
+              <Icons.wrench size={14} />
+              View in Build Planner
+            </Link>
+          )}
           <Link href="/education" className={styles.footerLink}>
             Learn About Upgrades <Icons.chevronRight size={14} />
           </Link>

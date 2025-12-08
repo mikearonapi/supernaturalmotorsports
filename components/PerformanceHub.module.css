@@ -646,6 +646,26 @@
   color: var(--sn-primary-dark);
 }
 
+.hubFooter .footerLinkPrimary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--sn-accent);
+  color: var(--sn-primary-dark);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.hubFooter .footerLinkPrimary:hover {
+  background: var(--sn-accent-hover, #c9982a);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 164, 24, 0.3);
+}
+
 /* Responsive adjustments for header */
 @media (max-width: 768px) {
   .hubHeader {

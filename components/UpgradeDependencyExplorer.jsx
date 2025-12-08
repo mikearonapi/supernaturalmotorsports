@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import styles from './UpgradeDependencyExplorer.module.css';
 import { 
   systems, 
@@ -8,6 +9,7 @@ import {
   upgradeNodeMap, 
   checkDependencies,
 } from '@/data/connectedTissueMatrix';
+import { genericPackages } from '@/data/upgradePackages';
 
 // Icons
 const Icons = {
@@ -621,16 +623,79 @@ function ImpactDetailPanel({ upgrade, selectedUpgrades }) {
   );
 }
 
+// Package presets for quick-start
+const packagePresets = [
+  { key: 'none', name: 'Start Fresh', description: 'Build from scratch', upgrades: [] },
+  { 
+    key: 'streetSport', 
+    name: 'Street Sport', 
+    description: 'Spirited street driving',
+    upgrades: ['cold-air-intake', 'ecu-tune', 'cat-back-exhaust', 'lowering-springs', 'brake-pads-performance']
+  },
+  { 
+    key: 'trackPack', 
+    name: 'Track Pack', 
+    description: 'HPDE & track days',
+    upgrades: ['coilovers', 'big-brake-kit', 'brake-pads-performance', 'braided-brake-lines', 'high-temp-brake-fluid', 'oil-cooler', 'ecu-tune', 'headers', 'sway-bars']
+  },
+  { 
+    key: 'timeAttack', 
+    name: 'Time Attack', 
+    description: 'Competitive laps',
+    upgrades: ['camshafts', 'ported-heads', 'headers', 'cat-back-exhaust', 'ecu-tune', 'fuel-system-upgrade', 'coilovers', 'big-brake-kit', 'brake-pads-performance', 'lightweight-wheels', 'competition-tires', 'front-splitter', 'rear-wing', 'oil-cooler']
+  },
+  { 
+    key: 'ultimatePower', 
+    name: 'Max Power', 
+    description: 'Forced induction build',
+    upgrades: ['supercharger-roots', 'fuel-system-upgrade', 'intercooler', 'heat-exchanger-sc', 'ecu-tune', 'clutch-upgrade', 'headers', 'downpipe', 'oil-cooler', 'radiator-upgrade']
+  },
+];
+
 // Main Component
-export default function UpgradeDependencyExplorer() {
+export default function UpgradeDependencyExplorer({ initialUpgrades = [], showPackageSelector = true }) {
+  const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedUpgrades, setSelectedUpgrades] = useState(new Set());
   const [hoveredUpgrade, setHoveredUpgrade] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [selectedPreset, setSelectedPreset] = useState('none');
   const containerRef = useRef(null);
   
   const allUpgrades = useMemo(() => getAllUpgrades(), []);
+  
+  // Initialize from URL params or props
+  const [selectedUpgrades, setSelectedUpgrades] = useState(() => {
+    // Check URL params first
+    const urlUpgrades = searchParams?.get('upgrades');
+    const urlPackage = searchParams?.get('package');
+    
+    if (urlUpgrades) {
+      return new Set(urlUpgrades.split(',').filter(Boolean));
+    }
+    
+    if (urlPackage) {
+      const preset = packagePresets.find(p => p.key === urlPackage);
+      if (preset) {
+        return new Set(preset.upgrades);
+      }
+    }
+    
+    if (initialUpgrades.length > 0) {
+      return new Set(initialUpgrades);
+    }
+    
+    return new Set();
+  });
+  
+  // Handle preset selection
+  const handlePresetChange = useCallback((presetKey) => {
+    setSelectedPreset(presetKey);
+    const preset = packagePresets.find(p => p.key === presetKey);
+    if (preset) {
+      setSelectedUpgrades(new Set(preset.upgrades));
+    }
+  }, []);
   
   // Filter upgrades
   const filteredUpgrades = useMemo(() => {
@@ -734,6 +799,28 @@ export default function UpgradeDependencyExplorer() {
           </div>
         </div>
       </div>
+      
+      {/* Package Presets */}
+      {showPackageSelector && (
+        <div className={styles.presetSelector}>
+          <span className={styles.presetLabel}>Quick Start:</span>
+          <div className={styles.presetTabs}>
+            {packagePresets.map(preset => (
+              <button
+                key={preset.key}
+                className={`${styles.presetTab} ${selectedPreset === preset.key ? styles.active : ''}`}
+                onClick={() => handlePresetChange(preset.key)}
+                title={preset.description}
+              >
+                {preset.name}
+                {preset.upgrades.length > 0 && (
+                  <span className={styles.presetCount}>{preset.upgrades.length}</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       
       {/* Controls */}
       <div className={styles.controls}>

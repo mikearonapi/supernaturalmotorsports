@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import Button from '@/components/Button';
 import UpgradeGuide from '@/components/UpgradeGuide';
 import UpgradeDependencyExplorer from '@/components/UpgradeDependencyExplorer';
@@ -72,33 +74,146 @@ const Icons = {
       <path d="M19 6h-8.5a2.5 2.5 0 0 0 0 5H15a2.5 2.5 0 0 1 0 5H5"/>
     </svg>
   ),
+  chevronDown: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  ),
+  chevronRight: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
+  ),
 };
 
 // Get system objects as array
 const systemsList = Object.values(systems);
 
-export default function EducationPage() {
-  const [activeSection, setActiveSection] = useState('encyclopedia'); // 'encyclopedia' or 'dependencies' or 'systems'
+// System Card Component - Now expandable
+function SystemCard({ system }) {
+  const [isExpanded, setIsExpanded] = useState(false);
   
-  const encyclopediaRef = useRef(null);
-  const dependenciesRef = useRef(null);
+  const systemNodes = Object.values(nodes).filter(n => n.system === system.key);
+  const relatedEdges = edges.filter(e => 
+    e.from.startsWith(system.key + '.') || e.to.startsWith(system.key + '.')
+  );
+  
+  return (
+    <div 
+      className={`${styles.systemCard} ${isExpanded ? styles.expanded : ''}`}
+      style={{ '--system-color': system.color }}
+    >
+      <button 
+        className={styles.systemCardHeader}
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <div className={styles.systemCardIcon}>
+          <Icons.bolt size={20} />
+        </div>
+        <h3>{system.name}</h3>
+        <span className={styles.expandIcon}>
+          {isExpanded ? <Icons.chevronDown size={16} /> : <Icons.chevronRight size={16} />}
+        </span>
+      </button>
+      
+      <p className={styles.systemCardDesc}>{system.description}</p>
+      
+      <div className={styles.systemCardStats}>
+        <span>{systemNodes.length} components</span>
+        <span>{relatedEdges.length} connections</span>
+      </div>
+      
+      {/* Always visible: first 4 nodes */}
+      <div className={styles.systemCardNodes}>
+        {systemNodes.slice(0, isExpanded ? undefined : 4).map(node => (
+          <span key={node.key} className={styles.nodeTag}>
+            {node.name}
+          </span>
+        ))}
+        {!isExpanded && systemNodes.length > 4 && (
+          <span className={styles.nodeMore}>+{systemNodes.length - 4} more</span>
+        )}
+      </div>
+      
+      {/* Expanded content: connections and relationships */}
+      {isExpanded && (
+        <div className={styles.systemCardExpanded}>
+          <div className={styles.expandedSection}>
+            <h4>Key Connections</h4>
+            <div className={styles.connectionsList}>
+              {relatedEdges.slice(0, 5).map((edge, idx) => {
+                const relType = relationshipTypes[edge.type];
+                const fromNode = nodes[edge.from];
+                const toNode = nodes[edge.to];
+                const isOutgoing = edge.from.startsWith(system.key + '.');
+                
+                return (
+                  <div key={idx} className={styles.connectionItem} data-type={edge.type}>
+                    <span className={styles.connectionType}>{relType?.name || edge.type}</span>
+                    <span className={styles.connectionPath}>
+                      {isOutgoing ? (
+                        <>{fromNode?.name} → {toNode?.name}</>
+                      ) : (
+                        <>{toNode?.name} ← {fromNode?.name}</>
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
+              {relatedEdges.length > 5 && (
+                <span className={styles.connectionMore}>+{relatedEdges.length - 5} more connections</span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Main Education Page Content
+function EducationContent() {
+  const searchParams = useSearchParams();
+  const [activeSection, setActiveSection] = useState('concepts');
+  const [showAdvancedRef, setShowAdvancedRef] = useState(false);
+  
+  const conceptsRef = useRef(null);
   const systemsRef = useRef(null);
+  const encyclopediaRef = useRef(null);
+  const builderRef = useRef(null);
+  
+  // Auto-scroll to Build Planner if coming from Performance HUB with upgrades
+  useEffect(() => {
+    const upgrades = searchParams?.get('upgrades');
+    const pkg = searchParams?.get('package');
+    
+    if (upgrades || pkg) {
+      // Small delay to ensure the page has rendered
+      setTimeout(() => {
+        setActiveSection('builder');
+        builderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 500);
+    }
+  }, [searchParams]);
   
   const scrollToSection = (section) => {
     setActiveSection(section);
     let ref;
     switch (section) {
-      case 'encyclopedia':
-        ref = encyclopediaRef;
-        break;
-      case 'dependencies':
-        ref = dependenciesRef;
+      case 'concepts':
+        ref = conceptsRef;
         break;
       case 'systems':
         ref = systemsRef;
         break;
-      default:
+      case 'encyclopedia':
         ref = encyclopediaRef;
+        break;
+      case 'builder':
+        ref = builderRef;
+        break;
+      default:
+        ref = conceptsRef;
     }
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
@@ -132,21 +247,14 @@ export default function EducationPage() {
               components, and why the best builds are planned—not impulse buys.
             </p>
             
-            {/* Section Navigation */}
+            {/* Section Navigation - Reordered for progressive disclosure */}
             <div className={styles.heroNav}>
               <button
-                className={`${styles.heroNavBtn} ${activeSection === 'encyclopedia' ? styles.active : ''}`}
-                onClick={() => scrollToSection('encyclopedia')}
+                className={`${styles.heroNavBtn} ${activeSection === 'concepts' ? styles.active : ''}`}
+                onClick={() => scrollToSection('concepts')}
               >
-                <Icons.book size={18} />
-                Upgrade Encyclopedia
-              </button>
-              <button
-                className={`${styles.heroNavBtn} ${activeSection === 'dependencies' ? styles.active : ''}`}
-                onClick={() => scrollToSection('dependencies')}
-              >
-                <Icons.flow size={18} />
-                Dependency Explorer
+                <Icons.info size={18} />
+                Key Concepts
               </button>
               <button
                 className={`${styles.heroNavBtn} ${activeSection === 'systems' ? styles.active : ''}`}
@@ -155,41 +263,37 @@ export default function EducationPage() {
                 <Icons.grid size={18} />
                 Vehicle Systems
               </button>
+              <button
+                className={`${styles.heroNavBtn} ${activeSection === 'encyclopedia' ? styles.active : ''}`}
+                onClick={() => scrollToSection('encyclopedia')}
+              >
+                <Icons.book size={18} />
+                Upgrade Encyclopedia
+              </button>
+              <button
+                className={`${styles.heroNavBtn} ${activeSection === 'builder' ? styles.active : ''}`}
+                onClick={() => scrollToSection('builder')}
+              >
+                <Icons.flow size={18} />
+                Build Planner
+              </button>
             </div>
           </div>
         </div>
       </section>
       
-      {/* Upgrade Encyclopedia Section */}
-      <section ref={encyclopediaRef} id="encyclopedia" className={styles.encyclopediaSection}>
-        <div className={styles.container}>
-          <UpgradeGuide />
-        </div>
-      </section>
-      
-      {/* Dependency Explorer - New Interactive Section */}
-      <section ref={dependenciesRef} id="dependencies" className={styles.dependencySection}>
-        <div className={styles.container}>
-          <div className={styles.sectionIntro}>
-            <span className={styles.sectionBadge}>Modification Matrix</span>
-            <h2 className={styles.sectionTitle}>Upgrade Dependency Explorer</h2>
-            <p className={styles.sectionSubtitle}>
-              Every modification affects multiple systems in your car. Select any upgrade 
-              to see its full impact—what it improves, what it stresses, and what 
-              supporting mods you need. This is how informed drivers build—with intention, not impulse.
-            </p>
-          </div>
-          
-          <UpgradeDependencyExplorer />
-        </div>
-      </section>
-      
-      {/* Key Concepts Section */}
-      <section className={styles.conceptsSection}>
+      {/* ================================================================
+          SECTION 1: KEY CONCEPTS - General Introduction (Progressive Disclosure Level 1)
+          ================================================================ */}
+      <section ref={conceptsRef} id="concepts" className={styles.conceptsSection}>
         <div className={styles.container}>
           <div className={styles.conceptsHeader}>
-            <span className={styles.sectionBadge}>Key Concepts</span>
+            <span className={styles.sectionBadge}>Start Here</span>
             <h2 className={styles.sectionTitleLight}>Understanding Upgrade Relationships</h2>
+            <p className={styles.conceptsSubtitle}>
+              Before diving into specific mods, understand these four fundamental concepts 
+              that govern how modifications interact with each other and your car.
+            </p>
           </div>
           
           <div className={styles.conceptsGrid}>
@@ -244,16 +348,18 @@ export default function EducationPage() {
         </div>
       </section>
       
-      {/* Vehicle Systems Overview */}
+      {/* ================================================================
+          SECTION 2: VEHICLE SYSTEMS - Foundational Knowledge (Level 2)
+          ================================================================ */}
       <section ref={systemsRef} id="systems" className={styles.systemsSection}>
         <div className={styles.container}>
           <div className={styles.systemsIntro}>
-            <span className={styles.sectionBadge}>Reference</span>
+            <span className={styles.sectionBadge}>The Foundation</span>
             <h2 className={styles.sectionTitle}>Vehicle Systems Overview</h2>
             <p className={styles.sectionSubtitle}>
               Your car isn&apos;t a collection of independent parts—it&apos;s a complex 
-              system where everything affects everything else. Understanding these systems 
-              is the foundation of real mastery.
+              system where everything affects everything else. Click any system to explore 
+              its components and connections.
             </p>
           </div>
           
@@ -273,65 +379,84 @@ export default function EducationPage() {
           </div>
           
           <div className={styles.systemsGrid}>
-            {systemsList.map(system => {
-              const systemNodes = Object.values(nodes).filter(n => n.system === system.key);
-              const relatedEdges = edges.filter(e => 
-                e.from.startsWith(system.key + '.') || e.to.startsWith(system.key + '.')
-              );
-              
-              return (
-                <div 
-                  key={system.key} 
-                  className={styles.systemCard}
-                  style={{ '--system-color': system.color }}
-                >
-                  <div className={styles.systemCardHeader}>
-                    <div className={styles.systemCardIcon}>
-                      <Icons.bolt size={20} />
-                    </div>
-                    <h3>{system.name}</h3>
-                  </div>
-                  <p className={styles.systemCardDesc}>{system.description}</p>
-                  <div className={styles.systemCardStats}>
-                    <span>{systemNodes.length} components</span>
-                    <span>{relatedEdges.length} connections</span>
-                  </div>
-                  <div className={styles.systemCardNodes}>
-                    {systemNodes.slice(0, 4).map(node => (
-                      <span key={node.key} className={styles.nodeTag}>
-                        {node.name}
-                      </span>
-                    ))}
-                    {systemNodes.length > 4 && (
-                      <span className={styles.nodeMore}>+{systemNodes.length - 4} more</span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+            {systemsList.map(system => (
+              <SystemCard key={system.key} system={system} />
+            ))}
           </div>
         </div>
       </section>
       
-      {/* Relationship Types Reference */}
+      {/* ================================================================
+          SECTION 3: UPGRADE ENCYCLOPEDIA - Detailed Mod Information (Level 3)
+          ================================================================ */}
+      <section ref={encyclopediaRef} id="encyclopedia" className={styles.encyclopediaSection}>
+        <div className={styles.container}>
+          <UpgradeGuide />
+        </div>
+      </section>
+      
+      {/* ================================================================
+          SECTION 4: BUILD PLANNER - Interactive Tool (Level 4 - Advanced)
+          ================================================================ */}
+      <section ref={builderRef} id="builder" className={styles.dependencySection}>
+        <div className={styles.container}>
+          <div className={styles.sectionIntro}>
+            <span className={styles.sectionBadge}>Plan Your Build</span>
+            <h2 className={styles.sectionTitle}>Build Planner</h2>
+            <p className={styles.sectionSubtitle}>
+              Put your knowledge into action. Select upgrades to build your mod list, 
+              see dependencies and conflicts in real-time, or start from a pre-built 
+              package and customize from there.
+            </p>
+            <div className={styles.hubLinkBox}>
+              <Icons.bolt size={18} />
+              <span>Have a specific car? Use the </span>
+              <Link href="/performance">Performance HUB</Link>
+              <span> for car-specific recommendations.</span>
+            </div>
+          </div>
+          
+          <Suspense fallback={<div className={styles.loadingPlaceholder}>Loading Build Planner...</div>}>
+            <UpgradeDependencyExplorer showPackageSelector={true} />
+          </Suspense>
+        </div>
+      </section>
+      
+      {/* ================================================================
+          SECTION 5: RELATIONSHIP REFERENCE - Technical Details (Collapsible)
+          ================================================================ */}
       <section className={styles.relationshipsSection}>
         <div className={styles.container}>
-          <h2 className={styles.sectionTitleLight}>Relationship Types Reference</h2>
-          <div className={styles.relationshipsGrid}>
-            {Object.entries(relationshipTypes).map(([key, rel]) => (
-              <div 
-                key={key} 
-                className={styles.relationshipCard}
-                data-severity={rel.severity}
-              >
-                <div className={styles.relationshipHeader}>
-                  <span className={styles.relationshipName}>{rel.name}</span>
-                  <span className={styles.relationshipSeverity}>{rel.severity}</span>
+          <button 
+            className={styles.refToggle}
+            onClick={() => setShowAdvancedRef(!showAdvancedRef)}
+          >
+            <h2 className={styles.sectionTitleLight}>Relationship Types Reference</h2>
+            <span className={styles.refToggleIcon}>
+              {showAdvancedRef ? <Icons.chevronDown size={20} /> : <Icons.chevronRight size={20} />}
+            </span>
+          </button>
+          <p className={styles.refSubtitle}>
+            Technical reference for the different ways modifications interact with your vehicle systems.
+          </p>
+          
+          {showAdvancedRef && (
+            <div className={styles.relationshipsGrid}>
+              {Object.entries(relationshipTypes).map(([key, rel]) => (
+                <div 
+                  key={key} 
+                  className={styles.relationshipCard}
+                  data-severity={rel.severity}
+                >
+                  <div className={styles.relationshipHeader}>
+                    <span className={styles.relationshipName}>{rel.name}</span>
+                    <span className={styles.relationshipSeverity}>{rel.severity}</span>
+                  </div>
+                  <p className={styles.relationshipDesc}>{rel.description}</p>
                 </div>
-                <p className={styles.relationshipDesc}>{rel.description}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
       
@@ -340,15 +465,15 @@ export default function EducationPage() {
         <div className={styles.container}>
           <div className={styles.ctaCard}>
             <div className={styles.ctaContent}>
-              <h2>Ready to Put Knowledge Into Action?</h2>
+              <h2>Ready to Apply What You&apos;ve Learned?</h2>
               <p>
-                Mastery is knowledge applied. Our Performance HUB uses the Modification 
-                Matrix to warn you about missing dependencies and recommend supporting upgrades 
-                for your specific car—so you build with confidence, not guesswork.
+                Take your knowledge to the Performance HUB where you can plan upgrades 
+                for your specific car, see real performance impacts, and get personalized 
+                recommendations based on your goals.
               </p>
               <div className={styles.ctaButtons}>
                 <Button href="/performance" variant="primary" size="lg">
-                  Plan Your Build
+                  Go to Performance HUB
                 </Button>
                 <Button href="/car-selector" variant="outlineLight" size="lg">
                   Find Your Car First
@@ -359,5 +484,14 @@ export default function EducationPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+// Main export with Suspense wrapper for useSearchParams in Build Planner
+export default function EducationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EducationContent />
+    </Suspense>
   );
 }

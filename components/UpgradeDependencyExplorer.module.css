@@ -1020,3 +1020,101 @@
     gap: var(--space-sm);
   }
 }
+
+/* Preset Selector - Quick Start from Package */
+.presetSelector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md) var(--space-xl);
+  background: linear-gradient(135deg, rgba(212, 164, 24, 0.08) 0%, transparent 50%);
+  border-bottom: 1px solid var(--color-gray-800);
+}
+
+@media (min-width: 640px) {
+  .presetSelector {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-md);
+  }
+}
+
+.presetLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.presetTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.presetTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--color-gray-800);
+  border: 1px solid var(--color-gray-700);
+  border-radius: var(--radius-lg);
+  color: var(--color-gray-300);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.presetTab:hover {
+  background: var(--color-gray-700);
+  border-color: var(--color-gray-600);
+  color: var(--color-white);
+}
+
+.presetTab.active {
+  background: var(--sn-accent);
+  border-color: var(--sn-accent);
+  color: var(--color-gray-900);
+}
+
+.presetCount {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.presetTab.active .presetCount {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Link from Performance HUB */
+.hubLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  background: linear-gradient(135deg, rgba(39, 174, 96, 0.1) 0%, transparent 50%);
+  border-bottom: 1px solid var(--color-gray-800);
+  color: #27ae60;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.hubLink svg {
+  flex-shrink: 0;
+}
+
+.hubLink a {
+  color: var(--sn-accent);
+  text-decoration: underline;
+}
+
+.hubLink a:hover {
+  color: var(--color-white);
+}
