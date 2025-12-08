@@ -39,14 +39,14 @@
 
 .thumbnail {
   width: 100%;
-  /* Wide aspect ratio for car thumbnails */
-  aspect-ratio: 16 / 9;
+  /* Match source image aspect ratio (2752×1536 = 43:24 ≈ 1.79:1) */
+  aspect-ratio: 43 / 24;
 }
 
 .card {
   width: 100%;
-  /* Wide aspect ratio to show cars properly in landscape hero images */
-  aspect-ratio: 16 / 9;
+  /* Match source image aspect ratio (2752×1536 = 43:24 ≈ 1.79:1) */
+  aspect-ratio: 43 / 24;
 }
 
 /* Placeholder */
@@ -135,10 +135,10 @@
   opacity: 1;
 }
 
-/* Card/thumbnail images need to focus even more on the car */
+/* Card/thumbnail use exact source aspect ratio - no positioning needed */
 .card .image,
 .thumbnail .image {
-  object-position: center 80%;
+  object-position: center center;
 }
 
 /* Variant-specific placeholder text sizes - Mobile First */
