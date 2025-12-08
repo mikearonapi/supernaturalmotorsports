@@ -393,13 +393,13 @@ export default function CarDetail() {
               </p>
               <div className={styles.upgradeTeaserActions}>
                 <Link 
-                  href={`/upgrades?car=${car.slug}`} 
+                  href={`/performance?car=${car.slug}`} 
                   className={styles.primaryButton}
                 >
                   Explore Upgrades
                 </Link>
-                <Link href="/contact" className={styles.secondaryButton}>
-                  Ask a Question
+                <Link href="/education" className={styles.secondaryButton}>
+                  Learn More
                 </Link>
               </div>
             </div>

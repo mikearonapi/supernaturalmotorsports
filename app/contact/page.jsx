@@ -32,10 +32,10 @@ const MessageIcon = () => (
 );
 
 const interests = [
-  { id: 'advisory', label: 'Sports Car Selector' },
+  { id: 'car-selector', label: 'Car Selector Questions' },
   { id: 'performance', label: 'Performance HUB / Build Planning' },
   { id: 'education', label: 'Learning About Upgrades' },
-  { id: 'inspection', label: 'Pre-Purchase Inspection' },
+  { id: 'general', label: 'General Question' },
   { id: 'other', label: 'Something Else' }
 ];
 
@@ -45,16 +45,16 @@ const faqs = [
     answer: 'We typically respond within 24-48 hours. For urgent matters, mention it in your message and we\'ll prioritize.'
   },
   {
-    question: 'Do you work on all makes and models?',
-    answer: "We specialize in sports cars and performance vehicles, but we're happy to discuss any project. If it's outside our wheelhouse, we'll point you toward someone who can actually help—not leave you hanging."
+    question: 'What kind of questions can I ask?',
+    answer: "Anything car-related. Need help narrowing down options in the Car Selector? Want advice on which upgrades to prioritize? Curious how a mod affects the rest of your car? We're here to help you think it through."
   },
   {
-    question: 'Can you work with my budget?',
-    answer: "Every budget deserves respect. Whether you're spending $1K or $50K, we bring the same commitment to getting you maximum value. The guy with the budget Miata gets the same attention as the GT3RS owner—that's how we roll."
+    question: 'Is this free?',
+    answer: "Yes. Our tools are free to use, and we're happy to answer questions. We're building a community of enthusiasts who help each other get better—that's the whole point."
   },
   {
-    question: 'Do you offer remote consultations?',
-    answer: 'Absolutely. Consultation and build planning work great over video call. For hands-on work, we\'re based in [Location] and happy to discuss logistics.'
+    question: 'What makes you different?',
+    answer: "We're drivers, not salespeople. No upselling, no agenda. Just honest knowledge from people who actually own and track these cars. The guy with the budget Miata gets the same respect as the GT3RS owner—that's how we roll."
   }
 ];
 

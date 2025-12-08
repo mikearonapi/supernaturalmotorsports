@@ -90,16 +90,16 @@ export default function CarSelector() {
             <div className={styles.ctaContent}>
               <h2 className={styles.ctaTitle}>Found Your Match?</h2>
               <p className={styles.ctaSubtitle}>
-                Now make it yours. We can help you inspect, acquire, or set up 
-                your new ride. From pre-purchase inspections to full performance builds, 
-                we&apos;re here to help you build with purpose.
+                Now plan your path forward. Use our Performance HUB to explore 
+                upgrade options, or dive into Education to understand how modifications 
+                work as a connected system. Build with knowledge, not guesswork.
               </p>
               <div className={styles.ctaButtons}>
                 <Button href="/performance" variant="primary" size="lg">
-                  Plan Your Build
+                  Explore Upgrades
                 </Button>
-                <Button href="/contact" variant="outlineLight" size="lg">
-                  Talk to an Expert
+                <Button href="/education" variant="outlineLight" size="lg">
+                  Learn the Fundamentals
                 </Button>
               </div>
             </div>

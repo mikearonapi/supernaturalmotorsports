@@ -6,6 +6,10 @@ import { redirect } from 'next/navigation';
 export const metadata = {
   title: 'Redirecting to Performance HUB',
   description: 'Upgrade planning is now part of the Performance HUB.',
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function UpgradesRedirect() {
