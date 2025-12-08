@@ -17,18 +17,18 @@ const SearchIcon = () => (
 );
 
 export const metadata = {
-  title: 'Sports Car Finder | Compare 35+ Performance Vehicles',
-  description: 'Find your perfect sports car with our intelligent comparison tool. Compare 35+ vehicles from $25K-$100K based on sound, track capability, reliability, daily comfort, and value. Real owner insights included.',
+  title: 'Sports Car Finder | Compare ~100 Performance Vehicles',
+  description: 'Find your perfect sports car with our intelligent comparison tool. Compare ~100 vehicles from $12K-$100K based on sound, track capability, reliability, daily comfort, and value. Real owner insights included.',
   keywords: ['sports car finder', 'car comparison', 'track cars', 'sports car buying guide', 'Porsche comparison', 'BMW M comparison', 'Corvette comparison', 'best sports car under 100k'],
   openGraph: {
-    title: 'Sports Car Finder | Compare 35+ Performance Vehicles',
-    description: 'Find your perfect sports car. Compare 35+ vehicles based on what matters most to you.',
+    title: 'Sports Car Finder | Compare ~100 Performance Vehicles',
+    description: 'Find your perfect sports car. Compare ~100 vehicles based on what matters most to you.',
     url: '/car-finder',
     type: 'website',
   },
   twitter: {
-    title: 'Sports Car Finder | Compare 35+ Performance Vehicles',
-    description: 'Find your perfect sports car. Compare 35+ vehicles from $25K-$100K.',
+    title: 'Sports Car Finder | Compare ~100 Performance Vehicles',
+    description: 'Find your perfect sports car. Compare ~100 vehicles from $12K-$100K.',
   },
   alternates: {
     canonical: '/car-finder',

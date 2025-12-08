@@ -43,15 +43,15 @@ CREATE TABLE IF NOT EXISTS cars (
   tier TEXT NOT NULL CHECK (tier IN ('premium', 'upper-mid', 'mid', 'budget')),
   category TEXT NOT NULL CHECK (category IN ('Mid-Engine', 'Front-Engine', 'Rear-Engine')),
   
-  -- Advisory Scoring Fields (1-10 scale)
+  -- Advisory Scoring Fields (1-10 scale, decimal precision)
   -- These are the core scores used by the recommendation engine
-  score_sound INTEGER NOT NULL CHECK (score_sound >= 1 AND score_sound <= 10),
-  score_interior INTEGER NOT NULL CHECK (score_interior >= 1 AND score_interior <= 10),
-  score_track INTEGER NOT NULL CHECK (score_track >= 1 AND score_track <= 10),
-  score_reliability INTEGER NOT NULL CHECK (score_reliability >= 1 AND score_reliability <= 10),
-  score_value INTEGER NOT NULL CHECK (score_value >= 1 AND score_value <= 10),
-  score_driver_fun INTEGER NOT NULL CHECK (score_driver_fun >= 1 AND score_driver_fun <= 10),
-  score_aftermarket INTEGER NOT NULL CHECK (score_aftermarket >= 1 AND score_aftermarket <= 10),
+  score_sound DECIMAL(3,1) NOT NULL CHECK (score_sound >= 1 AND score_sound <= 10),
+  score_interior DECIMAL(3,1) NOT NULL CHECK (score_interior >= 1 AND score_interior <= 10),
+  score_track DECIMAL(3,1) NOT NULL CHECK (score_track >= 1 AND score_track <= 10),
+  score_reliability DECIMAL(3,1) NOT NULL CHECK (score_reliability >= 1 AND score_reliability <= 10),
+  score_value DECIMAL(3,1) NOT NULL CHECK (score_value >= 1 AND score_value <= 10),
+  score_driver_fun DECIMAL(3,1) NOT NULL CHECK (score_driver_fun >= 1 AND score_driver_fun <= 10),
+  score_aftermarket DECIMAL(3,1) NOT NULL CHECK (score_aftermarket >= 1 AND score_aftermarket <= 10),
   
   -- Core Specifications (required)
   engine TEXT NOT NULL,
@@ -75,16 +75,16 @@ CREATE TABLE IF NOT EXISTS cars (
   braking_60_0 INTEGER CHECK (braking_60_0 > 0),        -- 60-0 braking distance in feet
   lateral_g DECIMAL(3, 2) CHECK (lateral_g > 0),        -- Maximum lateral G in cornering
   
-  -- Performance HUB Scores (1-10 scale)
+  -- Performance HUB Scores (1-10 scale, decimal precision)
   -- These supplement the advisory scores for the GT-style Performance HUB
   -- Nullable because they can be derived from advisory scores if not provided
-  perf_power_accel INTEGER CHECK (perf_power_accel >= 1 AND perf_power_accel <= 10),
-  perf_grip_cornering INTEGER CHECK (perf_grip_cornering >= 1 AND perf_grip_cornering <= 10),
-  perf_braking INTEGER CHECK (perf_braking >= 1 AND perf_braking <= 10),
-  perf_track_pace INTEGER CHECK (perf_track_pace >= 1 AND perf_track_pace <= 10),
-  perf_drivability INTEGER CHECK (perf_drivability >= 1 AND perf_drivability <= 10),
-  perf_reliability_heat INTEGER CHECK (perf_reliability_heat >= 1 AND perf_reliability_heat <= 10),
-  perf_sound_emotion INTEGER CHECK (perf_sound_emotion >= 1 AND perf_sound_emotion <= 10),
+  perf_power_accel DECIMAL(3,1) CHECK (perf_power_accel >= 1 AND perf_power_accel <= 10),
+  perf_grip_cornering DECIMAL(3,1) CHECK (perf_grip_cornering >= 1 AND perf_grip_cornering <= 10),
+  perf_braking DECIMAL(3,1) CHECK (perf_braking >= 1 AND perf_braking <= 10),
+  perf_track_pace DECIMAL(3,1) CHECK (perf_track_pace >= 1 AND perf_track_pace <= 10),
+  perf_drivability DECIMAL(3,1) CHECK (perf_drivability >= 1 AND perf_drivability <= 10),
+  perf_reliability_heat DECIMAL(3,1) CHECK (perf_reliability_heat >= 1 AND perf_reliability_heat <= 10),
+  perf_sound_emotion DECIMAL(3,1) CHECK (perf_sound_emotion >= 1 AND perf_sound_emotion <= 10),
   
   -- Content Fields (editorial)
   notes TEXT NOT NULL,

@@ -1,0 +1,443 @@
+[
+  {
+    "name": "Mitsubishi Lancer Evolution VIII/IX",
+    "slug": "mitsubishi-lancer-evo-8-9",
+    "filename": "mitsubishi-lancer-evo-8-9-hero.png",
+    "brand": "Mitsubishi",
+    "tier": "mid"
+  },
+  {
+    "name": "Mitsubishi Lancer Evolution X",
+    "slug": "mitsubishi-lancer-evo-x",
+    "filename": "mitsubishi-lancer-evo-x-hero.png",
+    "brand": "Mitsubishi",
+    "tier": "budget"
+  },
+  {
+    "name": "Subaru Impreza WRX STI GD",
+    "slug": "subaru-wrx-sti-gd",
+    "filename": "subaru-wrx-sti-gd-hero.png",
+    "brand": "Subaru",
+    "tier": "budget"
+  },
+  {
+    "name": "Subaru WRX STI GR/GV",
+    "slug": "subaru-wrx-sti-gr-gv",
+    "filename": "subaru-wrx-sti-gr-gv-hero.png",
+    "brand": "Subaru",
+    "tier": "budget"
+  },
+  {
+    "name": "Subaru WRX STI VA",
+    "slug": "subaru-wrx-sti-va",
+    "filename": "subaru-wrx-sti-va-hero.png",
+    "brand": "Subaru",
+    "tier": "mid"
+  },
+  {
+    "name": "Honda S2000",
+    "slug": "honda-s2000",
+    "filename": "honda-s2000-hero.png",
+    "brand": "Honda",
+    "tier": "mid"
+  },
+  {
+    "name": "Mazda MX-5 Miata NA",
+    "slug": "mazda-mx5-miata-na",
+    "filename": "mazda-mx5-miata-na-hero.png",
+    "brand": "Mazda",
+    "tier": "budget"
+  },
+  {
+    "name": "Mazda MX-5 Miata NB",
+    "slug": "mazda-mx5-miata-nb",
+    "filename": "mazda-mx5-miata-nb-hero.png",
+    "brand": "Mazda",
+    "tier": "budget"
+  },
+  {
+    "name": "Mazda MX-5 Miata NC",
+    "slug": "mazda-mx5-miata-nc",
+    "filename": "mazda-mx5-miata-nc-hero.png",
+    "brand": "Mazda",
+    "tier": "budget"
+  },
+  {
+    "name": "Mazda MX-5 Miata ND",
+    "slug": "mazda-mx5-miata-nd",
+    "filename": "mazda-mx5-miata-nd-hero.png",
+    "brand": "Mazda",
+    "tier": "budget"
+  },
+  {
+    "name": "Toyota 86 / Scion FR-S",
+    "slug": "toyota-86-scion-frs",
+    "filename": "toyota-86-scion-frs-hero.png",
+    "brand": "Toyota",
+    "tier": "budget"
+  },
+  {
+    "name": "Toyota GR86",
+    "slug": "toyota-gr86",
+    "filename": "toyota-gr86-hero.png",
+    "brand": "Toyota",
+    "tier": "budget"
+  },
+  {
+    "name": "Subaru BRZ",
+    "slug": "subaru-brz-zc6",
+    "filename": "subaru-brz-zc6-hero.png",
+    "brand": "Subaru",
+    "tier": "budget"
+  },
+  {
+    "name": "Subaru BRZ (2nd Gen)",
+    "slug": "subaru-brz-zd8",
+    "filename": "subaru-brz-zd8-hero.png",
+    "brand": "Subaru",
+    "tier": "budget"
+  },
+  {
+    "name": "Toyota Supra Mk4 A80 Turbo",
+    "slug": "toyota-supra-mk4-a80-turbo",
+    "filename": "toyota-supra-mk4-a80-turbo-hero.png",
+    "brand": "Toyota",
+    "tier": "premium"
+  },
+  {
+    "name": "Mazda RX-7 FD3S",
+    "slug": "mazda-rx7-fd3s",
+    "filename": "mazda-rx7-fd3s-hero.png",
+    "brand": "Mazda",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Nissan 300ZX Twin Turbo Z32",
+    "slug": "nissan-300zx-twin-turbo-z32",
+    "filename": "nissan-300zx-twin-turbo-z32-hero.png",
+    "brand": "Nissan",
+    "tier": "mid"
+  },
+  {
+    "name": "Nissan 350Z",
+    "slug": "nissan-350z",
+    "filename": "nissan-350z-hero.png",
+    "brand": "Nissan",
+    "tier": "budget"
+  },
+  {
+    "name": "Nissan Z",
+    "slug": "nissan-z-rz34",
+    "filename": "nissan-z-rz34-hero.png",
+    "brand": "Nissan",
+    "tier": "mid"
+  },
+  {
+    "name": "Acura Integra Type R",
+    "slug": "acura-integra-type-r-dc2",
+    "filename": "acura-integra-type-r-dc2-hero.png",
+    "brand": "Acura",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "BMW M3 E46",
+    "slug": "bmw-m3-e46",
+    "filename": "bmw-m3-e46-hero.png",
+    "brand": "BMW",
+    "tier": "mid"
+  },
+  {
+    "name": "BMW M3 E92",
+    "slug": "bmw-m3-e92",
+    "filename": "bmw-m3-e92-hero.png",
+    "brand": "BMW",
+    "tier": "mid"
+  },
+  {
+    "name": "BMW M3 F80",
+    "slug": "bmw-m3-f80",
+    "filename": "bmw-m3-f80-hero.png",
+    "brand": "BMW",
+    "tier": "mid"
+  },
+  {
+    "name": "BMW 1 Series M Coupe",
+    "slug": "bmw-1m-coupe-e82",
+    "filename": "bmw-1m-coupe-e82-hero.png",
+    "brand": "BMW",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "BMW Z4 M Coupe/Roadster",
+    "slug": "bmw-z4m-e85-e86",
+    "filename": "bmw-z4m-e85-e86-hero.png",
+    "brand": "BMW",
+    "tier": "mid"
+  },
+  {
+    "name": "Audi RS5 B8",
+    "slug": "audi-rs5-b8",
+    "filename": "audi-rs5-b8-hero.png",
+    "brand": "Audi",
+    "tier": "mid"
+  },
+  {
+    "name": "Audi RS5 B9",
+    "slug": "audi-rs5-b9",
+    "filename": "audi-rs5-b9-hero.png",
+    "brand": "Audi",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Audi RS3 8V",
+    "slug": "audi-rs3-8v",
+    "filename": "audi-rs3-8v-hero.png",
+    "brand": "Audi",
+    "tier": "mid"
+  },
+  {
+    "name": "Audi RS3 8Y",
+    "slug": "audi-rs3-8y",
+    "filename": "audi-rs3-8y-hero.png",
+    "brand": "Audi",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Audi TT RS 8J",
+    "slug": "audi-tt-rs-8j",
+    "filename": "audi-tt-rs-8j-hero.png",
+    "brand": "Audi",
+    "tier": "mid"
+  },
+  {
+    "name": "Audi TT RS 8S",
+    "slug": "audi-tt-rs-8s",
+    "filename": "audi-tt-rs-8s-hero.png",
+    "brand": "Audi",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Mercedes-AMG C63 W205",
+    "slug": "mercedes-amg-c63-w205",
+    "filename": "mercedes-amg-c63-w205-hero.png",
+    "brand": "Mercedes-AMG",
+    "tier": "mid"
+  },
+  {
+    "name": "Alfa Romeo Giulia Quadrifoglio",
+    "slug": "alfa-romeo-giulia-quadrifoglio",
+    "filename": "alfa-romeo-giulia-quadrifoglio-hero.png",
+    "brand": "Alfa Romeo",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "BMW M5 E39",
+    "slug": "bmw-m5-e39",
+    "filename": "bmw-m5-e39-hero.png",
+    "brand": "BMW",
+    "tier": "mid"
+  },
+  {
+    "name": "BMW M5 E60",
+    "slug": "bmw-m5-e60",
+    "filename": "bmw-m5-e60-hero.png",
+    "brand": "BMW",
+    "tier": "mid"
+  },
+  {
+    "name": "BMW M5 F10 Competition",
+    "slug": "bmw-m5-f10-competition",
+    "filename": "bmw-m5-f10-competition-hero.png",
+    "brand": "BMW",
+    "tier": "mid"
+  },
+  {
+    "name": "BMW M5 F90 Competition",
+    "slug": "bmw-m5-f90-competition",
+    "filename": "bmw-m5-f90-competition-hero.png",
+    "brand": "BMW",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Mercedes-AMG E63 W212",
+    "slug": "mercedes-amg-e63-w212",
+    "filename": "mercedes-amg-e63-w212-hero.png",
+    "brand": "Mercedes-AMG",
+    "tier": "mid"
+  },
+  {
+    "name": "Mercedes-AMG E63 S W213",
+    "slug": "mercedes-amg-e63s-w213",
+    "filename": "mercedes-amg-e63s-w213-hero.png",
+    "brand": "Mercedes-AMG",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Cadillac CTS-V Gen 2",
+    "slug": "cadillac-cts-v-gen2",
+    "filename": "cadillac-cts-v-gen2-hero.png",
+    "brand": "Cadillac",
+    "tier": "mid"
+  },
+  {
+    "name": "Cadillac CTS-V Gen 3",
+    "slug": "cadillac-cts-v-gen3",
+    "filename": "cadillac-cts-v-gen3-hero.png",
+    "brand": "Cadillac",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Chevrolet Corvette C6 Z06",
+    "slug": "chevrolet-corvette-c6-z06",
+    "filename": "chevrolet-corvette-c6-z06-hero.png",
+    "brand": "Chevrolet",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Chevrolet Corvette C6 Grand Sport",
+    "slug": "chevrolet-corvette-c6-grand-sport",
+    "filename": "chevrolet-corvette-c6-grand-sport-hero.png",
+    "brand": "Chevrolet",
+    "tier": "mid"
+  },
+  {
+    "name": "Chevrolet Corvette C5 Z06",
+    "slug": "chevrolet-corvette-c5-z06",
+    "filename": "chevrolet-corvette-c5-z06-hero.png",
+    "brand": "Chevrolet",
+    "tier": "budget"
+  },
+  {
+    "name": "Dodge Challenger SRT 392",
+    "slug": "dodge-challenger-srt-392",
+    "filename": "dodge-challenger-srt-392-hero.png",
+    "brand": "Dodge",
+    "tier": "mid"
+  },
+  {
+    "name": "Dodge Challenger Hellcat",
+    "slug": "dodge-challenger-hellcat",
+    "filename": "dodge-challenger-hellcat-hero.png",
+    "brand": "Dodge",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Dodge Charger SRT 392",
+    "slug": "dodge-charger-srt-392",
+    "filename": "dodge-charger-srt-392-hero.png",
+    "brand": "Dodge",
+    "tier": "mid"
+  },
+  {
+    "name": "Dodge Charger Hellcat",
+    "slug": "dodge-charger-hellcat",
+    "filename": "dodge-charger-hellcat-hero.png",
+    "brand": "Dodge",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Ford Mustang Boss 302",
+    "slug": "ford-mustang-boss-302",
+    "filename": "ford-mustang-boss-302-hero.png",
+    "brand": "Ford",
+    "tier": "mid"
+  },
+  {
+    "name": "Lotus Elise S2",
+    "slug": "lotus-elise-s2",
+    "filename": "lotus-elise-s2-hero.png",
+    "brand": "Lotus",
+    "tier": "mid"
+  },
+  {
+    "name": "Lotus Exige S",
+    "slug": "lotus-exige-s",
+    "filename": "lotus-exige-s-hero.png",
+    "brand": "Lotus",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Honda Civic Type R FK8",
+    "slug": "honda-civic-type-r-fk8",
+    "filename": "honda-civic-type-r-fk8-hero.png",
+    "brand": "Honda",
+    "tier": "mid"
+  },
+  {
+    "name": "Honda Civic Type R FL5",
+    "slug": "honda-civic-type-r-fl5",
+    "filename": "honda-civic-type-r-fl5-hero.png",
+    "brand": "Honda",
+    "tier": "mid"
+  },
+  {
+    "name": "Volkswagen Golf R Mk7",
+    "slug": "volkswagen-golf-r-mk7",
+    "filename": "volkswagen-golf-r-mk7-hero.png",
+    "brand": "Volkswagen",
+    "tier": "budget"
+  },
+  {
+    "name": "Volkswagen Golf R Mk8",
+    "slug": "volkswagen-golf-r-mk8",
+    "filename": "volkswagen-golf-r-mk8-hero.png",
+    "brand": "Volkswagen",
+    "tier": "mid"
+  },
+  {
+    "name": "Volkswagen GTI Mk7",
+    "slug": "volkswagen-gti-mk7",
+    "filename": "volkswagen-gti-mk7-hero.png",
+    "brand": "Volkswagen",
+    "tier": "budget"
+  },
+  {
+    "name": "Ford Focus RS",
+    "slug": "ford-focus-rs",
+    "filename": "ford-focus-rs-hero.png",
+    "brand": "Ford",
+    "tier": "budget"
+  },
+  {
+    "name": "Porsche 911 Turbo 997.1",
+    "slug": "porsche-911-turbo-997-1",
+    "filename": "porsche-911-turbo-997-1-hero.png",
+    "brand": "Porsche",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Porsche 911 Turbo 997.2",
+    "slug": "porsche-911-turbo-997-2",
+    "filename": "porsche-911-turbo-997-2-hero.png",
+    "brand": "Porsche",
+    "tier": "premium"
+  },
+  {
+    "name": "Porsche 911 GT3 996",
+    "slug": "porsche-911-gt3-996",
+    "filename": "porsche-911-gt3-996-hero.png",
+    "brand": "Porsche",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Porsche 911 GT3 997",
+    "slug": "porsche-911-gt3-997",
+    "filename": "porsche-911-gt3-997-hero.png",
+    "brand": "Porsche",
+    "tier": "premium"
+  },
+  {
+    "name": "Mercedes-AMG GT",
+    "slug": "mercedes-amg-gt",
+    "filename": "mercedes-amg-gt-hero.png",
+    "brand": "Mercedes-AMG",
+    "tier": "upper-mid"
+  },
+  {
+    "name": "Tesla Model 3 Performance",
+    "slug": "tesla-model-3-performance",
+    "filename": "tesla-model-3-performance-hero.png",
+    "brand": "Tesla",
+    "tier": "mid"
+  }
+]

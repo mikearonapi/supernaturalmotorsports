@@ -3,7 +3,7 @@
 /**
  * CarCarousel Component
  * 
- * An auto-scrolling carousel showcasing all 35 sports cars.
+ * An auto-scrolling carousel showcasing all ~100 sports cars.
  * Creates an engaging visual experience as users scroll through the page.
  * Mobile-optimized: pauses on touch, allows manual scrolling.
  */

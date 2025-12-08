@@ -155,7 +155,7 @@ export default function Home() {
       {/* Car Showcase Carousel */}
       <section className={styles.carShowcase}>
         <div className={styles.carShowcaseHeader}>
-          <h2 className={styles.carShowcaseTitle}>35+ Sports Cars to Explore</h2>
+          <h2 className={styles.carShowcaseTitle}>~100 Sports Cars to Explore</h2>
           <p className={styles.carShowcaseSubtitle}>From weekend warriors to track machines</p>
         </div>
         <CarCarousel />

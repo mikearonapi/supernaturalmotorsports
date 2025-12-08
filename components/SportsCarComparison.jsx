@@ -167,7 +167,7 @@ export default function SportsCarComparison() {
   const [weights, setWeights] = useState(() => DEFAULT_WEIGHTS);
   const [sortBy, setSortBy] = useState('total');
   const [priceMax, setPriceMax] = useState(100000);
-  const [priceMin, setPriceMin] = useState(25000);
+  const [priceMin, setPriceMin] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   // selectedCategory removed - now using mustHaveFilters.engineLayoutFilter
   const [expandedId, setExpandedId] = useState(null);
@@ -564,14 +564,16 @@ export default function SportsCarComparison() {
                 value={`${priceMin}-${priceMax}`} 
                 onChange={handlePriceChange}
                 className={styles.filterSelect}
-                aria-label="Filter by price range"
+                aria-label="Filter by budget"
               >
-                <option value="25000-100000">$25K – $100K</option>
-                <option value="25000-50000">$25K – $50K</option>
-                <option value="40000-75000">$40K – $75K</option>
-                <option value="50000-80000">$50K – $80K</option>
-                <option value="60000-100000">$60K – $100K</option>
-                <option value="75000-100000">$75K – $100K</option>
+                <option value="0-100000">Under $100K</option>
+                <option value="0-90000">Under $90K</option>
+                <option value="0-80000">Under $80K</option>
+                <option value="0-70000">Under $70K</option>
+                <option value="0-60000">Under $60K</option>
+                <option value="0-50000">Under $50K</option>
+                <option value="0-40000">Under $40K</option>
+                <option value="0-30000">Under $30K</option>
               </select>
 
               <select 

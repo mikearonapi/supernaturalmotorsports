@@ -1,6 +1,6 @@
 # SuperNatural Motorsports - Source of Truth
 
-> **Last Updated**: December 7, 2024 (Ownership data + brand-specific pricing)  
+> **Last Updated**: December 8, 2024 (Major vehicle database expansion - 98 vehicles)  
 > **Framework**: Next.js 14 (App Router)  
 > **Database**: Supabase (PostgreSQL)  
 > **Deployment**: Vercel  
@@ -33,7 +33,7 @@ This document is the authoritative reference for all code decisions, architectur
 
 SuperNatural Motorsports is a sports car advisory platform that helps enthusiasts find the right vehicle based on their priorities. The site features:
 
-- **Sports Car Selector**: 35+ vehicles with 7 weighted scoring criteria
+- **Sports Car Selector**: 98 vehicles with 7 weighted scoring criteria
 - **Performance HUB**: Gran Turismo-inspired upgrade visualization
 - **Upgrade Advisory**: Guidance on modifications
 - **Services**: Professional upgrade installation services
@@ -44,6 +44,28 @@ SuperNatural Motorsports is a sports car advisory platform that helps enthusiast
 - **For Everyone**: All budgets welcome ($25K-$100K+)
 - **Expert-Driven**: Real ownership experience, not just specs
 - **Free to Use**: No email required to use the advisory
+
+### Vehicle Database Coverage
+
+The database includes **98 sports cars and performance vehicles under $100k**, organized by segments:
+
+| Segment | Count | Examples |
+|---------|-------|----------|
+| **Rally/AWD Heroes** | 5 | Evo VIII/IX, Evo X, WRX STI GD/GR/VA |
+| **Lightweight Analog** | 9 | S2000, Miata NA/NB/NC/ND, 86/BRZ |
+| **JDM Legends** | 6 | Supra Mk4, RX-7 FD, 300ZX TT, Z RZ34, Integra Type R |
+| **German M/RS/AMG** | 13 | M3 E46/E92/F80, 1M, RS5, RS3, TT RS, C63, Giulia QV |
+| **Super-Sedans** | 8 | M5 E39/E60/F10/F90, E63, CTS-V Gen 2/3 |
+| **American Muscle** | 8 | C5/C6 Z06/GS, Challenger/Charger 392/Hellcat, Boss 302 |
+| **Lotus Hardcore** | 2 | Elise S2, Exige S |
+| **Hot Hatches** | 6 | Civic Type R FK8/FL5, Golf R Mk7/Mk8, GTI, Focus RS |
+| **Exotics/Other** | 6 | 911 Turbo/GT3, AMG GT, Model 3 Performance |
+| **Core Coverage** | 35 | Original Porsche, Corvette, GT-R, Viper, etc. |
+
+### Inclusion Rules
+- **Price**: Include if ANY realistic year/spec can be bought under $100k
+- **Granularity**: Separate entries per major generation when engine/chassis/ownership differs materially
+- **Scope**: U.S. market focus, ~1990s to present, curated sports sedans and hot hatches included
 
 ---
 
@@ -100,7 +122,7 @@ supernatural-motorsports/
 │   └── LoadingSpinner.jsx  # Loading state indicator
 │
 ├── data/                    # Static data (seed/fallback)
-│   ├── cars.js             # Vehicle database (35+ cars)
+│   ├── cars.js             # Vehicle database (98 cars)
 │   ├── performanceCategories.js  # Performance HUB categories
 │   └── upgradePackages.js  # Upgrade modules & packages
 │
@@ -721,6 +743,16 @@ Add console logging by checking browser DevTools:
 
 | Date | Change | Author |
 |------|--------|--------|
+| 2024-12-08 | **MAJOR**: Expanded vehicle database from 35 to 98 cars | AI |
+| 2024-12-08 | Added Rally/AWD segment: Evo VIII/IX/X, WRX STI GD/GR/VA | AI |
+| 2024-12-08 | Added Lightweight segment: S2000, Miata NA/NB/NC/ND, 86/BRZ variants | AI |
+| 2024-12-08 | Added JDM Legends: Supra Mk4, RX-7 FD, 300ZX TT, 350Z, Z RZ34, Integra Type R | AI |
+| 2024-12-08 | Added German M/RS/AMG: M3 E46/E92/F80, 1M, Z4 M, RS5/RS3/TT RS, C63 W205, Giulia QV | AI |
+| 2024-12-08 | Added Super-Sedans: M5 E39/E60/F10/F90, E63 W212/W213, CTS-V Gen 2/3 | AI |
+| 2024-12-08 | Added American Muscle: C5/C6 Z06/GS, Challenger/Charger 392/Hellcat, Boss 302 | AI |
+| 2024-12-08 | Added Lotus: Elise S2, Exige S | AI |
+| 2024-12-08 | Added Hot Hatches: Civic Type R FK8/FL5, Golf R Mk7/Mk8, GTI Mk7, Focus RS | AI |
+| 2024-12-08 | Added Other: 911 Turbo 997, 911 GT3 996/997, AMG GT, Model 3 Performance | AI |
 | 2024-12-07 | **CLEANUP**: Removed entire legacy `src/` directory (Vite-era code) | AI |
 | 2024-12-07 | **FIX**: Updated scripts to import from `data/` instead of `src/data/` | AI |
 | 2024-12-07 | Full-stack audit completed | AI |

@@ -145,7 +145,7 @@ export default async function Image() {
               lineHeight: 1.4,
             }}
           >
-            Find your perfect sports car • Compare 35+ vehicles • Plan your build
+            Find your perfect sports car • Compare ~100 vehicles • Plan your build
           </p>
 
           {/* Feature badges */}

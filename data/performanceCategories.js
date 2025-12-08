@@ -194,32 +194,45 @@ export const upgradeTiers = {
 
 /**
  * Upgrade module categories (for fine-tuning)
+ * Now expanded to include all categories from the unified upgrade taxonomy
  * @type {Object[]}
  */
 export const upgradeModuleCategories = [
   {
     key: 'power',
-    label: 'Power',
-    description: 'Engine, exhaust, intake, tune',
-    icon: 'engine',
+    label: 'Power & Engine',
+    description: 'Intake, exhaust, tune, headers',
+    icon: 'bolt',
   },
   {
-    key: 'chassis',
-    label: 'Chassis',
-    description: 'Suspension, bushings, sway bars',
-    icon: 'suspension',
+    key: 'forcedInduction',
+    label: 'Forced Induction',
+    description: 'Superchargers, turbos, intercoolers',
+    icon: 'turbo',
+  },
+  {
+    key: 'exhaust',
+    label: 'Exhaust & Sound',
+    description: 'Cat-backs, headers, mufflers',
+    icon: 'sound',
+  },
+  {
+    key: 'suspension',
+    label: 'Suspension',
+    description: 'Coilovers, springs, sway bars',
+    icon: 'car',
   },
   {
     key: 'brakes',
     label: 'Brakes',
-    description: 'Rotors, pads, fluid, lines',
+    description: 'Pads, rotors, BBK, fluid',
     icon: 'brake',
   },
   {
-    key: 'aero',
-    label: 'Aero',
-    description: 'Splitters, wings, diffusers',
-    icon: 'aero',
+    key: 'wheels',
+    label: 'Wheels & Tires',
+    description: 'Lightweight wheels, track tires',
+    icon: 'tire',
   },
   {
     key: 'cooling',
@@ -228,11 +241,35 @@ export const upgradeModuleCategories = [
     icon: 'thermometer',
   },
   {
-    key: 'wheels',
-    label: 'Wheels & Tires',
-    description: 'Lightweight wheels, performance tires',
-    icon: 'tire',
-  }
+    key: 'aero',
+    label: 'Aerodynamics',
+    description: 'Splitters, wings, diffusers',
+    icon: 'wind',
+  },
+  {
+    key: 'drivetrain',
+    label: 'Drivetrain',
+    description: 'Clutch, flywheel, LSD, axles',
+    icon: 'gears',
+  },
+  {
+    key: 'safety',
+    label: 'Safety & Track Prep',
+    description: 'Harnesses, seats, roll bars',
+    icon: 'shield',
+  },
+  {
+    key: 'weightReduction',
+    label: 'Weight Reduction',
+    description: 'Carbon panels, battery, interior',
+    icon: 'feather',
+  },
+  {
+    key: 'engineSwaps',
+    label: 'Engine Swaps',
+    description: 'LS, Coyote, 2JZ, K-series',
+    icon: 'engine',
+  },
 ];
 
 /**

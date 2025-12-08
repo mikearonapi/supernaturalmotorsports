@@ -39,6 +39,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 /**
  * Transform local car data to Supabase format (camelCase → snake_case)
+ * Preserves decimal precision for scores (e.g., 9.4, 9.8)
  */
 function transformCarForSupabase(car) {
   return {
@@ -48,7 +49,7 @@ function transformCarForSupabase(car) {
     tier: car.tier,
     category: car.category,
     
-    // Advisory Scores
+    // Advisory Scores (preserving decimal precision)
     score_sound: car.sound,
     score_interior: car.interior,
     score_track: car.track,
@@ -77,7 +78,7 @@ function transformCarForSupabase(car) {
     braking_60_0: car.braking60To0 || null,
     lateral_g: car.lateralG || null,
     
-    // Performance HUB Scores
+    // Performance HUB Scores (preserving decimal precision)
     perf_power_accel: car.perfPowerAccel || null,
     perf_grip_cornering: car.perfGripCornering || null,
     perf_braking: car.perfBraking || null,
