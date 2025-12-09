@@ -31,6 +31,7 @@ const CloseIcon = () => (
 
 const navLinks = [
   { href: '/', label: 'Home' },
+  { href: '/garage', label: 'Garage' },
   { href: '/car-selector', label: 'Car Selector' },
   { href: '/performance', label: 'Performance HUB' },
   { href: '/education', label: 'Education' },
