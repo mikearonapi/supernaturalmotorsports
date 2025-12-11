@@ -65,7 +65,10 @@ export default function ExplorePage() {
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
           <span className={styles.badge}>Explore</span>
-          <h1 className={styles.title}>Learn. Discover. Master.</h1>
+          <h1 className={styles.title}>
+            Learn. Discover.<br />
+            <span className={styles.titleAccent}>Master.</span>
+          </h1>
           <p className={styles.subtitle}>
             Whether you&apos;re researching your next car or understanding how modifications 
             work together, we&apos;ve got you covered with expert insights and real data.

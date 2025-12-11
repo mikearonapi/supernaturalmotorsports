@@ -75,31 +75,62 @@
 
 .badge {
   display: inline-block;
-  padding: var(--space-xs) var(--space-md);
-  background: rgba(196, 165, 100, 0.2);
-  color: var(--sn-gold);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
+  font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: var(--space-md);
+  padding: var(--space-2xs) var(--space-sm);
+  background: rgba(196, 165, 100, 0.2);
+  color: var(--sn-gold);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-sm);
+}
+
+@media (min-width: 768px) {
+  .badge {
+    font-size: var(--font-size-xs);
+    padding: var(--space-xs) var(--space-md);
+    margin-bottom: var(--space-md);
+  }
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-size: var(--font-size-2xl);
   font-weight: 700;
   color: var(--color-white);
   margin: 0 0 var(--space-md);
   line-height: 1.1;
 }
 
+@media (min-width: 768px) {
+  .title {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+.titleAccent {
+  color: var(--sn-accent);
+}
+
 .subtitle {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   color: var(--color-gray-300);
   line-height: 1.6;
-  margin: 0;
+  margin: 0 auto var(--space-lg);
+  max-width: 600px;
+}
+
+@media (min-width: 1024px) {
+  .subtitle {
+    font-size: var(--font-size-lg);
+  }
 }
 
 /* Paths Section */

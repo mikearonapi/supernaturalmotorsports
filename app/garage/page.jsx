@@ -288,12 +288,12 @@ export default function GaragePage() {
         </div>
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
-          <span className={styles.badge}>Your Garage</span>
-          <h1 className={styles.heroTitle}>
+          <span className={styles.badge}>My Garage</span>
+          <h1 className={styles.title}>
             Your Personal<br />
-            <span className={styles.heroAccent}>Car Hub</span>
+            <span className={styles.titleAccent}>Car Hub</span>
           </h1>
-          <p className={styles.heroSubtitle}>
+          <p className={styles.subtitle}>
             Your garage is your personal space to save favorites, plan builds, 
             compare options, and get AI-powered advice. Everything you need to 
             make informed decisions about your next car or upgrade.
