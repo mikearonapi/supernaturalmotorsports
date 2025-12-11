@@ -10,6 +10,10 @@ import { calculateScoreBreakdown, getScoreLabel, DEFAULT_WEIGHTS } from '@/lib/s
 import CarImage from '@/components/CarImage';
 import ScoringInfo from '@/components/ScoringInfo';
 import ExpertReviews from '@/components/ExpertReviews';
+import { useCarSelection } from '@/components/providers/CarSelectionProvider';
+import TunabilityBadge from '@/components/TunabilityBadge';
+import FavoriteButton from '@/components/FavoriteButton';
+import CompareButton from '@/components/CompareButton';
 
 // Icons - compact inline SVG components
 const Icons = {
@@ -153,6 +157,18 @@ const Icons = {
       <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
     </svg>
   ),
+  plus: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  ),
+  checkCircle: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+  ),
   timer: ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10" />
@@ -183,6 +199,16 @@ const Icons = {
       <line x1="20" y1="14" x2="23" y2="14" />
       <line x1="1" y1="9" x2="4" y2="9" />
       <line x1="1" y1="14" x2="4" y2="14" />
+    </svg>
+  ),
+  engine: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="10" width="16" height="8" rx="2" />
+      <path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4" />
+      <line x1="2" y1="13" x2="4" y2="13" />
+      <line x1="20" y1="13" x2="22" y2="13" />
+      <circle cx="12" cy="14" r="3" />
+      <line x1="12" y1="4" x2="12" y2="2" />
     </svg>
   ),
 };
@@ -249,6 +275,10 @@ export default function CarDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
+  
+  // Car selection integration
+  const { selectedCar, selectCar, isHydrated } = useCarSelection();
+  const isThisCarSelected = isHydrated && selectedCar?.slug === slug;
 
   // Fetch car data
   useEffect(() => {
@@ -368,6 +398,34 @@ export default function CarDetail() {
                 <Icons.zap size={18} />
                 <span>{car.highlight}</span>
               </div>
+              
+              {/* Tunability + Actions */}
+              <div className={styles.heroActions}>
+                <TunabilityBadge car={car} variant="default" />
+                
+                <div className={styles.actionButtons}>
+                  <FavoriteButton car={car} variant="button" />
+                  <CompareButton car={car} variant="button" />
+                </div>
+                
+                <button 
+                  onClick={() => selectCar(car)}
+                  className={`${styles.selectCarBtn} ${isThisCarSelected ? styles.selected : ''}`}
+                  disabled={isThisCarSelected}
+                >
+                  {isThisCarSelected ? (
+                    <>
+                      <Icons.checkCircle size={18} />
+                      <span>Selected</span>
+                    </>
+                  ) : (
+                    <>
+                      <Icons.plus size={18} />
+                      <span>Select This Car</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
             
             <div className={styles.heroImageWrapper}>
@@ -377,7 +435,7 @@ export default function CarDetail() {
           
           <div className={styles.specBar}>
             <div className={styles.specItem}>
-              <Icons.cpu size={20} />
+              <Icons.engine size={20} />
               <div className={styles.specContent}>
                 <span className={styles.specLabel}>Engine</span>
                 <span className={styles.specValue}>{car.engine}</span>

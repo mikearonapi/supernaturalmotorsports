@@ -102,9 +102,15 @@
   font-weight: 600;
 }
 
-/* Desktop CTA - Hidden on mobile */
-.ctaButton {
+/* User Menu Wrapper - Profile/Account */
+.userMenuWrapper {
   display: none;
+}
+
+.mobileUserMenu {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-gray-200);
 }
 
 /* Mobile Menu Toggle - Touch-optimized */
@@ -183,27 +189,6 @@
   background: rgba(26, 77, 110, 0.05);
 }
 
-.mobileCta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-md) var(--space-lg);
-  background: var(--sn-primary);
-  color: var(--color-white);
-  font-family: var(--font-display);
-  font-size: var(--font-size-base);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border-radius: var(--radius-md);
-  margin-top: var(--space-md);
-  min-height: 48px;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.mobileCta:active {
-  background: var(--sn-primary-dark);
-}
 
 /* Tablet Breakpoint */
 @media (min-width: 768px) {
@@ -264,23 +249,10 @@
     gap: var(--space-xs);
   }
 
-  .ctaButton {
+  /* Show user menu on desktop */
+  .userMenuWrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: var(--space-sm) var(--space-lg);
-    background: var(--sn-primary);
-    color: var(--color-white);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    border-radius: var(--radius-md);
-    transition: background var(--transition-fast), transform var(--transition-fast);
-    min-height: 40px;
-  }
-
-  .ctaButton:hover {
-    background: var(--sn-primary-light);
-    transform: translateY(-1px);
   }
 
   .menuToggle {

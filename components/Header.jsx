@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './Header.module.css';
+import UserMenu from './UserMenu';
+import AuthModal from './AuthModal';
 
 // Logo Icon
 const LogoIcon = () => (
@@ -29,18 +31,23 @@ const CloseIcon = () => (
   </svg>
 );
 
+// Navigation links - KISS principles: focused, purposeful
+// - Explore: Learning paths (Car Catalog + Education)
+// - Find Your Car: Active car selection tool
+// - Performance HUB: Build planning tool
+// - My Garage: Personal user area
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/garage', label: 'Garage' },
-  { href: '/car-selector', label: 'Car Selector' },
+  { href: '/explore', label: 'Explore' },
+  { href: '/car-selector', label: 'Find Your Car' },
   { href: '/performance', label: 'Performance HUB' },
-  { href: '/education', label: 'Education' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/garage', label: 'My Garage' },
 ];
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const pathname = usePathname();
 
   // Close menu on route change
@@ -103,10 +110,10 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Desktop CTA */}
-        <Link href="/car-selector" className={styles.ctaButton}>
-          Find Your Car
-        </Link>
+        {/* Desktop User Menu / Account */}
+        <div className={styles.userMenuWrapper}>
+          <UserMenu onSignInClick={() => setShowAuthModal(true)} />
+        </div>
 
         {/* Mobile Menu Toggle */}
         <button
@@ -132,10 +139,20 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <Link href="/car-selector" className={styles.mobileCta} onClick={() => setIsMenuOpen(false)}>
-          Find Your Car
-        </Link>
+        {/* Mobile User Menu */}
+        <div className={styles.mobileUserMenu}>
+          <UserMenu onSignInClick={() => {
+            setIsMenuOpen(false);
+            setShowAuthModal(true);
+          }} />
+        </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+      />
     </header>
   );
 }

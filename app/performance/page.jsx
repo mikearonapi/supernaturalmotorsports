@@ -12,10 +12,12 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import CarImage from '@/components/CarImage';
 // UpgradeGuide moved to /education page
 import Button from '@/components/Button';
+import { useCarSelection } from '@/components/providers/CarSelectionProvider';
+import ContextualBadge from '@/components/ContextualBadge';
+import TunabilityBadge from '@/components/TunabilityBadge';
 
-// Blob URL for hero image
-const BLOB_BASE = 'https://abqnp7qrs0nhv5pw.public.blob.vercel-storage.com';
-const heroImageUrl = `${BLOB_BASE}/pages/performance/hero.webp`;
+// High-quality hero image - Corvette wheel and brake detail
+const heroImageUrl = '/images/pages/performance-hero.jpg';
 
 // Icons
 const Icons = {
@@ -62,6 +64,9 @@ function PerformanceContent() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTier, setFilterTier] = useState('all');
   // Removed 'learn' tab - education content moved to /education page
+  
+  // Global car selection integration
+  const { selectedCar: globalSelectedCar, selectCar, isHydrated } = useCarSelection();
 
   // Load cars
   useEffect(() => {
@@ -79,6 +84,13 @@ function PerformanceContent() {
     }
     loadCars();
   }, []);
+
+  // Initialize from global state if no URL param but global car is selected
+  useEffect(() => {
+    if (isHydrated && !selectedCarSlug && globalSelectedCar?.slug) {
+      setSelectedCarSlug(globalSelectedCar.slug);
+    }
+  }, [isHydrated, globalSelectedCar, selectedCarSlug]);
 
   // Update URL when car is selected
   useEffect(() => {
@@ -104,6 +116,12 @@ function PerformanceContent() {
   const selectedCar = useMemo(() => {
     return cars.find(car => car.slug === selectedCarSlug);
   }, [cars, selectedCarSlug]);
+
+  // Handle car selection - updates both local state and global context
+  const handleSelectCar = (car) => {
+    setSelectedCarSlug(car.slug);
+    selectCar(car); // Update global state
+  };
 
   // Group cars by tier for display
   const carsByTier = useMemo(() => {
@@ -166,6 +184,27 @@ function PerformanceContent() {
       {/* Car Selection */}
       <section className={styles.selection}>
           <div className={styles.container}>
+          {/* Contextual Banner when car is already selected */}
+          {isHydrated && globalSelectedCar && (
+            <div className={styles.contextBanner}>
+              <div className={styles.contextBannerContent}>
+                <div className={styles.contextBannerText}>
+                  <Icons.wrench size={18} />
+                  <span>
+                    You have <strong>{globalSelectedCar.name}</strong> selected. 
+                    Click below to view its Performance HUB, or choose a different car.
+                  </span>
+                </div>
+                <button
+                  onClick={() => handleSelectCar(globalSelectedCar)}
+                  className={styles.contextBannerButton}
+                >
+                  View {globalSelectedCar.name} Performance HUB
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Filters */}
           <div className={styles.filters}>
             <div className={styles.searchBox}>
@@ -225,24 +264,31 @@ function PerformanceContent() {
                       <span className={styles.tierCount}>{tierCars.length}</span>
                     </h3>
                     <div className={styles.carGrid}>
-                      {tierCars.map(car => (
-                        <button
-                          key={car.slug}
-                          onClick={() => setSelectedCarSlug(car.slug)}
-                          className={styles.carCard}
-                        >
-                          <div className={styles.carCardImage}>
-                            <CarImage car={car} variant="thumbnail" showName={false} />
-                          </div>
-                          <div className={styles.carCardInfo}>
-                            <span className={styles.carCardName}>{car.name}</span>
-                            <span className={styles.carCardMeta}>
-                              {car.hp} hp • {car.category}
-                            </span>
-                          </div>
-                          <span className={styles.carCardPrice}>{car.priceRange}</span>
-                        </button>
-                      ))}
+                      {tierCars.map(car => {
+                        const isGlobalSelected = isHydrated && globalSelectedCar?.slug === car.slug;
+                        return (
+                          <button
+                            key={car.slug}
+                            onClick={() => handleSelectCar(car)}
+                            className={`${styles.carCard} ${isGlobalSelected ? styles.carCardSelected : ''}`}
+                          >
+                            {isGlobalSelected && (
+                              <span className={styles.carCardSelectedBadge}>Currently Selected</span>
+                            )}
+                            <div className={styles.carCardImage}>
+                              <CarImage car={car} variant="thumbnail" showName={false} />
+                            </div>
+                            <div className={styles.carCardInfo}>
+                              <span className={styles.carCardName}>{car.name}</span>
+                              <span className={styles.carCardMeta}>
+                                {car.hp} hp • {car.category}
+                              </span>
+                              <TunabilityBadge car={car} variant="compact" />
+                            </div>
+                            <span className={styles.carCardPrice}>{car.priceRange}</span>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 );

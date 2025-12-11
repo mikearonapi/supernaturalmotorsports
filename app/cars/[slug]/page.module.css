@@ -236,6 +236,52 @@
   font-size: 0.9rem;
 }
 
+/* Hero Actions Row */
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Select Car Button */
+.selectCarBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-white);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selectCarBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.selectCarBtn.selected {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: var(--color-white);
+  cursor: default;
+}
+
+.selectCarBtn.selected svg {
+  color: var(--color-white);
+}
+
 .heroImageWrapper {
   position: relative;
   display: flex;

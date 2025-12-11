@@ -4,6 +4,13 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MobileBottomCta from '@/components/MobileBottomCta';
 import ScrollToTop from '@/components/ScrollToTop';
+import { AuthProvider } from '@/components/providers/AuthProvider';
+import { CarSelectionProvider } from '@/components/providers/CarSelectionProvider';
+import { FavoritesProvider } from '@/components/providers/FavoritesProvider';
+import { CompareProvider } from '@/components/providers/CompareProvider';
+import { SavedBuildsProvider } from '@/components/providers/SavedBuildsProvider';
+import SelectedCarBanner from '@/components/SelectedCarBanner';
+import SelectedCarFloatingWidget from '@/components/SelectedCarFloatingWidget';
 
 const siteUrl = 'https://supernaturalmotorsports.com';
 
@@ -135,21 +142,40 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        {/* Scroll to top on route change */}
-        <Suspense fallback={null}>
-          <ScrollToTop />
-        </Suspense>
-        <Header />
-        <main style={{ 
-          flex: 1, 
-          paddingTop: 'var(--header-height-mobile)',
-          minHeight: 'calc(100dvh - var(--header-height-mobile))',
-        }}>
-          {children}
-        </main>
-        <Footer />
-        {/* Mobile sticky CTA bar - shows on scroll */}
-        <MobileBottomCta />
+        <AuthProvider>
+        <CarSelectionProvider>
+        <FavoritesProvider>
+        <CompareProvider>
+        <SavedBuildsProvider>
+          {/* Scroll to top on route change */}
+          <Suspense fallback={null}>
+            <ScrollToTop />
+          </Suspense>
+          <Header />
+          {/* Selected Car Banner - shows when a car is selected */}
+          <Suspense fallback={null}>
+            <SelectedCarBanner />
+          </Suspense>
+          <main style={{ 
+            flex: 1, 
+            paddingTop: 'var(--header-height-mobile)',
+            minHeight: 'calc(100dvh - var(--header-height-mobile))',
+          }}>
+            {children}
+          </main>
+          <Footer />
+          {/* Selected Car Floating Widget */}
+          <Suspense fallback={null}>
+            <SelectedCarFloatingWidget />
+          </Suspense>
+          
+          {/* Mobile sticky CTA bar - shows on scroll */}
+          <MobileBottomCta />
+        </SavedBuildsProvider>
+        </CompareProvider>
+        </FavoritesProvider>
+        </CarSelectionProvider>
+        </AuthProvider>
       </body>
     </html>
   );

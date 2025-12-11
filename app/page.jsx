@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Button from '@/components/Button';
 import CarCarousel from '@/components/CarCarousel';
 import MethodologyStrip from '@/components/MethodologyStrip';
+import TrustIndicators from '@/components/TrustIndicators';
 import styles from './page.module.css';
 
 // Homepage uses the default layout metadata but we can add specific homepage schema
@@ -14,9 +15,9 @@ export const metadata = {
   },
 };
 
-// Blob URLs for page images
+// Page images - using high-quality pressroom imagery
+const heroImageUrl = '/images/pages/home-hero.jpg'; // Stunning Viper overhead shot
 const BLOB_BASE = 'https://abqnp7qrs0nhv5pw.public.blob.vercel-storage.com';
-const heroImageUrl = `${BLOB_BASE}/pages/home/hero.webp`;
 const valueImageUrl = `${BLOB_BASE}/pages/home/value-section.webp`;
 
 // Icons
@@ -58,30 +59,54 @@ const CheckIcon = () => (
   </svg>
 );
 
+// Icons for pillars
+const ExploreIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.35-4.35"/>
+    <path d="M11 8v6"/>
+    <path d="M8 11h6"/>
+  </svg>
+);
+
+const GarageIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </svg>
+);
+
 const pillars = [
   {
+    icon: <ExploreIcon />,
+    title: 'Explore',
+    description: 'Learn about sports cars and performance modifications. Browse our catalog, understand how upgrades work as a system, and build real knowledge.',
+    cta: 'Start Exploring',
+    href: '/explore',
+    accent: 'tertiary'
+  },
+  {
     icon: <CarIcon />,
-    title: 'Car Selector',
-    description: 'Own your lane. Find the right car for your goals—not someone else\'s Instagram feed. Sound, track capability, reliability, and real-world value.',
-    cta: 'Find Your Car',
+    title: 'Find Your Car',
+    description: 'Match the perfect car to your goals, budget, and driving style. Our intelligent selector helps you find what actually fits—not what\'s trending.',
+    cta: 'Find Your Match',
     href: '/car-selector',
     accent: 'primary'
   },
   {
     icon: <ToolIcon />,
     title: 'Performance HUB',
-    description: 'Power under control. Plan your build the smart way—see how upgrades affect your car as a system, and spend your budget where it counts.',
+    description: 'Optimize any car for maximum performance. See how upgrades affect the whole system and plan builds that deliver real results.',
     cta: 'Plan Your Build',
     href: '/performance',
     accent: 'secondary'
   },
   {
-    icon: <WrenchIcon />,
-    title: 'Education',
-    description: 'Build your knowledge. Understand the fundamentals of modifications, connected systems, and why some builds work and others don\'t.',
-    cta: 'Start Learning',
-    href: '/education',
-    accent: 'tertiary'
+    icon: <GarageIcon />,
+    title: 'My Garage',
+    description: 'Save your favorites, compare cars side-by-side, and track your build configurations. Your personal space to plan your automotive journey.',
+    cta: 'View Garage',
+    href: '/garage',
+    accent: 'quaternary'
   }
 ];
 
@@ -90,6 +115,14 @@ const steps = [
   { number: '02', title: 'Get Matched', description: 'Our tools match you with cars or upgrades based on real ownership experience, not just specs.' },
   { number: '03', title: 'Plan with Purpose', description: 'Whether buying or building, we help you prioritize for maximum impact on your actual budget.' },
   { number: '04', title: 'Drive with Confidence', description: 'Execute your plan knowing every decision was made with intention—not impulse.' }
+];
+
+// Quick Stats - Key metrics to build trust
+const quickStats = [
+  { value: '98', label: 'Sports Cars Analyzed', suffix: '+' },
+  { value: '50', label: 'Upgrade Modules', suffix: '+' },
+  { value: '7', label: 'Performance Categories', suffix: '' },
+  { value: '24', label: 'Expert Sources Cited', suffix: '+' },
 ];
 
 export default function Home() {
@@ -115,9 +148,9 @@ export default function Home() {
             <span className={styles.heroAccent}>Racing Spirit</span>
           </h1>
           <p className={styles.heroSubtitle}>
-            Find the perfect sports car. Plan the ultimate build. 
-            SuperNatural Motorsports helps drivers at every budget 
-            pursue mastery—not materialism. Build skills, not just ego.
+            Explore sports cars and learn what makes them tick. Find the 
+            perfect match for your goals. Plan performance builds that 
+            deliver real results. Save favorites and compare options in your garage.
           </p>
           <Button href="/car-selector" variant="secondary" size="lg" icon={<ArrowRightIcon />}>
             Find Your Car
@@ -127,6 +160,19 @@ export default function Home() {
           <span>Scroll to explore</span>
           <div className={styles.scrollIndicator} />
         </div>
+        
+        {/* Quick Stats Bar */}
+        <div className={styles.quickStatsBar}>
+          {quickStats.map((stat, index) => (
+            <div key={index} className={styles.quickStat}>
+              <span className={styles.quickStatValue}>
+                {stat.value}
+                {stat.suffix && <span className={styles.quickStatSuffix}>{stat.suffix}</span>}
+              </span>
+              <span className={styles.quickStatLabel}>{stat.label}</span>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Pillars Section */}
@@ -135,7 +181,7 @@ export default function Home() {
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>How We Help</h2>
             <p className={styles.sectionSubtitle}>
-              Three ways to get more out of your driving experience
+              Four tools to get more out of your driving experience
             </p>
           </div>
           <div className={styles.pillarsGrid}>
@@ -161,6 +207,9 @@ export default function Home() {
         </div>
         <CarCarousel />
       </section>
+
+      {/* Trust Indicators - Compact version for credibility */}
+      <TrustIndicators variant="compact" />
 
       {/* Methodology - Transparent about our research process */}
       <MethodologyStrip />

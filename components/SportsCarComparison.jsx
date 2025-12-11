@@ -5,6 +5,7 @@ import Link from 'next/link';
 import styles from './SportsCarComparison.module.css';
 import { carData as localCarData, categories, tierConfig, recommendationTypes } from '@/data/cars.js';
 import { fetchCars } from '@/lib/carsClient.js';
+import { getDescriptorForValue, priorityDescriptors } from '@/data/selectorDescriptors.js';
 import { 
   calculateWeightedScore, 
   calculateMaxScore, 
@@ -15,6 +16,9 @@ import {
   ENTHUSIAST_WEIGHTS
 } from '@/lib/scoring.js';
 import CarImage from './CarImage';
+import { useCarSelection } from './providers/CarSelectionProvider';
+import FavoriteButton from './FavoriteButton';
+import CompareButton from './CompareButton';
 
 /**
  * Extract the low price from a price range string like "$55-70K" → 55000
@@ -127,6 +131,18 @@ const Icons = {
       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
       <polyline points="15 3 21 3 21 9"/>
       <line x1="10" y1="14" x2="21" y2="3"/>
+    </svg>
+  ),
+  plus: ({ size = 14, className }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  ),
+  checkCircle: ({ size = 14, className }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
     </svg>
   ),
   // Requirement card icons
@@ -244,7 +260,7 @@ export default function SportsCarComparison() {
   const [carData, setCarData] = useState(localCarData);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
-  
+
   // State for user preferences
   // Use ENTHUSIAST_WEIGHTS by default to prioritize driving engagement
   const [weights, setWeights] = useState(() => ENTHUSIAST_WEIGHTS);
@@ -256,6 +272,9 @@ export default function SportsCarComparison() {
   const [expandedId, setExpandedId] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   
+  // Global car selection integration
+  const { selectedCar, selectCar, isHydrated } = useCarSelection();
+  
   // Must-have filters (hard constraints)
   const [mustHaveFilters, setMustHaveFilters] = useState({
     transmissionFilter: 'all', // 'all', 'manual', 'automatic'
@@ -264,7 +283,20 @@ export default function SportsCarComparison() {
     engineLayoutFilter: 'all', // 'all', 'Mid-Engine', 'Front-Engine', 'Rear-Engine'
     originFilter: 'all', // 'all', 'american', 'japanese', 'european'
     styleFilter: 'all', // 'all', 'purist', 'tuner', 'drift', 'stance'
+    tierFilter: 'all', // 'all', 'premium', 'upper-mid', 'mid', 'budget'
+    categoryFilter: 'all', // 'all', 'jdm', 'muscle', 'german', 'exotic', 'track', 'rally', 'hothatch'
   });
+  
+  // Car category definitions for filtering
+  const CAR_CATEGORIES = [
+    { key: 'all', label: 'All Cars', icon: Icons.car },
+    { key: 'jdm', label: 'JDM Legends', icon: Icons.racing, brands: ['Toyota', 'Nissan', 'Honda', 'Mazda', 'Mitsubishi', 'Subaru', 'Lexus', 'Acura'] },
+    { key: 'muscle', label: 'American Muscle', icon: Icons.zap, brands: ['Chevrolet', 'Ford', 'Dodge'] },
+    { key: 'german', label: 'German Performance', icon: Icons.shield, brands: ['BMW', 'Mercedes-Benz', 'Mercedes-AMG', 'Audi', 'Porsche', 'Volkswagen'] },
+    { key: 'exotic', label: 'Exotic & Rare', icon: Icons.trophy, brands: ['Lamborghini', 'Ferrari', 'McLaren', 'Aston Martin', 'Lotus'] },
+    { key: 'track', label: 'Track Weapons', icon: Icons.track, filter: (car) => car.track >= 8 },
+    { key: 'rally', label: 'Rally & AWD', icon: Icons.drivetrain, filter: (car) => car.drivetrain === 'AWD' },
+  ];
   
   // Refs
   const tableRef = useRef(null);
@@ -389,6 +421,24 @@ export default function SportsCarComparison() {
       .filter(car => mustHaveFilters.originFilter === 'all' || getCarOrigin(car) === mustHaveFilters.originFilter)
       // Enthusiast style filter (Purist, Tuner, Drift, Stance)
       .filter(car => matchesStyle(car, mustHaveFilters.styleFilter))
+      // Tier filter (Premium, Upper-Mid, Mid, Budget)
+      .filter(car => mustHaveFilters.tierFilter === 'all' || car.tier === mustHaveFilters.tierFilter)
+      // Category filter (JDM, Muscle, German, etc.)
+      .filter(car => {
+        if (mustHaveFilters.categoryFilter === 'all') return true;
+        const category = CAR_CATEGORIES.find(c => c.key === mustHaveFilters.categoryFilter);
+        if (!category) return true;
+        if (category.brands) {
+          return category.brands.some(brand => 
+            (car.brand || '').toLowerCase().includes(brand.toLowerCase()) ||
+            (car.name || '').toLowerCase().includes(brand.toLowerCase())
+          );
+        }
+        if (category.filter) {
+          return category.filter(car);
+        }
+        return true;
+      })
       .map(car => ({ ...car, total: calculateTotal(car) }))
       .sort((a, b) => {
         if (sortBy === 'price') return a.priceAvg - b.priceAvg;
@@ -500,6 +550,64 @@ export default function SportsCarComparison() {
             <div className={styles.stepBadge}>1</div>
             <h2 className={styles.sectionTitle}>What Kind of Car Are You Looking For?</h2>
             <span className={styles.sectionMeta}>Tell us your must-haves and preferences</span>
+          </div>
+
+          {/* Category Quick Filters */}
+          <div className={styles.categoryFilters}>
+            <span className={styles.categoryFiltersLabel}>Browse by Category:</span>
+            <div className={styles.categoryFilterScroll}>
+              {CAR_CATEGORIES.map(cat => {
+                const IconComponent = cat.icon;
+                const isActive = mustHaveFilters.categoryFilter === cat.key;
+                return (
+                  <button
+                    key={cat.key}
+                    className={`${styles.categoryFilterBtn} ${isActive ? styles.categoryFilterActive : ''}`}
+                    onClick={() => setMustHaveFilters(prev => ({ ...prev, categoryFilter: cat.key }))}
+                  >
+                    <IconComponent size={16} />
+                    <span>{cat.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Tier Quick Filters */}
+          <div className={styles.tierFilters}>
+            <span className={styles.tierFiltersLabel}>Quick Filter by Tier:</span>
+            <div className={styles.tierFilterButtons}>
+              <button
+                className={`${styles.tierFilterBtn} ${mustHaveFilters.tierFilter === 'all' ? styles.tierFilterActive : ''}`}
+                onClick={() => setMustHaveFilters(prev => ({ ...prev, tierFilter: 'all' }))}
+              >
+                All Tiers
+              </button>
+              <button
+                className={`${styles.tierFilterBtn} ${styles.tierFilterPremium} ${mustHaveFilters.tierFilter === 'premium' ? styles.tierFilterActive : ''}`}
+                onClick={() => setMustHaveFilters(prev => ({ ...prev, tierFilter: 'premium' }))}
+              >
+                Premium
+              </button>
+              <button
+                className={`${styles.tierFilterBtn} ${styles.tierFilterUpper} ${mustHaveFilters.tierFilter === 'upper-mid' ? styles.tierFilterActive : ''}`}
+                onClick={() => setMustHaveFilters(prev => ({ ...prev, tierFilter: 'upper-mid' }))}
+              >
+                Upper-Mid
+              </button>
+              <button
+                className={`${styles.tierFilterBtn} ${styles.tierFilterMid} ${mustHaveFilters.tierFilter === 'mid' ? styles.tierFilterActive : ''}`}
+                onClick={() => setMustHaveFilters(prev => ({ ...prev, tierFilter: 'mid' }))}
+              >
+                Mid
+              </button>
+              <button
+                className={`${styles.tierFilterBtn} ${styles.tierFilterBudget} ${mustHaveFilters.tierFilter === 'budget' ? styles.tierFilterActive : ''}`}
+                onClick={() => setMustHaveFilters(prev => ({ ...prev, tierFilter: 'budget' }))}
+              >
+                Budget
+              </button>
+            </div>
           </div>
 
           <div className={styles.requirementsGrid}>
@@ -695,6 +803,7 @@ export default function SportsCarComparison() {
               const isActive = weights[cat.key] > 0;
               const isHighPriority = weights[cat.key] > 1;
               const badge = getPriorityBadge(weights[cat.key]);
+              const descriptor = getDescriptorForValue(cat.key, weights[cat.key]);
               
               return (
                 <div 
@@ -722,6 +831,9 @@ export default function SportsCarComparison() {
                       background: `linear-gradient(to right, #1a4d6e 0%, #1a4d6e ${(weights[cat.key] / 3) * 100}%, #e5e5e5 ${(weights[cat.key] / 3) * 100}%, #e5e5e5 100%)`
                     }}
                   />
+                  {descriptor && (
+                    <p className={styles.priorityDescriptor}>{descriptor}</p>
+                  )}
                 </div>
               );
             })}
@@ -1025,9 +1137,33 @@ export default function SportsCarComparison() {
                           </div>
                           {car.slug && (
                             <div className={styles.expandedActions}>
-                              <Link href={`/cars/${car.slug}`} className={styles.viewProfileButton}>
-                                View Full Profile <Icons.externalLink size={14} />
-                              </Link>
+                              <div className={styles.expandedActionsRow}>
+                                <FavoriteButton car={car} variant="button" />
+                                <CompareButton car={car} variant="button" />
+                              </div>
+                              <div className={styles.expandedActionsRow}>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    selectCar(car);
+                                  }}
+                                  className={`${styles.selectCarButton} ${isHydrated && selectedCar?.slug === car.slug ? styles.selected : ''}`}
+                                  disabled={isHydrated && selectedCar?.slug === car.slug}
+                                >
+                                  {isHydrated && selectedCar?.slug === car.slug ? (
+                                    <>
+                                      <Icons.checkCircle size={14} /> Selected
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Icons.plus size={14} /> Select This Car
+                                    </>
+                                  )}
+                                </button>
+                                <Link href={`/cars/${car.slug}`} className={styles.viewProfileButton}>
+                                  View Full Profile <Icons.externalLink size={14} />
+                                </Link>
+                              </div>
                             </div>
                           )}
                         </div>

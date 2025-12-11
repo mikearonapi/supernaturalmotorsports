@@ -13,7 +13,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './PerformanceHub.module.css';
 import ScoringInfo from './ScoringInfo';
@@ -32,6 +32,8 @@ import { tierConfig } from '@/data/cars.js';
 import { getRecommendationsForCar, getTierRecommendations } from '@/data/carUpgradeRecommendations.js';
 import { validateUpgradeSelection, getRecommendedUpgrades, getSystemImpactOverview, SEVERITY } from '@/lib/dependencyChecker.js';
 import CarImage from './CarImage';
+import UpgradeAggregator from './UpgradeAggregator';
+import { useCarSelection } from './providers/CarSelectionProvider';
 
 // Icons for performance categories
 const Icons = {
@@ -984,12 +986,15 @@ function ExpertTrackInsights({ car }) {
  * Main Performance HUB component
  */
 export default function PerformanceHub({ car }) {
+  // Global car selection integration
+  const { selectCar, setUpgrades, isHydrated } = useCarSelection();
+
   // Get car-specific recommendations to determine default tier
-  const carRecommendations = useMemo(() => 
-    getRecommendationsForCar(car.slug), 
+  const carRecommendations = useMemo(() =>
+    getRecommendationsForCar(car.slug),
     [car.slug]
   );
-  
+
   // Initialize to car's default tier if available, otherwise stock
   const [selectedPackageKey, setSelectedPackageKey] = useState(() => {
     return carRecommendations?.defaultTier || 'stock';
@@ -997,6 +1002,14 @@ export default function PerformanceHub({ car }) {
   const [expandedModules, setExpandedModules] = useState(false);
   const [selectedModules, setSelectedModules] = useState([]);
   const [selectedUpgradeForModal, setSelectedUpgradeForModal] = useState(null);
+
+  // Set this car as selected when viewing the performance hub
+  // This ensures the car banner shows the correct car
+  useEffect(() => {
+    if (isHydrated && car) {
+      selectCar(car);
+    }
+  }, [isHydrated, car, selectCar]);
   
   // Get available upgrades for this car
   const availableUpgrades = useMemo(() => 
@@ -1242,9 +1255,12 @@ export default function PerformanceHub({ car }) {
             </button>
           </div>
           {showUpgrade && (
-            <div className={styles.costBadge}>
-              Est. Investment: {totalCost.display}
-            </div>
+            <UpgradeAggregator
+              car={car}
+              selectedUpgrades={profile.selectedUpgrades}
+              totalCost={totalCost}
+              variant="compact"
+            />
           )}
         </div>
 

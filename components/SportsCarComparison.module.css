@@ -366,6 +366,30 @@
   box-shadow: 0 0 0 3px rgba(26, 77, 110, 0.2);
 }
 
+/* Priority Descriptor - Shows context for current slider position */
+.priorityDescriptor {
+  margin-top: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-gray-100);
+  border-radius: var(--radius-xs);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--color-gray-600);
+  line-height: 1.4;
+  text-align: center;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .priorityDescriptor {
+    font-size: var(--font-size-xs);
+    padding: var(--space-xs) var(--space-md);
+  }
+}
+
 /* --------------------------------------------------------------------------
    Priority Summary
    -------------------------------------------------------------------------- */
@@ -1729,6 +1753,38 @@
   border-top: 1px solid var(--color-gray-200);
   display: flex;
   justify-content: flex-start;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.selectCarButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  background: var(--sn-accent);
+  color: var(--sn-primary-dark);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selectCarButton:hover:not(:disabled) {
+  background: var(--sn-accent-light);
+  transform: translateY(-1px);
+}
+
+.selectCarButton.selected {
+  background: var(--color-success);
+  color: var(--color-white);
+  cursor: default;
+}
+
+.selectCarButton:disabled {
+  opacity: 1;
 }
 
 .viewProfileButton {
@@ -1769,5 +1825,187 @@
   background: linear-gradient(135deg, #059669 0%, #10b981 100%);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(4, 120, 87, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   Category Quick Filters
+   -------------------------------------------------------------------------- */
+.categoryFilters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: linear-gradient(135deg, var(--sn-primary) 0%, var(--sn-primary-dark) 100%);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-md);
+}
+
+.categoryFiltersLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.categoryFilterScroll {
+  display: flex;
+  gap: var(--space-xs);
+  overflow-x: auto;
+  padding-bottom: var(--space-xs);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.categoryFilterScroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.categoryFilterScroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.categoryFilterScroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.categoryFilterBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.categoryFilterBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.categoryFilterBtn.categoryFilterActive {
+  background: var(--sn-accent);
+  border-color: var(--sn-accent);
+  color: var(--sn-primary-dark);
+}
+
+.categoryFilterBtn svg {
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Tier Quick Filters
+   -------------------------------------------------------------------------- */
+.tierFilters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-gray-200);
+  margin-bottom: var(--space-md);
+}
+
+.tierFiltersLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-gray-600);
+}
+
+.tierFilterButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.tierFilterBtn {
+  padding: 0.5rem 1rem;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-gray-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tierFilterBtn:hover {
+  background: var(--color-gray-200);
+  border-color: var(--color-gray-300);
+}
+
+.tierFilterBtn.tierFilterActive {
+  background: var(--sn-primary);
+  border-color: var(--sn-primary);
+  color: var(--color-white);
+}
+
+/* Tier-specific styling when active */
+.tierFilterPremium.tierFilterActive {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  border-color: #7c3aed;
+}
+
+.tierFilterUpper.tierFilterActive {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: #2563eb;
+}
+
+.tierFilterMid.tierFilterActive {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  border-color: #059669;
+}
+
+.tierFilterBudget.tierFilterActive {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  border-color: #d97706;
+}
+
+@media (min-width: 640px) {
+  .tierFilters {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .tierFiltersLabel {
+    white-space: nowrap;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Expanded Actions Row
+   -------------------------------------------------------------------------- */
+.expandedActionsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .expandedActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .expandedActionsRow {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .selectCarButton,
+  .viewProfileButton {
+    flex: 1;
+    justify-content: center;
+  }
 }
 

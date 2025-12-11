@@ -4,9 +4,8 @@ import Button from '@/components/Button';
 import ScoringInfo from '@/components/ScoringInfo';
 import styles from './page.module.css';
 
-// Blob URL for hero image
-const BLOB_BASE = 'https://abqnp7qrs0nhv5pw.public.blob.vercel-storage.com';
-const heroImageUrl = `${BLOB_BASE}/pages/advisory/hero.webp`;
+// Hero image - Canyon road conveys "finding YOUR lane/path"
+const heroImageUrl = '/images/pages/canyon-road.png';
 
 // Icon
 const SearchIcon = () => (

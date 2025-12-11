@@ -1,76 +1,63 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { carData, tierConfig } from '@/data/cars.js';
 import styles from './page.module.css';
+import { useCarSelection } from '@/components/providers/CarSelectionProvider';
+import { useFavorites } from '@/components/providers/FavoritesProvider';
+import { useCompare } from '@/components/providers/CompareProvider';
+import { useSavedBuilds } from '@/components/providers/SavedBuildsProvider';
+import { useAuth } from '@/components/providers/AuthProvider';
+import AuthModal, { useAuthModal } from '@/components/AuthModal';
 
-// Blob base URL for car images
-const BLOB_BASE = 'https://abqnp7qrs0nhv5pw.public.blob.vercel-storage.com';
-const heroImageUrl = `${BLOB_BASE}/pages/home/hero.webp`;
-
-function getCarImageUrl(slug) {
-  return `${BLOB_BASE}/cars/${slug}/hero.webp`;
-}
+// Hero image - Actual garage/workshop setting for "My Garage"
+const heroImageUrl = '/images/pages/upgrades-garage.png';
 
 // Icons
 const Icons = {
-  search: ({ size = 20 }) => (
+  heart: ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="8"/>
-      <path d="m21 21-4.35-4.35"/>
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
     </svg>
   ),
-  grid: ({ size = 20 }) => (
+  wrench: ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="7" height="7"/>
-      <rect x="14" y="3" width="7" height="7"/>
-      <rect x="14" y="14" width="7" height="7"/>
-      <rect x="3" y="14" width="7" height="7"/>
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
     </svg>
   ),
-  list: ({ size = 20 }) => (
+  compare: ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="8" y1="6" x2="21" y2="6"/>
-      <line x1="8" y1="12" x2="21" y2="12"/>
-      <line x1="8" y1="18" x2="21" y2="18"/>
-      <line x1="3" y1="6" x2="3.01" y2="6"/>
-      <line x1="3" y1="12" x2="3.01" y2="12"/>
-      <line x1="3" y1="18" x2="3.01" y2="18"/>
+      <line x1="18" y1="20" x2="18" y2="10"/>
+      <line x1="12" y1="20" x2="12" y2="4"/>
+      <line x1="6" y1="20" x2="6" y2="14"/>
     </svg>
   ),
-  filter: ({ size = 20 }) => (
+  clipboard: ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
     </svg>
   ),
-  chevronDown: ({ size = 20 }) => (
+  bot: ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="6 9 12 15 18 9"/>
+      <rect x="3" y="11" width="18" height="10" rx="2"/>
+      <circle cx="12" cy="5" r="2"/>
+      <path d="M12 7v4"/>
+      <line x1="8" y1="16" x2="8" y2="16"/>
+      <line x1="16" y1="16" x2="16" y2="16"/>
     </svg>
   ),
-  zap: ({ size = 16 }) => (
+  user: ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
     </svg>
   ),
-  gauge: ({ size = 16 }) => (
+  lock: ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20z"/>
-      <path d="M12 6v6l4 2"/>
-    </svg>
-  ),
-  volume: ({ size = 16 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-    </svg>
-  ),
-  star: ({ size = 16 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
     </svg>
   ),
   arrowRight: ({ size = 16 }) => (
@@ -79,352 +66,211 @@ const Icons = {
       <polyline points="12 5 19 12 12 19"/>
     </svg>
   ),
-  x: ({ size = 20 }) => (
+  zap: ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="18" y1="6" x2="6" y2="18"/>
-      <line x1="6" y1="6" x2="18" y2="18"/>
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+  ),
+  car: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
+      <circle cx="6.5" cy="16.5" r="2.5"/>
+      <circle cx="16.5" cy="16.5" r="2.5"/>
+    </svg>
+  ),
+  sparkles: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3L13.5 9L19 9L14.5 13L16 19L12 15.5L8 19L9.5 13L5 9L10.5 9L12 3Z"/>
+    </svg>
+  ),
+  calendar: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+      <line x1="16" y1="2" x2="16" y2="6"/>
+      <line x1="8" y1="2" x2="8" y2="6"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
     </svg>
   ),
 };
 
-// Filter options
-const TIERS = [
-  { value: 'all', label: 'All Tiers' },
-  { value: 'premium', label: 'Premium ($75K+)' },
-  { value: 'upper-mid', label: 'Upper-Mid ($45-75K)' },
-  { value: 'mid', label: 'Mid ($25-45K)' },
-  { value: 'budget', label: 'Entry ($12-25K)' },
+// Feature cards for the garage - Active features
+const ACTIVE_FEATURES = [
+  {
+    id: 'favorites',
+    title: 'Favorite Cars',
+    description: 'Save cars you love for quick access. Build your dream garage wishlist.',
+    icon: Icons.heart,
+    color: '#e74c3c',
+    comingSoon: false,
+  },
+  {
+    id: 'builds',
+    title: 'Saved Builds',
+    description: 'Save Performance HUB configurations. Compare different build paths for your car.',
+    icon: Icons.wrench,
+    color: '#3498db',
+    comingSoon: false,
+  },
+  {
+    id: 'compare',
+    title: 'Compare Vehicles',
+    description: 'Side-by-side comparisons of specs, scores, and ownership costs.',
+    icon: Icons.compare,
+    color: '#2ecc71',
+    comingSoon: false,
+  },
 ];
 
-const CATEGORIES = [
-  { value: 'all', label: 'All Layouts' },
-  { value: 'Mid-Engine', label: 'Mid-Engine' },
-  { value: 'Front-Engine', label: 'Front-Engine' },
-  { value: 'Rear-Engine', label: 'Rear-Engine' },
+// Coming soon features - Gated until account system
+const COMING_SOON_FEATURES = [
+  {
+    id: 'ai-mechanic',
+    title: 'AI Mechanic',
+    description: 'Your personal car advisor. Get answers about maintenance, modifications, and more.',
+    icon: Icons.bot,
+    color: '#9b59b6',
+    comingSoon: true,
+  },
+  {
+    id: 'vin-lookup',
+    title: 'VIN Auto-Fill',
+    description: 'Enter your VIN to automatically load your exact car specs, history, and recalls.',
+    icon: Icons.car,
+    color: '#e67e22',
+    comingSoon: true,
+  },
+  {
+    id: 'maintenance',
+    title: 'Maintenance Log',
+    description: 'Track service history, upload receipts, and get maintenance reminders.',
+    icon: Icons.clipboard,
+    color: '#f39c12',
+    comingSoon: true,
+  },
+  {
+    id: 'service-analyzer',
+    title: 'Service Analyzer',
+    description: 'AI-powered analysis of repair estimates. Know if you\'re getting a fair price.',
+    icon: Icons.sparkles,
+    color: '#1abc9c',
+    comingSoon: true,
+  },
 ];
 
-const SORT_OPTIONS = [
-  { value: 'name-asc', label: 'Name A-Z' },
-  { value: 'name-desc', label: 'Name Z-A' },
-  { value: 'price-asc', label: 'Price: Low to High' },
-  { value: 'price-desc', label: 'Price: High to Low' },
-  { value: 'hp-desc', label: 'Power: High to Low' },
-  { value: 'hp-asc', label: 'Power: Low to High' },
-  { value: 'zerosixty-asc', label: '0-60: Fastest First' },
-  { value: 'zerosixty-desc', label: '0-60: Slowest First' },
-  { value: 'torque-desc', label: 'Torque: High to Low' },
-  { value: 'sound-desc', label: 'Best Sound' },
-  { value: 'track-desc', label: 'Best Track' },
-  { value: 'value-desc', label: 'Best Value' },
-  { value: 'reliability-desc', label: 'Most Reliable' },
-];
+// All features combined
+const GARAGE_FEATURES = [...ACTIVE_FEATURES, ...COMING_SOON_FEATURES];
 
-// Get unique brands from car data
-const BRANDS = ['all', ...new Set(carData.map(car => {
-  // Extract brand from car name
-  const name = car.name;
-  if (name.startsWith('718') || name.startsWith('911') || name.startsWith('Cayman') || name.startsWith('Boxster')) return 'Porsche';
-  if (name.startsWith('M2') || name.startsWith('M3') || name.startsWith('M4') || name.startsWith('M5') || name.startsWith('Z4')) return 'BMW';
-  if (name.startsWith('Corvette') || name.startsWith('Camaro')) return 'Chevrolet';
-  if (name.startsWith('Mustang')) return 'Ford';
-  if (name.startsWith('GT-R') || name.startsWith('370Z') || name.startsWith('350Z') || name.includes('Nissan')) return 'Nissan';
-  if (name.startsWith('Supra') || name.startsWith('GR86') || name.includes('Toyota')) return 'Toyota';
-  if (name.startsWith('BRZ') || name.startsWith('WRX') || name.includes('Subaru')) return 'Subaru';
-  if (name.startsWith('S2000') || name.startsWith('NSX') || name.startsWith('Civic Type R') || name.includes('Honda')) return 'Honda';
-  if (name.startsWith('Miata') || name.startsWith('MX-5') || name.startsWith('RX-') || name.includes('Mazda')) return 'Mazda';
-  if (name.startsWith('Challenger') || name.startsWith('Charger') || name.startsWith('Viper')) return 'Dodge';
-  if (name.startsWith('AMG') || name.includes('Mercedes')) return 'Mercedes-AMG';
-  if (name.startsWith('RS') || name.startsWith('R8') || name.startsWith('TT') || name.includes('Audi')) return 'Audi';
-  if (name.startsWith('Evora') || name.startsWith('Elise') || name.startsWith('Exige') || name.startsWith('Emira')) return 'Lotus';
-  if (name.startsWith('Shelby')) return 'Shelby';
-  if (name.startsWith('Alfa')) return 'Alfa Romeo';
-  if (name.startsWith('Genesis')) return 'Genesis';
-  if (name.startsWith('Model')) return 'Tesla';
-  return car.brand || name.split(' ')[0];
-}))].sort((a, b) => a === 'all' ? -1 : b === 'all' ? 1 : a.localeCompare(b));
-
-// Get tier styling
-const getTierClass = (tier) => {
-  const tierClasses = {
-    premium: styles.tierPremium,
-    'upper-mid': styles.tierUpper,
-    mid: styles.tierMid,
-    budget: styles.tierEntry,
-  };
-  return tierClasses[tier] || styles.tierMid;
-};
-
-// Get score color class
-const getScoreClass = (score) => {
-  if (score >= 9) return styles.scoreExcellent;
-  if (score >= 7) return styles.scoreGood;
-  if (score >= 5) return styles.scoreAverage;
-  return styles.scorePoor;
-};
-
-// Car Card Component
-function CarCard({ car, viewMode }) {
-  const tier = tierConfig[car.tier] || { label: car.tier };
-  
-  if (viewMode === 'list') {
-    return (
-      <Link href={`/cars/${car.slug}`} className={styles.tableRow}>
-        <div className={styles.tableCell} data-label="Car">
-          <div className={styles.tableCellCar}>
-            <div className={styles.tableImageWrapper}>
-              <Image
-                src={getCarImageUrl(car.slug)}
-                alt={car.name}
-                fill
-                sizes="80px"
-                className={styles.tableImage}
-              />
-            </div>
-            <div className={styles.tableCarInfo}>
-              <h3 className={styles.tableCarName}>{car.name}</h3>
-              <span className={styles.tableCarYears}>{car.years}</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className={styles.tableCell} data-label="Tier">
-          <span className={`${styles.tableTier} ${getTierClass(car.tier)}`}>
-            {tier.label}
-          </span>
-        </div>
-        
-        <div className={styles.tableCell} data-label="HP">
-          <span className={styles.tableCellValue}>{car.hp}</span>
-        </div>
-        
-        <div className={styles.tableCell} data-label="Torque">
-          <span className={styles.tableCellValue}>{car.torque || '—'}</span>
-        </div>
-        
-        <div className={styles.tableCell} data-label="0-60">
-          <span className={styles.tableCellValue}>{car.zeroToSixty ? `${car.zeroToSixty}s` : '—'}</span>
-        </div>
-        
-        <div className={styles.tableCell} data-label="Sound">
-          <span className={`${styles.tableScore} ${getScoreClass(car.sound)}`}>
-            {car.sound}
-          </span>
-        </div>
-        
-        <div className={styles.tableCell} data-label="Track">
-          <span className={`${styles.tableScore} ${getScoreClass(car.track)}`}>
-            {car.track}
-          </span>
-        </div>
-        
-        <div className={styles.tableCell} data-label="Value">
-          <span className={`${styles.tableScore} ${getScoreClass(car.value)}`}>
-            {car.value}
-          </span>
-        </div>
-        
-        <div className={styles.tableCell} data-label="Reliable">
-          <span className={`${styles.tableScore} ${getScoreClass(car.reliability)}`}>
-            {car.reliability}
-          </span>
-        </div>
-        
-        <div className={styles.tableCell} data-label="Price">
-          <span className={styles.tableCellValue}>{car.priceRange}</span>
-        </div>
-      </Link>
-    );
-  }
+// Feature Card Component
+function FeatureCard({ feature, isAuthenticated }) {
+  const Icon = feature.icon;
   
   return (
-    <Link href={`/cars/${car.slug}`} className={styles.card}>
-      <div className={styles.cardImageWrapper}>
-        <Image
-          src={getCarImageUrl(car.slug)}
-          alt={car.name}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className={styles.cardImage}
-        />
-        <div className={styles.cardOverlay} />
-        <span className={`${styles.cardTier} ${getTierClass(car.tier)}`}>
-          {tier.label}
-        </span>
-        <div className={styles.cardQuickStats}>
-          <div className={styles.quickStat}>
-            <Icons.zap size={14} />
-            <span>{car.hp} hp</span>
-          </div>
-          <div className={styles.quickStat}>
-            <span>{car.priceRange}</span>
-          </div>
+    <div 
+      className={`${styles.featureCard} ${feature.comingSoon ? styles.comingSoon : ''}`}
+      style={{ '--feature-color': feature.color }}
+    >
+      <div className={styles.featureIcon}>
+        <Icon size={24} />
+      </div>
+      <div className={styles.featureContent}>
+        <div className={styles.featureHeader}>
+          <h3 className={styles.featureTitle}>{feature.title}</h3>
+          {feature.comingSoon && (
+            <span className={styles.comingSoonBadge}>Coming Soon</span>
+          )}
+        </div>
+        <p className={styles.featureDescription}>{feature.description}</p>
+      </div>
+      {!feature.comingSoon && !isAuthenticated && (
+        <div className={styles.featureLock}>
+          <Icons.lock size={16} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Empty state for when user is not signed in
+function SignUpCTA({ onSignUpClick }) {
+  return (
+    <div className={styles.signUpCta}>
+      <div className={styles.signUpIcon}>
+        <Icons.user size={32} />
+      </div>
+      <h2 className={styles.signUpTitle}>Your Personal Garage Awaits</h2>
+      <p className={styles.signUpDescription}>
+        Create a free account to unlock your personal garage. Save favorite cars, 
+        build configurations, and get personalized recommendations.
+      </p>
+      <div className={styles.signUpBenefits}>
+        <div className={styles.benefit}>
+          <Icons.heart size={16} />
+          <span>Save favorite cars</span>
+        </div>
+        <div className={styles.benefit}>
+          <Icons.wrench size={16} />
+          <span>Save build configurations</span>
+        </div>
+        <div className={styles.benefit}>
+          <Icons.compare size={16} />
+          <span>Compare vehicles side-by-side</span>
+        </div>
+        <div className={styles.benefit}>
+          <Icons.bot size={16} />
+          <span>AI-powered car advice</span>
         </div>
       </div>
-      <div className={styles.cardContent}>
-        <div className={styles.cardHeader}>
-          <h3 className={styles.cardName}>{car.name}</h3>
-          <span className={styles.cardYears}>{car.years}</span>
-        </div>
-        <p className={styles.cardEngine}>{car.engine} • {car.trans}</p>
-        <div className={styles.cardScores}>
-          <div className={styles.scoreItem} title="Sound Score">
-            <span className={styles.scoreLabel}>Sound</span>
-            <span className={`${styles.scoreValue} ${getScoreClass(car.sound)}`}>{car.sound}</span>
-          </div>
-          <div className={styles.scoreItem} title="Track Score">
-            <span className={styles.scoreLabel}>Track</span>
-            <span className={`${styles.scoreValue} ${getScoreClass(car.track)}`}>{car.track}</span>
-          </div>
-          <div className={styles.scoreItem} title="Value Score">
-            <span className={styles.scoreLabel}>Value</span>
-            <span className={`${styles.scoreValue} ${getScoreClass(car.value)}`}>{car.value}</span>
-          </div>
-          <div className={styles.scoreItem} title="Reliability Score">
-            <span className={styles.scoreLabel}>Reliable</span>
-            <span className={`${styles.scoreValue} ${getScoreClass(car.reliability)}`}>{car.reliability}</span>
-          </div>
-        </div>
-        <p className={styles.cardHighlight}>{car.highlight}</p>
+      <div className={styles.signUpActions}>
+        <button className={styles.signUpButton} onClick={onSignUpClick}>
+          <Icons.user size={18} />
+          Create Free Account
+        </button>
+        <span className={styles.signUpNote}>Free forever. No credit card required.</span>
       </div>
-    </Link>
+    </div>
+  );
+}
+
+// Quick access card for selected car
+function SelectedCarQuickAccess({ selectedCar }) {
+  if (!selectedCar) return null;
+  
+  return (
+    <div className={styles.selectedCarCard}>
+      <div className={styles.selectedCarHeader}>
+        <Icons.car size={18} />
+        <span>Currently Selected</span>
+      </div>
+      <h3 className={styles.selectedCarName}>{selectedCar.name}</h3>
+      <p className={styles.selectedCarMeta}>{selectedCar.years} • {selectedCar.hp} hp</p>
+      <div className={styles.selectedCarActions}>
+        <Link href={`/cars/${selectedCar.slug}`} className={styles.selectedCarLink}>
+          View Details
+        </Link>
+        <Link href={`/performance?car=${selectedCar.slug}`} className={styles.selectedCarLink}>
+          Build It
+        </Link>
+      </div>
+    </div>
   );
 }
 
 export default function GaragePage() {
-  // State for filters and view
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTier, setSelectedTier] = useState('all');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedBrand, setSelectedBrand] = useState('all');
-  const [sortBy, setSortBy] = useState('name-asc');
-  const [viewMode, setViewMode] = useState('grid');
-  const [showFilters, setShowFilters] = useState(false);
+  // Get auth state
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const authModal = useAuthModal();
   
-  // Get brand from car name (same logic as BRANDS)
-  const getCarBrand = (name) => {
-    if (name.startsWith('718') || name.startsWith('911') || name.startsWith('Cayman') || name.startsWith('Boxster')) return 'Porsche';
-    if (name.startsWith('M2') || name.startsWith('M3') || name.startsWith('M4') || name.startsWith('M5') || name.startsWith('Z4')) return 'BMW';
-    if (name.startsWith('Corvette') || name.startsWith('Camaro')) return 'Chevrolet';
-    if (name.startsWith('Mustang')) return 'Ford';
-    if (name.startsWith('GT-R') || name.startsWith('370Z') || name.startsWith('350Z') || name.includes('Nissan')) return 'Nissan';
-    if (name.startsWith('Supra') || name.startsWith('GR86') || name.includes('Toyota')) return 'Toyota';
-    if (name.startsWith('BRZ') || name.startsWith('WRX') || name.includes('Subaru')) return 'Subaru';
-    if (name.startsWith('S2000') || name.startsWith('NSX') || name.startsWith('Civic Type R') || name.includes('Honda')) return 'Honda';
-    if (name.startsWith('Miata') || name.startsWith('MX-5') || name.startsWith('RX-') || name.includes('Mazda')) return 'Mazda';
-    if (name.startsWith('Challenger') || name.startsWith('Charger') || name.startsWith('Viper')) return 'Dodge';
-    if (name.startsWith('AMG') || name.includes('Mercedes')) return 'Mercedes-AMG';
-    if (name.startsWith('RS') || name.startsWith('R8') || name.startsWith('TT') || name.includes('Audi')) return 'Audi';
-    if (name.startsWith('Evora') || name.startsWith('Elise') || name.startsWith('Exige') || name.startsWith('Emira')) return 'Lotus';
-    if (name.startsWith('Shelby')) return 'Shelby';
-    if (name.startsWith('Alfa')) return 'Alfa Romeo';
-    if (name.startsWith('Genesis')) return 'Genesis';
-    if (name.startsWith('Model')) return 'Tesla';
-    return name.split(' ')[0];
-  };
+  // Get currently selected car from global state
+  const { selectedCar, isHydrated } = useCarSelection();
   
-  // Filter and sort cars
-  const filteredCars = useMemo(() => {
-    let result = [...carData];
-    
-    // Search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(car => 
-        car.name.toLowerCase().includes(query) ||
-        car.engine?.toLowerCase().includes(query) ||
-        car.highlight?.toLowerCase().includes(query) ||
-        car.years?.includes(query)
-      );
-    }
-    
-    // Tier filter
-    if (selectedTier !== 'all') {
-      result = result.filter(car => car.tier === selectedTier);
-    }
-    
-    // Category filter
-    if (selectedCategory !== 'all') {
-      result = result.filter(car => car.category === selectedCategory);
-    }
-    
-    // Brand filter
-    if (selectedBrand !== 'all') {
-      result = result.filter(car => getCarBrand(car.name) === selectedBrand);
-    }
-    
-    // Sort
-    const [sortField, sortDir] = sortBy.split('-');
-    result.sort((a, b) => {
-      let aVal, bVal;
-      
-      switch (sortField) {
-        case 'name':
-          aVal = a.name.toLowerCase();
-          bVal = b.name.toLowerCase();
-          break;
-        case 'price':
-          aVal = a.priceAvg || 0;
-          bVal = b.priceAvg || 0;
-          break;
-        case 'hp':
-          aVal = a.hp || 0;
-          bVal = b.hp || 0;
-          break;
-        case 'zerosixty':
-          // For 0-60 time, lower is better, so we handle nulls specially
-          aVal = a.zeroToSixty || 999;
-          bVal = b.zeroToSixty || 999;
-          break;
-        case 'torque':
-          aVal = a.torque || 0;
-          bVal = b.torque || 0;
-          break;
-        case 'sound':
-          aVal = a.sound || 0;
-          bVal = b.sound || 0;
-          break;
-        case 'track':
-          aVal = a.track || 0;
-          bVal = b.track || 0;
-          break;
-        case 'value':
-          aVal = a.value || 0;
-          bVal = b.value || 0;
-          break;
-        case 'reliability':
-          aVal = a.reliability || 0;
-          bVal = b.reliability || 0;
-          break;
-        default:
-          aVal = a.name.toLowerCase();
-          bVal = b.name.toLowerCase();
-      }
-      
-      if (sortDir === 'asc') {
-        return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
-      } else {
-        return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
-      }
-    });
-    
-    return result;
-  }, [searchQuery, selectedTier, selectedCategory, selectedBrand, sortBy]);
+  // Get favorites from store
+  const { favorites, count: favoriteCount, removeFavorite, isHydrated: favoritesHydrated, isLoading: favoritesLoading } = useFavorites();
   
-  // Count active filters
-  const activeFilterCount = [
-    selectedTier !== 'all',
-    selectedCategory !== 'all',
-    selectedBrand !== 'all',
-  ].filter(Boolean).length;
+  // Get compare list from store
+  const { cars: compareCars, count: compareCount, removeFromCompare, isHydrated: compareHydrated, savedLists } = useCompare();
   
-  // Clear all filters
-  const clearFilters = () => {
-    setSearchQuery('');
-    setSelectedTier('all');
-    setSelectedCategory('all');
-    setSelectedBrand('all');
-    setSortBy('name-asc');
-  };
+  // Get saved builds
+  const { builds, isLoading: buildsLoading, deleteBuild } = useSavedBuilds();
   
   return (
     <div className={styles.page}>
@@ -433,7 +279,7 @@ export default function GaragePage() {
         <div className={styles.heroImageWrapper}>
           <Image
             src={heroImageUrl}
-            alt="Sports cars in a showroom garage"
+            alt="Personal garage workspace"
             fill
             priority
             quality={85}
@@ -442,233 +288,290 @@ export default function GaragePage() {
         </div>
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
-          <span className={styles.badge}>The Garage</span>
+          <span className={styles.badge}>Your Garage</span>
           <h1 className={styles.heroTitle}>
-            Explore Our<br />
-            <span className={styles.heroAccent}>Collection</span>
+            Your Personal<br />
+            <span className={styles.heroAccent}>Car Hub</span>
           </h1>
           <p className={styles.heroSubtitle}>
-            Browse ~{carData.length} sports cars from budget-friendly track toys to premium 
-            performance machines. Filter by what matters to you—sound, track capability, 
-            value, or just find something that speaks to your soul.
+            Your garage is your personal space to save favorites, plan builds, 
+            compare options, and get AI-powered advice. Everything you need to 
+            make informed decisions about your next car or upgrade.
           </p>
-          <div className={styles.heroStats}>
-            <div className={styles.heroStat}>
-              <span className={styles.heroStatNumber}>~{carData.length}</span>
-              <span className={styles.heroStatLabel}>Vehicles</span>
-            </div>
-            <div className={styles.heroStatDivider} />
-            <div className={styles.heroStat}>
-              <span className={styles.heroStatNumber}>$12K</span>
-              <span className={styles.heroStatLabel}>Starting</span>
-            </div>
-            <div className={styles.heroStatDivider} />
-            <div className={styles.heroStat}>
-              <span className={styles.heroStatNumber}>4</span>
-              <span className={styles.heroStatLabel}>Tiers</span>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Controls Section */}
-      <section className={styles.controls}>
-        <div className={styles.controlsContainer}>
-          {/* Top Row: Search + View Toggle */}
-          <div className={styles.controlsTopRow}>
-            {/* Search Bar */}
-            <div className={styles.searchWrapper}>
-              <Icons.search size={18} />
-              <input
-                type="text"
-                placeholder="Search by name, engine, or feature..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={styles.searchInput}
-              />
-              {searchQuery && (
-                <button 
-                  className={styles.clearSearch}
-                  onClick={() => setSearchQuery('')}
-                  aria-label="Clear search"
-                >
-                  <Icons.x size={16} />
-                </button>
-              )}
-            </div>
-            
-            {/* View Toggle & Results Count */}
-            <div className={styles.controlsRight}>
-              <span className={styles.resultsCount}>
-                {filteredCars.length} {filteredCars.length === 1 ? 'car' : 'cars'}
-              </span>
-              <div className={styles.viewToggle}>
-                <button
-                  className={`${styles.viewButton} ${viewMode === 'grid' ? styles.viewButtonActive : ''}`}
-                  onClick={() => setViewMode('grid')}
-                  aria-label="Grid view"
-                  title="Grid view"
-                >
-                  <Icons.grid size={18} />
-                </button>
-                <button
-                  className={`${styles.viewButton} ${viewMode === 'list' ? styles.viewButtonActive : ''}`}
-                  onClick={() => setViewMode('list')}
-                  aria-label="Table view"
-                  title="Table view"
-                >
-                  <Icons.list size={18} />
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          {/* Bottom Row: Filters */}
-          <div className={styles.controlsBottomRow}>
-            {/* Filter Toggle (Mobile) */}
-            <button 
-              className={`${styles.filterToggle} ${showFilters ? styles.filterToggleActive : ''}`}
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <Icons.filter size={18} />
-              <span>Filters</span>
-              {activeFilterCount > 0 && (
-                <span className={styles.filterCount}>{activeFilterCount}</span>
-              )}
-            </button>
-            
-            {/* Filters Panel */}
-            <div className={`${styles.filtersPanel} ${showFilters ? styles.filtersPanelOpen : ''}`}>
-              <div className={styles.filterGroup}>
-                <label className={styles.filterLabel}>Price Tier</label>
-                <select 
-                  value={selectedTier} 
-                  onChange={(e) => setSelectedTier(e.target.value)}
-                  className={styles.filterSelect}
-                >
-                  {TIERS.map(tier => (
-                    <option key={tier.value} value={tier.value}>{tier.label}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className={styles.filterGroup}>
-                <label className={styles.filterLabel}>Layout</label>
-                <select 
-                  value={selectedCategory} 
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className={styles.filterSelect}
-                >
-                  {CATEGORIES.map(cat => (
-                    <option key={cat.value} value={cat.value}>{cat.label}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className={styles.filterGroup}>
-                <label className={styles.filterLabel}>Brand</label>
-                <select 
-                  value={selectedBrand} 
-                  onChange={(e) => setSelectedBrand(e.target.value)}
-                  className={styles.filterSelect}
-                >
-                  {BRANDS.map(brand => (
-                    <option key={brand} value={brand}>
-                      {brand === 'all' ? 'All Brands' : brand}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className={styles.filterGroup}>
-                <label className={styles.filterLabel}>Sort By</label>
-                <select 
-                  value={sortBy} 
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className={styles.filterSelect}
-                >
-                  {SORT_OPTIONS.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                  ))}
-                </select>
-              </div>
-              
-              {activeFilterCount > 0 && (
-                <button className={styles.clearFilters} onClick={clearFilters}>
-                  <Icons.x size={16} />
-                  Clear Filters
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Car Grid/List */}
-      <section className={styles.carsSection}>
-        <div className={styles.carsContainer}>
-          {filteredCars.length === 0 ? (
-            <div className={styles.emptyState}>
-              <Icons.search size={48} />
-              <h3>No cars found</h3>
-              <p>Try adjusting your filters or search query</p>
-              <button className={styles.resetButton} onClick={clearFilters}>
-                Reset Filters
-              </button>
-            </div>
-          ) : viewMode === 'grid' ? (
-            <div className={styles.carsGrid}>
-              {filteredCars.map((car) => (
-                <CarCard key={car.slug} car={car} viewMode={viewMode} />
-              ))}
-            </div>
-          ) : (
-            <div className={styles.tableWrapper}>
-              <div className={styles.tableContainer}>
-                <div className={styles.tableHeader}>
-                  <div className={styles.tableHeaderCell}>Car</div>
-                  <div className={styles.tableHeaderCell}>Tier</div>
-                  <div className={styles.tableHeaderCell}>HP</div>
-                  <div className={styles.tableHeaderCell}>Torque</div>
-                  <div className={styles.tableHeaderCell}>0-60</div>
-                  <div className={styles.tableHeaderCell}>Sound</div>
-                  <div className={styles.tableHeaderCell}>Track</div>
-                  <div className={styles.tableHeaderCell}>Value</div>
-                  <div className={styles.tableHeaderCell}>Reliable</div>
-                  <div className={styles.tableHeaderCell}>Price</div>
-                </div>
-                <div className={styles.tableBody}>
-                  {filteredCars.map((car) => (
-                    <CarCard key={car.slug} car={car} viewMode={viewMode} />
-                  ))}
-                </div>
-              </div>
-            </div>
+      {/* Main Content */}
+      <section className={styles.mainContent}>
+        <div className={styles.container}>
+          {/* Sidebar with selected car (if any) */}
+          {isHydrated && selectedCar && (
+            <aside className={styles.sidebar}>
+              <SelectedCarQuickAccess selectedCar={selectedCar} />
+            </aside>
           )}
-        </div>
-      </section>
+          
+          {/* Main area */}
+          <div className={styles.mainArea}>
+            {/* Favorites Section */}
+            {favoritesHydrated && favorites.length > 0 && (
+              <div className={styles.favoritesSection}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>
+                    <Icons.heart size={22} />
+                    Your Favorites
+                  </h2>
+                  <span className={styles.favoritesCount}>{favoriteCount} cars</span>
+                </div>
+                <div className={styles.favoritesGrid}>
+                  {favorites.map(car => (
+                    <div key={car.slug} className={styles.favoriteCard}>
+                      <div className={styles.favoriteCardContent}>
+                        <h3 className={styles.favoriteCardName}>{car.name}</h3>
+                        <p className={styles.favoriteCardMeta}>
+                          {car.years} • {car.hp} hp • {car.priceRange}
+                        </p>
+                      </div>
+                      <div className={styles.favoriteCardActions}>
+                        <Link 
+                          href={`/cars/${car.slug}`}
+                          className={styles.favoriteCardLink}
+                        >
+                          View
+                        </Link>
+                        <Link 
+                          href={`/performance?car=${car.slug}`}
+                          className={styles.favoriteCardLink}
+                        >
+                          Build
+                        </Link>
+                        <button
+                          onClick={() => removeFavorite(car.slug)}
+                          className={styles.favoriteRemoveBtn}
+                          title="Remove from favorites"
+                        >
+                          <Icons.heart size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-      {/* CTA Section */}
-      <section className={styles.ctaSection}>
-        <div className={styles.ctaContainer}>
-          <div className={styles.ctaContent}>
-            <h2 className={styles.ctaTitle}>Need Help Choosing?</h2>
-            <p className={styles.ctaSubtitle}>
-              Our Car Selector tool helps match you with the perfect vehicle based on 
-              your priorities—whether that's sound, track capability, value, or daily usability.
-            </p>
-            <div className={styles.ctaButtons}>
-              <Link href="/car-selector" className={styles.ctaPrimary}>
-                Try the Car Selector
-              </Link>
-              <Link href="/performance" className={styles.ctaSecondary}>
-                Explore Upgrades
-              </Link>
+            {/* Compare Section */}
+            {compareHydrated && compareCars.length > 0 && (
+              <div className={styles.compareSection}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>
+                    <Icons.compare size={22} />
+                    Compare List
+                  </h2>
+                  <Link href="/garage/compare" className={styles.compareLink}>
+                    View Comparison →
+                  </Link>
+                </div>
+                <div className={styles.compareCarsList}>
+                  {compareCars.map(car => (
+                    <div key={car.slug} className={styles.compareCarChip}>
+                      <span className={styles.compareCarName}>{car.name}</span>
+                      <button
+                        onClick={() => removeFromCompare(car.slug)}
+                        className={styles.compareRemoveBtn}
+                        title="Remove from compare"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Saved Builds Section - Only for authenticated users */}
+            {isAuthenticated && builds.length > 0 && (
+              <div className={styles.buildsSection}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>
+                    <Icons.wrench size={22} />
+                    Saved Builds
+                  </h2>
+                  <span className={styles.buildsCount}>{builds.length} builds</span>
+                </div>
+                <div className={styles.buildsGrid}>
+                  {builds.slice(0, 4).map(build => (
+                    <div key={build.id} className={styles.buildCard}>
+                      <div className={styles.buildCardHeader}>
+                        <h3 className={styles.buildCardName}>{build.name}</h3>
+                        {build.isFavorite && (
+                          <span className={styles.buildFavoriteBadge}>★</span>
+                        )}
+                      </div>
+                      <p className={styles.buildCardCar}>{build.carName}</p>
+                      <div className={styles.buildCardStats}>
+                        <span className={styles.buildStat}>
+                          +{build.totalHpGain} hp
+                        </span>
+                        <span className={styles.buildStat}>
+                          ${build.totalCostLow?.toLocaleString()} - ${build.totalCostHigh?.toLocaleString()}
+                        </span>
+                      </div>
+                      <div className={styles.buildCardActions}>
+                        <Link 
+                          href={`/cars/${build.carSlug}/performance`}
+                          className={styles.buildCardLink}
+                        >
+                          Load Build
+                        </Link>
+                        <button
+                          onClick={() => deleteBuild(build.id)}
+                          className={styles.buildRemoveBtn}
+                          title="Delete build"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {builds.length > 4 && (
+                  <Link href="/garage/builds" className={styles.viewAllLink}>
+                    View all {builds.length} builds →
+                  </Link>
+                )}
+              </div>
+            )}
+
+            {/* Sign Up CTA - Show if not authenticated and no content */}
+            {!isAuthenticated && (!favoritesHydrated || favorites.length === 0) && (!compareHydrated || compareCars.length === 0) && (
+              <SignUpCTA onSignUpClick={authModal.openSignUp} />
+            )}
+            
+            {/* Welcome back message for authenticated users */}
+            {isAuthenticated && user && favorites.length === 0 && compareCars.length === 0 && builds.length === 0 && (
+              <div className={styles.welcomeBack}>
+                <div className={styles.welcomeBackIcon}>
+                  <Icons.user size={32} />
+                </div>
+                <h2 className={styles.welcomeBackTitle}>
+                  Welcome, {user.user_metadata?.full_name?.split(' ')[0] || 'Enthusiast'}!
+                </h2>
+                <p className={styles.welcomeBackText}>
+                  Your garage is empty. Start exploring cars to add favorites, 
+                  compare options, or save Performance HUB builds.
+                </p>
+                <div className={styles.welcomeBackActions}>
+                  <Link href="/car-selector" className={styles.welcomeBackPrimary}>
+                    <Icons.zap size={18} />
+                    Find Your Car
+                  </Link>
+                </div>
+              </div>
+            )}
+            
+            {/* Active Features */}
+            <div className={styles.featuresSection}>
+              <h2 className={styles.sectionTitle}>
+                <Icons.sparkles size={22} />
+                Available Now
+              </h2>
+              <p className={styles.sectionSubtitle}>
+                Tools you can use today to research and plan your car ownership journey.
+              </p>
+              
+              <div className={styles.featuresGrid}>
+                {ACTIVE_FEATURES.map(feature => (
+                  <FeatureCard 
+                    key={feature.id} 
+                    feature={feature} 
+                    isAuthenticated={isAuthenticated}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Coming Soon Features */}
+            <div className={styles.comingSoonSection}>
+              <div className={styles.comingSoonHeader}>
+                <h2 className={styles.sectionTitle}>
+                  <Icons.calendar size={22} />
+                  Coming Soon
+                </h2>
+                <span className={styles.comingSoonBadge}>In Development</span>
+              </div>
+              <p className={styles.sectionSubtitle}>
+                Premium features we&apos;re building to take your car ownership experience to the next level.
+              </p>
+              
+              <div className={styles.comingSoonGrid}>
+                {COMING_SOON_FEATURES.map(feature => {
+                  const Icon = feature.icon;
+                  return (
+                    <div 
+                      key={feature.id}
+                      className={styles.comingSoonCard}
+                      style={{ '--feature-color': feature.color }}
+                    >
+                      <div className={styles.comingSoonIcon}>
+                        <Icon size={28} />
+                      </div>
+                      <div className={styles.comingSoonContent}>
+                        <h3 className={styles.comingSoonTitle}>{feature.title}</h3>
+                        <p className={styles.comingSoonDesc}>{feature.description}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {/* Email signup for coming soon features */}
+              <div className={styles.notifySection}>
+                <p className={styles.notifyText}>
+                  Want to be first to know when these features launch?
+                </p>
+                <div className={styles.notifyForm}>
+                  <input 
+                    type="email" 
+                    placeholder="Enter your email"
+                    className={styles.notifyInput}
+                    disabled
+                  />
+                  <button className={styles.notifyButton} disabled title="Coming Soon">
+                    Notify Me
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            {/* CTA Section */}
+            <div className={styles.exploreCta}>
+              <div className={styles.exploreCtaContent}>
+                <h3 className={styles.exploreCtaTitle}>Ready to Explore?</h3>
+                <p className={styles.exploreCtaText}>
+                  Browse our catalog of sports cars or use our intelligent selector to find your perfect match.
+                </p>
+              </div>
+              <div className={styles.exploreCtaActions}>
+                <Link href="/car-selector" className={styles.exploreCtaPrimary}>
+                  <Icons.zap size={18} />
+                  Find Your Car
+                </Link>
+                <Link href="/performance" className={styles.exploreCtaSecondary}>
+                  Explore Upgrades
+                  <Icons.arrowRight size={16} />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={authModal.isOpen}
+        onClose={authModal.close}
+        defaultMode={authModal.defaultMode}
+      />
     </div>
   );
 }
-

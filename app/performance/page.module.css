@@ -668,3 +668,105 @@
   padding: var(--space-lg) 0;
 }
 
+/* ==========================================================================
+   Contextual Banner
+   ========================================================================== */
+.contextBanner {
+  background: linear-gradient(135deg, var(--sn-primary) 0%, var(--sn-primary-dark) 100%);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.contextBannerContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .contextBannerContent {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.contextBannerText {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: var(--font-size-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .contextBannerText {
+    justify-content: flex-start;
+  }
+}
+
+.contextBannerText strong {
+  color: var(--sn-accent);
+}
+
+.contextBannerText svg {
+  color: var(--sn-accent);
+  flex-shrink: 0;
+}
+
+.contextBannerButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--sn-accent);
+  color: var(--sn-primary-dark);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.contextBannerButton:hover {
+  background: var(--sn-accent-light);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Car Card Selected State
+   ========================================================================== */
+.carCardSelected {
+  border-color: var(--sn-accent);
+  box-shadow: 0 0 0 2px var(--sn-accent), 0 4px 12px rgba(212, 164, 24, 0.2);
+}
+
+.carCardSelectedBadge {
+  position: absolute;
+  top: var(--space-xs);
+  right: var(--space-xs);
+  background: var(--sn-accent);
+  color: var(--sn-primary-dark);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .carCardSelectedBadge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
+

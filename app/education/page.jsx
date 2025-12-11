@@ -6,6 +6,8 @@ import Button from '@/components/Button';
 import UpgradeGuide from '@/components/UpgradeGuide';
 import styles from './page.module.css';
 import { systems, nodes, edges } from '@/data/connectedTissueMatrix';
+import { useSelectedCar } from '@/components/providers/CarSelectionProvider';
+import ContextualBadge from '@/components/ContextualBadge';
 
 // Blob URL for hero image
 const BLOB_BASE = 'https://abqnp7qrs0nhv5pw.public.blob.vercel-storage.com';
@@ -246,6 +248,7 @@ function SystemCard({ system }) {
 // Main Education Page Content
 function EducationContent() {
   const [activeSection, setActiveSection] = useState('concepts');
+  const selectedCar = useSelectedCar();
   
   const conceptsRef = useRef(null);
   const systemsRef = useRef(null);
@@ -298,6 +301,17 @@ function EducationContent() {
               Learn what each modification actually does, how upgrades affect connected 
               components, and why the best builds are planned—not impulse buys.
             </p>
+            
+            {/* Car Context Message */}
+            {selectedCar && (
+              <div className={styles.carContextBanner}>
+                <Icons.info size={18} />
+                <span>
+                  Learning for your <strong>{selectedCar.name}</strong>? 
+                  This knowledge will help you plan smarter upgrades.
+                </span>
+              </div>
+            )}
             
             {/* Section Navigation */}
             <div className={styles.heroNav}>
