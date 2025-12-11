@@ -42,8 +42,8 @@ const Icons = {
 };
 
 // AI-generated images (owned/licensed) - unique to this page
-const heroImage = '/images/pages/canyon-road.png'; // Scenic driving road - exploration theme
-const catalogImage = '/images/pages/cars-and-coffee.png'; // Cars & coffee meet - multiple cars, community feel
+const heroImage = '/images/pages/explore-hero.jpg'; // Porsche 911 GT3 992 dramatic rear - stunning visual
+const catalogImage = '/images/pages/track-day-fun.png'; // Track day scene with multiple cars
 const educationImage = '/images/pages/engine-bay.png'; // Clean engine bay detail
 
 export default function ExplorePage() {
@@ -54,7 +54,7 @@ export default function ExplorePage() {
         <div className={styles.heroImageWrapper}>
           <Image
             src={heroImage}
-            alt="Scenic winding canyon road perfect for spirited driving"
+            alt="Porsche 911 GT3 992 dramatic rear view with glowing taillights"
             fill
             priority
             quality={90}
@@ -81,7 +81,7 @@ export default function ExplorePage() {
             <div className={styles.pathImageWrapper}>
               <Image
                 src={catalogImage}
-                alt="Sports cars gathered at a cars and coffee community meet"
+                alt="Sports cars on track during an exciting track day event"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className={styles.pathImage}

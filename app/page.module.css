@@ -130,6 +130,29 @@
   }
 }
 
+/* Cycling text animation */
+.cyclingText {
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  min-height: 3em; /* Prevent layout shift */
+}
+
+.cyclingText.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cyclingText.hidden {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@media (min-width: 768px) {
+  .cyclingText {
+    min-height: 2em;
+    font-size: var(--font-size-lg);
+  }
+}
+
 .heroCtas {
   display: flex;
   flex-direction: column;

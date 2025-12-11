@@ -4,6 +4,7 @@ import Button from '@/components/Button';
 import CarCarousel from '@/components/CarCarousel';
 import MethodologyStrip from '@/components/MethodologyStrip';
 import TrustIndicators from '@/components/TrustIndicators';
+import HeroSection from '@/components/HeroSection';
 import styles from './page.module.css';
 
 // Homepage uses the default layout metadata but we can add specific homepage schema
@@ -16,7 +17,6 @@ export const metadata = {
 };
 
 // AI-generated images (owned/licensed)
-const heroImageUrl = '/images/pages/home-hero.png';
 const BLOB_BASE = 'https://abqnp7qrs0nhv5pw.public.blob.vercel-storage.com';
 const valueImageUrl = `${BLOB_BASE}/pages/home/value-section.webp`;
 
@@ -117,63 +117,11 @@ const steps = [
   { number: '04', title: 'Drive with Confidence', description: 'Execute your plan knowing every decision was made with intention—not impulse.' }
 ];
 
-// Quick Stats - Key metrics to build trust
-const quickStats = [
-  { value: '98', label: 'Sports Cars Analyzed', suffix: '+' },
-  { value: '50', label: 'Upgrade Modules', suffix: '+' },
-  { value: '7', label: 'Performance Categories', suffix: '' },
-  { value: '24', label: 'Expert Sources Cited', suffix: '+' },
-];
-
 export default function Home() {
   return (
     <div className={styles.page}>
-      {/* Hero Section */}
-      <section className={styles.hero}>
-        <div className={styles.heroImageWrapper}>
-          <Image
-            src={heroImageUrl}
-            alt="Sports car on a winding mountain road at golden hour"
-            fill
-            priority
-            quality={90}
-            className={styles.heroImage}
-            sizes="100vw"
-          />
-        </div>
-        <div className={styles.heroOverlay} />
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            Unleash Your<br />
-            <span className={styles.heroAccent}>Racing Spirit</span>
-          </h1>
-          <p className={styles.heroSubtitle}>
-            Explore sports cars and learn what makes them tick. Find the 
-            perfect match for your goals. Plan performance builds that 
-            deliver real results. Save favorites and compare options in your garage.
-          </p>
-          <Button href="/car-selector" variant="secondary" size="lg" icon={<ArrowRightIcon />}>
-            Find Your Car
-          </Button>
-        </div>
-        <div className={styles.heroScroll}>
-          <span>Scroll to explore</span>
-          <div className={styles.scrollIndicator} />
-        </div>
-        
-        {/* Quick Stats Bar */}
-        <div className={styles.quickStatsBar}>
-          {quickStats.map((stat, index) => (
-            <div key={index} className={styles.quickStat}>
-              <span className={styles.quickStatValue}>
-                {stat.value}
-                {stat.suffix && <span className={styles.quickStatSuffix}>{stat.suffix}</span>}
-              </span>
-              <span className={styles.quickStatLabel}>{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Hero Section with cycling text */}
+      <HeroSection />
 
       {/* Pillars Section */}
       <section className={styles.pillars}>
