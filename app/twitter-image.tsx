@@ -1,7 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
-
+// Using Node.js runtime to avoid Edge Function size limit (images exceed 2MB)
 export const alt = 'AutoRev - Find Your Perfect Sports Car';
 export const size = {
   width: 1200,

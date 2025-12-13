@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
+// Force dynamic rendering since this route uses request.url for query params
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/cars/expert-reviewed
  * 
