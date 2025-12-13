@@ -40,9 +40,9 @@ const pageCtas = {
   },
   '/car-selector': {
     primary: { href: '/contact', label: 'Get Expert Help', icon: <MessageIcon /> },
-    secondary: { href: '/mod-planner', label: 'Plan Build' }
+    secondary: { href: '/tuning-shop', label: 'Plan Build' }
   },
-  '/mod-planner': {
+  '/tuning-shop': {
     primary: { href: '/contact', label: 'Talk to Expert', icon: <MessageIcon /> },
     secondary: { href: '/encyclopedia', label: 'Learn More' }
   },

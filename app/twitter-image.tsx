@@ -9,11 +9,36 @@ export const size = {
 };
 export const contentType = 'image/png';
 
+// Brand Colors (from globals.css)
+const BRAND = {
+  primary: '#1a4d6e',
+  primaryLight: '#2a6d94',
+  primaryDark: '#0f3347',
+  gold: '#D4AF37',
+  goldLight: '#E6C54A',
+  goldDark: '#B8973A',
+};
+
 /**
  * Twitter Card Image for social sharing
- * Used when sharing links on Twitter/X
+ * Features the dramatic hero car image with branded overlay
+ * Brand-aligned: teal primary + gold accent
  */
 export default async function Image() {
+  // Fetch the hero image for embedding
+  const heroImageResponse = await fetch(
+    new URL('../public/images/pages/home-hero.jpg', import.meta.url)
+  );
+  const heroImageData = await heroImageResponse.arrayBuffer();
+  const heroImageBase64 = Buffer.from(heroImageData).toString('base64');
+
+  // Fetch the logo - use the generated white version
+  const logoResponse = await fetch(
+    new URL('../public/images/autorev-logo-white.png', import.meta.url)
+  );
+  const logoData = await logoResponse.arrayBuffer();
+  const logoBase64 = Buffer.from(logoData).toString('base64');
+
   return new ImageResponse(
     (
       <div
@@ -22,205 +47,212 @@ export default async function Image() {
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'linear-gradient(135deg, #0a1628 0%, #1a3a52 50%, #0f3460 100%)',
-          fontFamily: 'system-ui, -apple-system, sans-serif',
           position: 'relative',
           overflow: 'hidden',
+          fontFamily: 'system-ui, -apple-system, sans-serif',
         }}
       >
-        {/* Decorative elements */}
-        <div
+        {/* Background car image */}
+        <img
+          src={`data:image/jpeg;base64,${heroImageBase64}`}
+          alt=""
           style={{
             position: 'absolute',
-            top: '-100px',
-            right: '-100px',
-            width: '500px',
-            height: '500px',
-            background: 'radial-gradient(circle, rgba(233,69,96,0.15) 0%, transparent 70%)',
-            borderRadius: '50%',
-          }}
-        />
-
-        {/* Racing stripe accent */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            width: '8px',
+            top: 0,
+            left: 0,
+            width: '100%',
             height: '100%',
-            background: 'linear-gradient(180deg, #e94560 0%, #ff6b6b 100%)',
+            objectFit: 'cover',
           }}
         />
 
-        {/* Content */}
+        {/* Lighter gradient overlay - mostly transparent, just enough for text readability */}
         <div
           style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `linear-gradient(135deg, rgba(15,51,71,0.7) 0%, rgba(26,77,110,0.3) 30%, transparent 50%, rgba(15,51,71,0.4) 100%)`,
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '60px',
-            textAlign: 'center',
           }}
-        >
-          {/* Logo with div-based icon */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '30px',
-            }}
-          >
-            {/* AutoRev Logo Icon - Div-based */}
-            <div
-              style={{
-                width: '70px',
-                height: '70px',
-                background: 'linear-gradient(135deg, #0a1628 0%, #1a3a52 100%)',
-                borderRadius: '14px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: '18px',
-                border: '2px solid rgba(255,255,255,0.3)',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              {/* Speedometer arc */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '8px',
-                  left: '8px',
-                  width: '54px',
-                  height: '54px',
-                  borderRadius: '50%',
-                  border: '4px solid rgba(255,255,255,0.7)',
-                  borderRightColor: 'transparent',
-                  borderBottomColor: 'transparent',
-                }}
-              />
-              
-              {/* Letter A */}
-              <span
-                style={{
-                  fontSize: '36px',
-                  fontWeight: 900,
-                  fontFamily: 'Arial Black, Arial, sans-serif',
-                  color: '#ffffff',
-                  marginTop: '4px',
-                }}
-              >
-                A
-              </span>
-              
-              {/* Red accent */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '12px',
-                  right: '14px',
-                  width: '8px',
-                  height: '18px',
-                  background: '#e94560',
-                  borderRadius: '4px',
-                  transform: 'rotate(35deg)',
-                }}
-              />
-              
-              {/* Orange needle */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '32px',
-                  right: '6px',
-                  width: '18px',
-                  height: '5px',
-                  background: 'linear-gradient(90deg, #f5a623, #ff6b6b)',
-                  borderRadius: '2px',
-                  transform: 'rotate(-10deg)',
-                }}
-              />
-            </div>
-            <span
-              style={{
-                fontSize: '42px',
-                fontWeight: 700,
-                color: '#ffffff',
-                letterSpacing: '-0.5px',
-              }}
-            >
-              AutoRev
-            </span>
-          </div>
+        />
 
-          {/* Main headline */}
-          <h1
-            style={{
-              fontSize: '72px',
-              fontWeight: 800,
-              color: '#ffffff',
-              lineHeight: 1.1,
-              margin: '0 0 24px 0',
-              textShadow: '0 4px 20px rgba(0,0,0,0.3)',
-              letterSpacing: '-2px',
-            }}
-          >
-            Find What Drives You
-          </h1>
-
-          {/* Subheadline */}
-          <p
-            style={{
-              fontSize: '28px',
-              color: 'rgba(255,255,255,0.85)',
-              margin: '0 0 40px 0',
-              maxWidth: '800px',
-              lineHeight: 1.4,
-            }}
-          >
-            Find your perfect sports car • Compare 100+ vehicles • Plan your build
-          </p>
-
-          {/* Feature badges */}
-          <div
-            style={{
-              display: 'flex',
-              gap: '16px',
-            }}
-          >
-            {['$25K - $300K', 'Car Selector', 'Performance Hub'].map((badge) => (
-              <div
-                key={badge}
-                style={{
-                  padding: '12px 24px',
-                  background: 'rgba(255,255,255,0.1)',
-                  borderRadius: '50px',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  color: '#ffffff',
-                  fontSize: '18px',
-                  fontWeight: 600,
-                }}
-              >
-                {badge}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom accent bar */}
+        {/* Bottom fade for text area - keeps text readable */}
         <div
           style={{
             position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
-            height: '6px',
-            background: 'linear-gradient(90deg, #e94560, #ff6b6b, #ffa502, #ff6b6b, #e94560)',
+            height: '280px',
+            background: `linear-gradient(to top, rgba(15,51,71,0.95) 0%, rgba(15,51,71,0.7) 40%, transparent 100%)`,
+            display: 'flex',
+          }}
+        />
+
+        {/* Left accent stripe - gold gradient */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '6px',
+            height: '100%',
+            background: `linear-gradient(180deg, ${BRAND.gold} 0%, ${BRAND.goldLight} 50%, ${BRAND.goldDark} 100%)`,
+            display: 'flex',
+          }}
+        />
+
+        {/* Logo in top left */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '36px',
+            left: '36px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '14px',
+          }}
+        >
+          <img
+            src={`data:image/png;base64,${logoBase64}`}
+            alt=""
+            style={{
+              width: '56px',
+              height: '56px',
+              objectFit: 'contain',
+            }}
+          />
+          <span
+            style={{
+              fontSize: '32px',
+              fontWeight: 700,
+              color: '#ffffff',
+              letterSpacing: '-0.5px',
+              textShadow: '0 2px 12px rgba(0,0,0,0.5)',
+            }}
+          >
+            AutoRev
+          </span>
+        </div>
+
+        {/* Main content area - bottom left */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '44px',
+            left: '40px',
+            right: '40px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '14px',
+          }}
+        >
+          {/* Main headline with space between What and Drives */}
+          <h1
+            style={{
+              fontSize: '72px',
+              fontWeight: 800,
+              color: '#ffffff',
+              lineHeight: 1.0,
+              margin: 0,
+              textShadow: '0 4px 24px rgba(0,0,0,0.6)',
+              letterSpacing: '-2px',
+            }}
+          >
+            Find What{' '}
+            <span style={{ color: BRAND.gold, marginLeft: '8px' }}>Drives You</span>
+          </h1>
+
+          {/* Subheadline - value proposition */}
+          <p
+            style={{
+              fontSize: '26px',
+              color: 'rgba(255,255,255,0.9)',
+              margin: 0,
+              textShadow: '0 2px 12px rgba(0,0,0,0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+            }}
+          >
+            <span>100+ Sports Cars</span>
+            <span style={{ color: BRAND.gold, fontSize: '18px' }}>◆</span>
+            <span>$25K – $300K</span>
+            <span style={{ color: BRAND.gold, fontSize: '18px' }}>◆</span>
+            <span>Miatas to GT3s</span>
+          </p>
+
+          {/* Feature pills - actual site features */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '10px',
+              marginTop: '10px',
+            }}
+          >
+            {[
+              { label: 'Your Sports Car Match', highlight: true },
+              { label: 'My Garage', highlight: false },
+              { label: 'Tuning Shop', highlight: false },
+              { label: 'Encyclopedia', highlight: false },
+            ].map((feature) => (
+              <div
+                key={feature.label}
+                style={{
+                  padding: '10px 18px',
+                  background: feature.highlight 
+                    ? `rgba(212,175,55,0.25)` 
+                    : `rgba(255,255,255,0.08)`,
+                  borderRadius: '50px',
+                  border: feature.highlight 
+                    ? `2px solid ${BRAND.gold}` 
+                    : '1.5px solid rgba(255,255,255,0.2)',
+                  color: feature.highlight ? BRAND.goldLight : '#ffffff',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                }}
+              >
+                {feature.label}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Domain in bottom right - clean, no dot */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '48px',
+            right: '40px',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <span
+            style={{
+              color: 'rgba(255,255,255,0.85)',
+              fontSize: '22px',
+              fontWeight: 600,
+              textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+            }}
+          >
+            autorev.app
+          </span>
+        </div>
+
+        {/* Bottom accent bar - gold gradient */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: `linear-gradient(90deg, ${BRAND.goldDark}, ${BRAND.gold}, ${BRAND.goldLight}, ${BRAND.gold}, ${BRAND.goldDark})`,
+            display: 'flex',
           }}
         />
       </div>

@@ -3,14 +3,58 @@
  * 
  * Displays car images with graceful fallback to styled placeholders.
  * Used across CarDetail, PerformanceHub, Advisory cards, etc.
+ * 
+ * Performance optimizations:
+ * - Uses placeholder="blur" with generated blurDataURL for instant visual feedback
+ * - Priority images use fetchPriority="high" for faster loading
+ * - Fast opacity transition for snappy load feel
  */
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { getCarHeroImage, getCarThumbnail, getCarGarageImage, getPlaceholderGradient } from '@/lib/images.js';
 import styles from './CarImage.module.css';
+
+/**
+ * Generate a tiny SVG-based blur placeholder for instant loading
+ * This creates a colored gradient that approximates the image
+ * @param {string} seed - Seed for deterministic color (e.g., car slug)
+ * @returns {string} - Base64 encoded blur data URL
+ */
+function generateBlurDataURL(seed = 'default') {
+  // Generate deterministic colors based on seed
+  const hash = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  
+  // Create automotive-themed gradient colors (dark blues, grays)
+  const hue1 = (hash % 40) + 200; // Blue-ish range (200-240)
+  const hue2 = (hash % 30) + 210; // Slightly different blue
+  const sat = 30 + (hash % 20); // 30-50% saturation
+  const light1 = 15 + (hash % 10); // 15-25% lightness (dark)
+  const light2 = 20 + (hash % 15); // 20-35% lightness
+  
+  const color1 = `hsl(${hue1}, ${sat}%, ${light1}%)`;
+  const color2 = `hsl(${hue2}, ${sat}%, ${light2}%)`;
+  
+  // Create a tiny SVG gradient (10x6 for 16:9 aspect, very small for fast encoding)
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6">
+    <defs>
+      <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:${color1}"/>
+        <stop offset="100%" style="stop-color:${color2}"/>
+      </linearGradient>
+    </defs>
+    <rect fill="url(#g)" width="10" height="6"/>
+  </svg>`;
+  
+  // Encode to base64 data URL
+  const encoded = typeof window !== 'undefined' 
+    ? btoa(svg) 
+    : Buffer.from(svg).toString('base64');
+  
+  return `data:image/svg+xml;base64,${encoded}`;
+}
 
 /**
  * @typedef {Object} CarImageProps
@@ -31,6 +75,11 @@ export default function CarImage({
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [usingFallback, setUsingFallback] = useState(false);
+  
+  // Generate blur placeholder for this car (memoized for performance)
+  const blurDataURL = useMemo(() => {
+    return generateBlurDataURL(car?.slug || 'default');
+  }, [car?.slug]);
   
   // Reset error state when car changes
   useEffect(() => {
@@ -112,6 +161,9 @@ export default function CarImage({
           onError={handleError}
           onLoad={handleLoad}
           priority={!lazy}
+          // Use blur placeholder for instant visual feedback
+          placeholder="blur"
+          blurDataURL={blurDataURL}
           // Mobile-optimized sizes: load smaller images on smaller screens
           sizes={
             variant === 'hero' || variant === 'garage'
@@ -122,6 +174,8 @@ export default function CarImage({
           }
           quality={variant === 'garage' ? 90 : 75}
           style={{ objectFit: 'cover' }}
+          // High fetch priority for hero/priority images
+          {...(!lazy && { fetchPriority: 'high' })}
         />
       )}
     </div>

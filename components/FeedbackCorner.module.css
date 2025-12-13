@@ -137,10 +137,15 @@
 /* Mobile: smaller size and spacing */
 @media (max-width: 480px) {
   .feedbackCorner {
-    bottom: 80px;
+    bottom: 78px;
     right: 20px;
     width: 36px;
     height: 36px;
+  }
+  
+  .feedbackCorner svg {
+    width: 16px;
+    height: 16px;
   }
   
   /* Hide tooltip on mobile */
@@ -149,8 +154,28 @@
   }
 }
 
+/* Small phones (iPhone SE) */
+@media (max-width: 375px) {
+  .feedbackCorner {
+    bottom: 74px;
+    right: 16px;
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* iPad/Tablet */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .feedbackCorner {
+    bottom: 92px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
 /* Desktop: larger size */
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
   .feedbackCorner {
     width: 42px;
     height: 42px;

@@ -3,6 +3,18 @@
   "framework": "nextjs",
   "buildCommand": "next build",
   "outputDirectory": ".next",
+  "redirects": [
+    {
+      "source": "/mod-planner",
+      "destination": "/tuning-shop",
+      "permanent": true
+    },
+    {
+      "source": "/mod-planner/:path*",
+      "destination": "/tuning-shop",
+      "permanent": true
+    }
+  ],
   "crons": [
     {
       "path": "/api/cron/youtube-enrichment",

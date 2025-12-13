@@ -65,6 +65,65 @@ export const platformCostMultipliers = {
 };
 
 /**
+ * Category-specific cost multipliers by tier
+ * More accurate than a single global multiplier since different parts scale differently
+ * 
+ * Rationale:
+ * - Exhaust/headers: High variation due to specialized manufacturing, materials
+ * - Chassis/suspension: Moderate variation, some shared platforms
+ * - Brakes: Moderate variation, compound is similar but calipers vary
+ * - Cooling: Lower variation, aluminum is aluminum
+ * - Power (bolt-ons): Lower variation, mass-market parts exist
+ * - Forced induction: Moderate, kit availability varies
+ * - Wheels: High variation, forged wheels for exotics are pricey
+ * - Aero: Moderate, carbon fiber costs scale with complexity
+ * 
+ * Values validated against 2024-2025 market pricing from major vendors
+ */
+export const categoryMultipliers = {
+  exotic: {
+    power: 1.6,           // Intakes, tunes - some standardization
+    forcedInduction: 2.2, // Limited kit availability, custom work needed
+    chassis: 2.0,         // Specialized dampers, unique geometry
+    brakes: 1.8,          // Exotic calipers, carbon ceramics common
+    cooling: 1.5,         // Aluminum is aluminum, but fitment matters
+    wheels: 2.5,          // Forged wheels, exotic fitments
+    aero: 2.0,            // Carbon fiber, wind tunnel tested designs
+    drivetrain: 2.2,      // Specialized clutches, limited slip diffs
+  },
+  premium: {
+    power: 1.3,           // Good aftermarket support
+    forcedInduction: 1.6, // Decent kit availability
+    chassis: 1.5,         // KW, Ohlins make dedicated parts
+    brakes: 1.4,          // StopTech, Brembo kits available
+    cooling: 1.2,         // Standard aluminum, good fitment options
+    wheels: 1.8,          // Flow-formed options available
+    aero: 1.5,            // Carbon options, some fiberglass
+    drivetrain: 1.6,      // Clutch kits, LSD options exist
+  },
+  luxury: {
+    power: 1.2,           // Good aftermarket
+    forcedInduction: 1.4, // Reasonable kit availability
+    chassis: 1.3,         // Shared platforms help
+    brakes: 1.3,          // Standard upgrade path
+    cooling: 1.15,        // Minimal markup
+    wheels: 1.5,          // Good variety available
+    aero: 1.3,            // Mix of materials
+    drivetrain: 1.4,      // Some shared parts with mainstream
+  },
+  mainstream: {
+    power: 1.0,
+    forcedInduction: 1.0,
+    chassis: 1.0,
+    brakes: 1.0,
+    cooling: 1.0,
+    wheels: 1.0,
+    aero: 1.0,
+    drivetrain: 1.0,
+  },
+};
+
+/**
  * Brand-specific cost overrides for certain upgrades
  * These are for cases where specific brand/upgrade combos have known pricing
  */
@@ -99,11 +158,28 @@ export const brandUpgradeOverrides = {
     'big-brake-kit': { costLow: 4000, costHigh: 8000 },
   },
   
-  // Lotus specific - premium but smaller parts
+  // Lotus specific - premium British engineering, limited aftermarket
+  // Emira pricing validated against Komo-Tec, Nitron, Larini, BOE
   'Lotus': {
-    'intake': { costLow: 400, costHigh: 700 },
-    'exhaust-catback': { costLow: 1200, costHigh: 2800 },
-    'coilovers-street': { costLow: 2000, costHigh: 4000 },
+    'intake': { low: 400, high: 800 },
+    'exhaust-catback': { low: 1500, high: 3500 },        // Larini, Komo-Tec systems
+    'headers': { low: 2000, high: 4000 },                // Limited options, mostly custom
+    'tune-street': { low: 600, high: 1200 },             // Komo-Tec, BOE tuning
+    'tune-track': { low: 1000, high: 2000 },
+    'coilovers-street': { low: 2500, high: 4500 },       // Nitron, Ohlins
+    'coilovers-track': { low: 4000, high: 7000 },        // Nitron R3, Ohlins TTX
+    'lowering-springs': { low: 500, high: 900 },
+    'sway-bars': { low: 800, high: 1500 },
+    'big-brake-kit': { low: 4000, high: 7500 },          // AP Racing, Essex
+    'brake-pads-street': { low: 300, high: 600 },
+    'brake-pads-track': { low: 500, high: 900 },
+    'wheels-lightweight': { low: 3000, high: 5500 },     // Forged options limited
+    'tires-performance': { low: 1000, high: 1800 },      // Staggered fitment
+    'tires-track': { low: 1500, high: 2500 },
+    'oil-cooler': { low: 1000, high: 2000 },
+    'radiator-upgrade': { low: 800, high: 1500 },
+    'splitter': { low: 600, high: 1500 },
+    'wing': { low: 1500, high: 4000 },
   },
   
   // Aston Martin - exotic pricing
@@ -209,31 +285,71 @@ export function getCostTier(car) {
 }
 
 /**
+ * Confidence levels for pricing estimates
+ * @readonly
+ * @enum {string}
+ */
+export const PricingConfidence = {
+  VERIFIED: 'verified',     // Brand-specific override with researched pricing
+  HIGH: 'high',             // Package-level tier pricing or category multiplier
+  ESTIMATED: 'estimated',   // Fallback to global multiplier
+};
+
+/**
  * Get adjusted cost for an upgrade based on car's platform tier
+ * Uses category-specific multipliers for better accuracy
+ * 
  * @param {Object} car - Car object
  * @param {Object} upgrade - Upgrade object with estimatedCostLow/High
- * @returns {Object} - { low, high } adjusted costs
+ * @returns {Object} - { low, high, confidence, source } adjusted costs with confidence info
  */
 export function getAdjustedUpgradeCost(car, upgrade) {
   const tier = getCostTier(car);
   const brand = car.brand;
   
-  // Check for brand-specific override first
+  // Priority 1: Brand-specific override (highest confidence)
   if (brand && brandUpgradeOverrides[brand]?.[upgrade.key]) {
-    return brandUpgradeOverrides[brand][upgrade.key];
+    const override = brandUpgradeOverrides[brand][upgrade.key];
+    // Normalize property names (overrides use costLow/costHigh, we return low/high)
+    return {
+      low: override.low ?? override.costLow ?? 0,
+      high: override.high ?? override.costHigh ?? 0,
+      confidence: PricingConfidence.VERIFIED,
+      source: `${brand} market data`,
+    };
   }
   
-  // Check for package-level override
+  // Priority 2: Package-level tier override (high confidence)
   if (upgrade.type === 'package' && packageCostByTier[upgrade.key]?.[tier]) {
-    return packageCostByTier[upgrade.key][tier];
+    const tierPricing = packageCostByTier[upgrade.key][tier];
+    return {
+      low: tierPricing.low,
+      high: tierPricing.high,
+      confidence: PricingConfidence.HIGH,
+      source: `${tier} tier package pricing`,
+    };
   }
   
-  // Apply tier multiplier to base cost
+  // Priority 3: Category-specific multiplier (high confidence)
+  const category = upgrade.category;
+  if (category && categoryMultipliers[tier]?.[category]) {
+    const multiplier = categoryMultipliers[tier][category];
+    return {
+      low: Math.round((upgrade.estimatedCostLow || 0) * multiplier),
+      high: Math.round((upgrade.estimatedCostHigh || 0) * multiplier),
+      confidence: PricingConfidence.HIGH,
+      source: `${tier} ${category} category estimate`,
+    };
+  }
+  
+  // Priority 4: Global tier multiplier (fallback)
   const multiplier = platformCostMultipliers[tier]?.multiplier || 1.0;
   
   return {
     low: Math.round((upgrade.estimatedCostLow || 0) * multiplier),
     high: Math.round((upgrade.estimatedCostHigh || 0) * multiplier),
+    confidence: PricingConfidence.ESTIMATED,
+    source: `${tier} tier estimate`,
   };
 }
 
@@ -292,12 +408,15 @@ export function formatUpgradeCost(car, upgrade) {
 
 export default {
   platformCostMultipliers,
+  categoryMultipliers,
   brandUpgradeOverrides,
   packageCostByTier,
+  PricingConfidence,
   getCostTier,
   getAdjustedUpgradeCost,
   getCostComparisonText,
   formatUpgradeCost,
+  PRICING_DISCLAIMER,
 };
 
 

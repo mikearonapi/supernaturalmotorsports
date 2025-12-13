@@ -1162,9 +1162,9 @@ function PerformanceOverlay({ car, onClose }) {
         </div>
 
         <div className={styles.overlayFooter}>
-          <Link href={`/mod-planner?car=${car.slug}`} className={styles.overlayLinkPrimary}>
+          <Link href={`/tuning-shop?car=${car.slug}`} className={styles.overlayLinkPrimary}>
             <Icons.wrench size={16} />
-            Open Full Performance Hub
+            Open Tuning Shop
           </Link>
         </div>
       </div>

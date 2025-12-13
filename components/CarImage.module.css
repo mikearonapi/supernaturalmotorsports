@@ -79,7 +79,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity var(--transition-slow);
+  /* Faster transition for snappy feel (200ms vs slow ~400ms) */
+  transition: opacity 200ms ease-out;
   z-index: 1;
 }
 
@@ -150,7 +151,8 @@
   /* Position to show the car (typically in lower portion of hero images) */
   object-position: center 70%;
   opacity: 0;
-  transition: opacity var(--transition-slow);
+  /* Faster transition for snappy load feel (200ms vs slow ~400ms) */
+  transition: opacity 200ms ease-out;
   z-index: 2;
 }
 

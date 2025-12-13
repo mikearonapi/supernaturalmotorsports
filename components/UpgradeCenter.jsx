@@ -669,7 +669,12 @@ export default function UpgradeCenter({ car, initialBuildId = null, onChangeCar 
           {showUpgrade && (
             <div className={styles.buildStats}>
               <span className={styles.hpBadge}>+{hpGain} HP</span>
-              <span className={styles.costBadge}>${totalCost.low?.toLocaleString()}</span>
+              <span 
+                className={`${styles.costBadge} ${totalCost.confidence === 'verified' ? styles.costVerified : totalCost.confidence === 'high' ? styles.costHigh : styles.costEstimated}`}
+                title={`${totalCost.confidence === 'verified' ? 'Verified pricing from market data' : totalCost.confidence === 'high' ? 'High confidence estimate' : 'Estimated pricing'} (${totalCost.confidencePercent || 0}% verified)`}
+              >
+                ${(totalCost.low || 0).toLocaleString()}
+              </span>
             </div>
           )}
           <button

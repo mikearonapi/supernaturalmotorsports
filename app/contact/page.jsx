@@ -179,7 +179,7 @@ export default function Contact() {
                     <Button href="/car-selector" variant="primary" size="md">
                       Your Sportscar Match
                     </Button>
-                    <Button href="/mod-planner" variant="outline" size="md">
+                    <Button href="/tuning-shop" variant="outline" size="md">
                       Plan Your Build
                     </Button>
                   </div>

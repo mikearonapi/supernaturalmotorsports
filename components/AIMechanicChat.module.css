@@ -372,6 +372,7 @@
   }
 }
 
+/* Mobile phones */
 @media (max-width: 480px) {
   .chatPanel {
     left: 10px;
@@ -379,7 +380,7 @@
     bottom: 74px;
     width: calc(100% - 20px);
     max-width: none;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 150px);
     max-height: none;
     border-radius: 12px;
   }
@@ -393,6 +394,45 @@
   }
 }
 
+/* Small phones (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  .chatPanel {
+    left: 8px;
+    right: 8px;
+    bottom: 70px;
+    width: calc(100% - 16px);
+    height: calc(100vh - 140px);
+    border-radius: 10px;
+  }
+}
+
+/* iPad Portrait (768px - 1024px) */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .chatPanel {
+    bottom: 86px;
+    right: 24px;
+    max-width: 380px;
+    max-height: 520px;
+    height: calc(100vh - 180px);
+  }
+  
+  .chatPanelExpanded {
+    left: 40px;
+    right: 40px;
+    top: 80px;
+    bottom: 30px;
+    border-radius: 16px;
+  }
+}
+
+/* iPad Landscape */
+@media (min-width: 1025px) and (max-width: 1366px) {
+  .chatPanel {
+    max-width: 400px;
+    max-height: 560px;
+  }
+}
+
 /* ----------------------------------------
    Header - Minimal & Clean
    ---------------------------------------- */
@@ -403,6 +443,7 @@
   padding: 14px 16px;
   border-bottom: 1px solid #f3f4f6;
   background: #ffffff;
+  flex-shrink: 0;
 }
 
 .headerLeft {
@@ -422,6 +463,7 @@
   overflow: hidden;
   border: 2px solid #d4a04a;
   box-shadow: 0 2px 8px rgba(212, 160, 74, 0.2);
+  flex-shrink: 0;
 }
 
 .headerTitle {
@@ -440,19 +482,68 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   background: transparent;
   border: none;
   border-radius: 8px;
   color: #6b7280;
   cursor: pointer;
   transition: all 0.15s ease;
+  /* Ensure good touch target */
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .headerBtn:hover {
   background: #f3f4f6;
   color: #111827;
+}
+
+/* Mobile header */
+@media (max-width: 480px) {
+  .header {
+    padding: 12px 14px;
+  }
+  
+  .headerIcon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .headerTitle {
+    font-size: 14px;
+  }
+  
+  .headerActions {
+    gap: 2px;
+  }
+  
+  .headerBtn {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 375px) {
+  .header {
+    padding: 10px 12px;
+  }
+  
+  .headerLeft {
+    gap: 8px;
+  }
+  
+  .headerIcon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .headerTitle {
+    font-size: 13px;
+  }
 }
 
 /* ----------------------------------------
@@ -464,11 +555,34 @@
   padding: 20px;
   background: #fafafa;
   min-height: 0;
+  /* Enable momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Ensure proper height when not in chatContent wrapper */
 .chatContent .messagesArea {
   height: 100%;
+}
+
+/* Mobile messages area */
+@media (max-width: 480px) {
+  .messagesArea {
+    padding: 16px;
+  }
+  
+  .welcomeSimple {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 375px) {
+  .messagesArea {
+    padding: 12px;
+  }
+  
+  .welcomeSimple {
+    padding: 12px;
+  }
 }
 
 /* ----------------------------------------
@@ -558,12 +672,39 @@
   text-align: left;
   cursor: pointer;
   transition: all 0.15s ease;
+  /* Ensure good touch target */
+  min-height: 44px;
 }
 
 .suggestionBtn:hover {
   background: #f9fafb;
   border-color: #1a4d6e;
   color: #1a4d6e;
+}
+
+/* Mobile suggestions */
+@media (max-width: 480px) {
+  .suggestionsTop {
+    gap: 8px;
+  }
+  
+  .suggestionsLabel {
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  
+  .suggestionBtn {
+    padding: 10px 14px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 375px) {
+  .suggestionBtn {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
 }
 
 /* ----------------------------------------
@@ -646,6 +787,55 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* Mobile messages */
+@media (max-width: 480px) {
+  .messages {
+    gap: 14px;
+  }
+  
+  .message {
+    gap: 10px;
+  }
+  
+  .messageIcon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .messageContent {
+    max-width: 85%;
+    padding: 10px 14px;
+    font-size: 14px;
+    border-radius: 14px;
+  }
+  
+  .message.assistant .messageContent {
+    border-radius: 14px 14px 14px 4px;
+  }
+  
+  .message.user .messageContent {
+    border-radius: 14px 14px 4px 14px;
+  }
+}
+
+@media (max-width: 375px) {
+  .messages {
+    gap: 12px;
+  }
+  
+  .messageIcon {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .messageContent {
+    max-width: 88%;
+    padding: 9px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}
+
 /* Loading icon animation - subtle pulse for AL mascot */
 .loadingIcon {
   animation: loadingPulse 1s ease-in-out infinite;
@@ -725,7 +915,7 @@
   padding: 10px 0;
   background: transparent;
   border: none;
-  font-size: 14px;
+  font-size: 16px; /* Prevent iOS zoom on focus */
   font-family: inherit;
   color: #111827;
   resize: none;
@@ -746,8 +936,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   border-radius: 12px;
@@ -755,6 +945,9 @@
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  /* Ensure good touch target */
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .sendBtn:hover:not(:disabled) {
@@ -766,6 +959,55 @@
   opacity: 0.4;
   cursor: not-allowed;
   background: #d1d5db;
+}
+
+/* Mobile input optimizations */
+@media (max-width: 480px) {
+  .inputArea {
+    padding: 12px;
+    /* Add safe area padding for devices with home indicator */
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  
+  .inputWrapper {
+    border-radius: 14px;
+    padding: 3px 3px 3px 14px;
+  }
+  
+  .input {
+    font-size: 16px;
+    padding: 9px 0;
+  }
+  
+  .sendBtn {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    border-radius: 10px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 375px) {
+  .inputArea {
+    padding: 10px;
+  }
+  
+  .inputWrapper {
+    padding-left: 12px;
+  }
+}
+
+/* iPad */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .inputArea {
+    padding: 14px;
+  }
+  
+  .input {
+    font-size: 15px;
+  }
 }
 
 /* ----------------------------------------
@@ -787,6 +1029,7 @@
   padding: 40px 30px;
   background: linear-gradient(180deg, #faf9f7 0%, #f5f3ef 100%);
   position: relative;
+  overflow-y: auto;
 }
 
 .introCloseBtn {
@@ -804,6 +1047,10 @@
   color: #6b7280;
   cursor: pointer;
   transition: all 0.2s ease;
+  /* Ensure good touch target */
+  min-width: 44px;
+  min-height: 44px;
+  z-index: 10;
 }
 
 .introCloseBtn:hover {
@@ -817,6 +1064,7 @@
   align-items: center;
   text-align: center;
   max-width: 320px;
+  width: 100%;
 }
 
 .introMascot {
@@ -875,6 +1123,8 @@
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(26, 77, 110, 0.25);
   animation: introFadeIn 0.5s ease 0.3s both;
+  /* Ensure good touch target */
+  min-height: 48px;
 }
 
 .introStartBtn:hover {
@@ -894,6 +1144,11 @@
   margin-top: 20px;
   cursor: pointer;
   animation: introFadeIn 0.5s ease 0.4s both;
+  /* Better touch target */
+  padding: 8px 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+  border-radius: 8px;
 }
 
 .introCheckbox input {
@@ -908,8 +1163,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
   background: #ffffff;
   border: 2px solid #d1d5db;
   border-radius: 5px;
@@ -950,6 +1206,99 @@
 }
 
 /* ----------------------------------------
+   INTRO SCREEN - Mobile Optimizations
+   ---------------------------------------- */
+@media (max-width: 480px) {
+  .introScreen {
+    padding: 24px 20px;
+    justify-content: flex-start;
+    padding-top: 56px;
+  }
+  
+  .introCloseBtn {
+    top: 12px;
+    right: 12px;
+  }
+  
+  .introMascot {
+    margin-bottom: 20px;
+  }
+  
+  /* Mascot size handled in JSX, but ensure container fits */
+  .introMascotImg {
+    border-width: 3px !important;
+  }
+  
+  .introTitle {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  
+  .introDescription {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  
+  .introStartBtn {
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+  
+  .introCheckbox {
+    margin-top: 16px;
+  }
+  
+  .checkboxLabel {
+    font-size: 13px;
+  }
+}
+
+/* Small phones (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  .introScreen {
+    padding: 20px 16px;
+    padding-top: 50px;
+  }
+  
+  .introTitle {
+    font-size: 20px;
+  }
+  
+  .introDescription {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  
+  .introStartBtn {
+    padding: 11px 20px;
+    font-size: 14px;
+  }
+}
+
+/* ----------------------------------------
+   INTRO SCREEN - iPad/Tablet Optimizations
+   ---------------------------------------- */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .introScreen {
+    padding: 36px 32px;
+  }
+  
+  .introMascot {
+    margin-bottom: 24px;
+  }
+  
+  .introTitle {
+    font-size: 24px;
+  }
+  
+  .introDescription {
+    font-size: 15px;
+    max-width: 300px;
+  }
+}
+
+/* ----------------------------------------
    Sign In Required Screen
    ---------------------------------------- */
 .signInScreen {
@@ -961,6 +1310,7 @@
   padding: 40px 30px;
   background: linear-gradient(180deg, #faf9f7 0%, #f5f3ef 100%);
   position: relative;
+  overflow-y: auto;
 }
 
 .signInContent {
@@ -969,6 +1319,7 @@
   align-items: center;
   text-align: center;
   max-width: 320px;
+  width: 100%;
 }
 
 .signInTitle {
@@ -1028,6 +1379,8 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(26, 77, 110, 0.25);
+  /* Ensure good touch target */
+  min-height: 48px;
 }
 
 .signInBtn:hover {
@@ -1048,6 +1401,9 @@
   color: #d4a04a;
   text-decoration: none;
   transition: color 0.2s ease;
+  /* Better touch target */
+  padding: 8px 16px;
+  border-radius: 8px;
 }
 
 .joinLink:hover {
@@ -1059,6 +1415,76 @@
   font-size: 12px;
   color: #9ca3af;
   margin-top: 20px;
+}
+
+/* ----------------------------------------
+   SIGN IN - Mobile Optimizations
+   ---------------------------------------- */
+@media (max-width: 480px) {
+  .signInScreen {
+    padding: 24px 20px;
+    justify-content: flex-start;
+    padding-top: 56px;
+  }
+  
+  .signInTitle {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+  
+  .signInDescription {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  
+  .signInBtn {
+    padding: 12px 20px;
+    font-size: 15px;
+  }
+  
+  .signInDivider {
+    margin: 14px 0;
+  }
+  
+  .joinLink {
+    font-size: 14px;
+  }
+  
+  .signInNote {
+    font-size: 11px;
+    margin-top: 16px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 375px) {
+  .signInScreen {
+    padding: 20px 16px;
+    padding-top: 50px;
+  }
+  
+  .signInTitle {
+    font-size: 18px;
+  }
+  
+  .signInDescription {
+    font-size: 13px;
+  }
+}
+
+/* iPad/Tablet */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .signInScreen {
+    padding: 36px 32px;
+  }
+  
+  .signInTitle {
+    font-size: 21px;
+  }
+  
+  .signInDescription {
+    max-width: 280px;
+  }
 }
 
 /* ----------------------------------------

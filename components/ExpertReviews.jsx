@@ -238,7 +238,7 @@ export default function ExpertReviews({ carSlug, car }) {
             {upgradeSuggestions.map((upgrade, i) => (
               <Link 
                 key={i}
-                href={`/mod-planner?car=${car.slug}`}
+                href={`/tuning-shop?car=${car.slug}`}
                 className={styles.upgradeTag}
               >
                 {formatTag(upgrade)}

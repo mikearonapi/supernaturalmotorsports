@@ -7,6 +7,7 @@ import styles from './page.module.css';
 import { fetchCarBySlug } from '@/lib/carsClient.js';
 import { getCarBySlug as getLocalCarBySlug, tierConfig } from '@/data/cars.js';
 import { calculateScoreBreakdown, getScoreLabel, DEFAULT_WEIGHTS } from '@/lib/scoring.js';
+import { getCarHeroImage, preloadImage } from '@/lib/images.js';
 import CarImage from '@/components/CarImage';
 import ScoringInfo from '@/components/ScoringInfo';
 import ExpertReviews from '@/components/ExpertReviews';
@@ -291,10 +292,20 @@ export default function CarDetail() {
         if (isMounted) {
           if (carData) {
             setCar(carData);
+            // Preload hero image as soon as we have car data for faster display
+            const heroUrl = getCarHeroImage(carData);
+            if (heroUrl) {
+              preloadImage(heroUrl);
+            }
           } else {
             const localCar = getLocalCarBySlug(slug);
             if (localCar) {
               setCar(localCar);
+              // Preload hero image for local car too
+              const heroUrl = getCarHeroImage(localCar);
+              if (heroUrl) {
+                preloadImage(heroUrl);
+              }
             } else {
               setError('Vehicle not found');
             }
@@ -307,6 +318,11 @@ export default function CarDetail() {
           const localCar = getLocalCarBySlug(slug);
           if (localCar) {
             setCar(localCar);
+            // Preload hero image for local car
+            const heroUrl = getCarHeroImage(localCar);
+            if (heroUrl) {
+              preloadImage(heroUrl);
+            }
           } else {
             setError('Failed to load vehicle data');
           }
@@ -1230,23 +1246,6 @@ export default function CarDetail() {
           </div>
         )}
       </div>
-
-
-      {/* ================================================================
-          FOOTER CTA
-          ================================================================ */}
-      <section className={styles.footerCta}>
-        <div className={styles.footerCtaInner}>
-          <Link href={`/mod-planner?car=${car.slug}`} className={styles.ctaPrimary}>
-            <Icons.gauge size={20} />
-            See Performance Impact
-          </Link>
-          <Link href="/car-selector" className={styles.ctaSecondary}>
-            <Icons.arrowLeft size={18} />
-            Back to Car Selector
-          </Link>
-        </div>
-      </section>
     </div>
   );
 }

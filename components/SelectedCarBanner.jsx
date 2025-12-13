@@ -76,6 +76,10 @@ const Icons = {
  * @returns {string}
  */
 function formatCurrency(amount) {
+  // Handle invalid values
+  if (amount === undefined || amount === null || isNaN(amount)) {
+    return '$0';
+  }
   if (amount >= 1000) {
     return `$${(amount / 1000).toFixed(amount % 1000 === 0 ? 0 : 1)}K`;
   }
@@ -91,8 +95,8 @@ export default function SelectedCarBanner() {
   const { selectedCar, buildSummary, appliedUpgrades, clearCar, isHydrated } = useCarSelection();
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Determine if we're in a Mod Planner context
-  const isPerformanceContext = pathname?.startsWith('/mod-planner');
+  // Determine if we're in a Tuning Shop context
+  const isPerformanceContext = pathname?.startsWith('/tuning-shop');
   const isCarDetailPage = pathname?.startsWith('/browse-cars/');
   
   // Don't show banner if no car is selected or during SSR
@@ -175,12 +179,12 @@ export default function SelectedCarBanner() {
             {isExpanded ? <Icons.chevronUp size={16} /> : <Icons.chevronDown size={16} />}
           </button>
 
-          {/* Mod Planner Link - if not already there */}
+          {/* Tuning Shop Link - if not already there */}
           {!isPerformanceContext && (
             <Link 
-              href={`/mod-planner?car=${selectedCar.slug}`}
+              href={`/tuning-shop?car=${selectedCar.slug}`}
               className={styles.actionBtn}
-              title="Go to Mod Planner"
+              title="Go to Tuning Shop"
             >
               <Icons.wrench size={14} />
               <span className={styles.actionLabel}>Build</span>
@@ -289,11 +293,11 @@ export default function SelectedCarBanner() {
           <div className={styles.expandedActions}>
             {!isPerformanceContext && (
               <Link 
-                href={`/mod-planner?car=${selectedCar.slug}`}
+                href={`/tuning-shop?car=${selectedCar.slug}`}
                 className={styles.expandedActionBtn}
               >
                 <Icons.wrench size={16} />
-                Go to Mod Planner
+                Go to Tuning Shop
               </Link>
             )}
             {!isCarDetailPage && (

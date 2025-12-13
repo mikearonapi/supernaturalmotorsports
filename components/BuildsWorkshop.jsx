@@ -332,7 +332,7 @@ function BuildCard({
           <span>Details</span>
         </button>
         <Link 
-          href={`/mod-planner?car=${car?.slug || build.carSlug}&build=${build.id}`}
+          href={`/tuning-shop?car=${car?.slug || build.carSlug}&build=${build.id}`}
           className={styles.actionBtnPrimary}
           onClick={(e) => e.stopPropagation()}
           title="Modify Build"
@@ -588,7 +588,7 @@ function EmptyState({ onCreateBuild }) {
           Start Your First Project
         </button>
       ) : (
-        <Link href="/mod-planner" className={styles.emptyAction}>
+        <Link href="/tuning-shop" className={styles.emptyAction}>
           <Icons.plus size={18} />
           Start Your First Project
         </Link>
@@ -757,7 +757,7 @@ export default function BuildsWorkshop({
               <span>New Project</span>
             </button>
           ) : (
-            <Link href="/mod-planner" className={styles.newBuildBtn}>
+            <Link href="/tuning-shop" className={styles.newBuildBtn}>
               <Icons.plus size={16} />
               <span>New Project</span>
             </Link>

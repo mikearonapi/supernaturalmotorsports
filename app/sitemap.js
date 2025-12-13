@@ -39,12 +39,6 @@ export default async function sitemap() {
       priority: 0.8,
     },
     {
-      url: `${siteUrl}/mod-planner`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
       url: `${siteUrl}/encyclopedia`,
       lastModified: new Date(),
       changeFrequency: 'monthly',

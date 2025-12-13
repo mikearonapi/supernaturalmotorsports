@@ -7,13 +7,44 @@
  * Context-aware help across all pages.
  */
 
-import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
+import { useState, useEffect, useRef, useCallback, createContext, useContext, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import styles from './AIMechanicChat.module.css';
 import { useAuth } from './providers/AuthProvider';
 import { useCarSelection } from './providers/CarSelectionProvider';
 import AuthModal, { useAuthModal } from './AuthModal';
+
+/**
+ * Hook for responsive screen size detection
+ * Returns breakpoint information for adaptive UI
+ */
+function useResponsiveSize() {
+  const [screenSize, setScreenSize] = useState({
+    isMobile: false,
+    isSmallMobile: false,
+    isTablet: false,
+  });
+  
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const checkSize = () => {
+      const width = window.innerWidth;
+      setScreenSize({
+        isMobile: width <= 480,
+        isSmallMobile: width <= 375,
+        isTablet: width > 480 && width <= 1024,
+      });
+    };
+    
+    checkSize();
+    window.addEventListener('resize', checkSize);
+    return () => window.removeEventListener('resize', checkSize);
+  }, []);
+  
+  return screenSize;
+}
 
 // Context for controlling chat from anywhere
 const AIChatContext = createContext({
@@ -244,6 +275,24 @@ export default function AIMechanicChat({ showFloatingButton = false, externalOpe
   
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const { selectedCar } = useCarSelection();
+  
+  // Responsive sizing
+  const { isMobile, isSmallMobile, isTablet } = useResponsiveSize();
+  
+  // Calculate responsive mascot sizes
+  const introMascotSize = useMemo(() => {
+    if (isSmallMobile) return 100;
+    if (isMobile) return 120;
+    if (isTablet) return 140;
+    return 160;
+  }, [isMobile, isSmallMobile, isTablet]);
+  
+  const signInMascotSize = useMemo(() => {
+    if (isSmallMobile) return 80;
+    if (isMobile) return 100;
+    if (isTablet) return 110;
+    return 120;
+  }, [isMobile, isSmallMobile, isTablet]);
   
   // Check localStorage on mount to see if user has seen intro
   useEffect(() => {
@@ -494,7 +543,7 @@ export default function AIMechanicChat({ showFloatingButton = false, externalOpe
               
               <div className={styles.introContent}>
                 <div className={styles.introMascot}>
-                  <ALMascot size={160} className={styles.introMascotImg} />
+                  <ALMascot size={introMascotSize} className={styles.introMascotImg} />
                 </div>
                 
                 <h2 className={styles.introTitle}>
@@ -538,7 +587,7 @@ export default function AIMechanicChat({ showFloatingButton = false, externalOpe
               
               <div className={styles.signInContent}>
                 <div className={styles.introMascot}>
-                  <ALMascot size={120} className={styles.introMascotImg} />
+                  <ALMascot size={signInMascotSize} className={styles.introMascotImg} />
                 </div>
                 
                 <h2 className={styles.signInTitle}>

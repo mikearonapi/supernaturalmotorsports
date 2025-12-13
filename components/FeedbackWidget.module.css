@@ -94,7 +94,7 @@
   }
 }
 
-/* Mobile: Full width bottom sheet */
+/* Mobile: Full width */
 @media (max-width: 480px) {
   .overlay {
     padding: 0;
@@ -110,10 +110,123 @@
     max-height: calc(100vh - var(--header-height-mobile, 60px) - 32px);
     overflow-y: auto;
   }
+  
+  .header {
+    padding: 14px 16px;
+  }
+  
+  .title {
+    font-size: 16px;
+  }
+  
+  .form {
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  .typeGrid {
+    gap: 6px;
+  }
+  
+  .typeButton {
+    padding: 10px 12px;
+    font-size: 12px;
+    gap: 6px;
+  }
+  
+  .typeButton svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .textarea {
+    min-height: 90px;
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+  
+  .input {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+  
+  .submitButton {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  .contextHint {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+  
+  .label {
+    font-size: 13px;
+  }
 }
 
-/* Tablet and desktop: use desktop header height */
-@media (min-width: 768px) {
+/* Small phones (iPhone SE) */
+@media (max-width: 375px) {
+  .widget {
+    margin: 0 8px;
+    border-radius: 14px;
+  }
+  
+  .header {
+    padding: 12px 14px;
+  }
+  
+  .title {
+    font-size: 15px;
+  }
+  
+  .form {
+    padding: 14px;
+    gap: 14px;
+  }
+  
+  .typeButton {
+    padding: 9px 10px;
+    font-size: 11px;
+    border-radius: 8px;
+  }
+  
+  .textarea {
+    min-height: 80px;
+    font-size: 13px;
+  }
+  
+  .submitButton {
+    padding: 11px 18px;
+    font-size: 13px;
+  }
+}
+
+/* iPad/Tablet (portrait and landscape) */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .overlay {
+    padding: 20px;
+    padding-top: calc(var(--header-height, 70px) + 50px);
+  }
+  
+  .widget {
+    max-width: 380px;
+    max-height: calc(100vh - var(--header-height, 70px) - 80px);
+    border-radius: 18px;
+  }
+  
+  .typeGrid {
+    gap: 10px;
+  }
+  
+  .typeButton {
+    padding: 11px 13px;
+    font-size: 13px;
+  }
+}
+
+/* Desktop: use desktop header height */
+@media (min-width: 1025px) {
   .overlay {
     padding-top: calc(var(--header-height, 70px) + 70px);
   }
@@ -384,5 +497,37 @@
   font-size: 14px !important;
   font-weight: 400 !important;
   color: #666666 !important;
+}
+
+/* Success state - Mobile */
+@media (max-width: 480px) {
+  .success {
+    padding: 32px 16px;
+    gap: 10px;
+  }
+  
+  .successIcon {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .success p {
+    font-size: 15px;
+  }
+  
+  .successSubtext {
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .success {
+    padding: 28px 14px;
+  }
+  
+  .successIcon {
+    width: 52px;
+    height: 52px;
+  }
 }
 
